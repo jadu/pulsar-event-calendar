@@ -25,7 +25,7 @@
         ]
     },
     "scripts": {
-        "build": "browserify --standalone pulsar index --outfile dist/EventCalendar.js",
+        "build": "browserify index.js --outfile dist/EventCalendar.js",
         "jshint": "jshint .",
         "mocha": "mochify -r ./test/harness --recursive --reporter spec",
         "test": "npm run jshint && npm run mocha"
@@ -42,7 +42,12 @@
         "babelify": "^7.3.0",
         "browserify": "^11.2.0",
         "chai": "^2.3.0",
+        "grunt": "^1.0.3",
+        "grunt-browserify": "^5.0.0",
+        "grunt-contrib-watch": "^1.0.0",
+        "grunt-sass": "^1.1.0",
         "jshint": "^2.8.0",
+        "matchdep": "^2.0.0",
         "mochify": "^2.19.0",
         "sinon": "~1.15",
         "sinon-chai": "^2.7.0"
