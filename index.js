@@ -1,7 +1,17 @@
-'use strict';
+const $ = require('jquery');
+const EventCal = require('./src/EventCalendar');
 
-var EventCalendar = require('./src/EventCalendar');
+$(function () {
 
-module.exports = {
-    EventCalendar
-}
+    let myEvents = [
+        {
+            date: "2018-11-24"
+        },
+        {
+            date: "2018-11-26"
+        }
+    ]
+
+    const clndr = new EventCal($('html'));
+    clndr.init(myEvents);
+});

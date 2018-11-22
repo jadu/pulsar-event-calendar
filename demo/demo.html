@@ -5,42 +5,14 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Pulsar Event Calendar Demo</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- <link rel="stylesheet" type="text/css" media="screen" href="main.css" /> -->
+    <link rel="stylesheet" type="text/css" media="screen" href="css/event-calendar.css" />
 </head>
 <body>
     <h1>Pulsar Event Calendar Demo</h1>
 
-    <div class="js-calendar">Container</div>
-
-    <div class="calendar">
-        <div class="clndr-controls">
-            <button class="clndr-previous-button">&lsaquo;</button>
-            <div class="month"><%= month %></div>
-            <button class="clndr-next-button">&rsaquo;</button>
-        </div>
-        <div class="clndr-grid">
-            <div class="days-of-the-week">
-            <% _.each(daysOfTheWeek, function (day) { %>
-                <div class="header-day"><%= day %></div>
-            <% }); %>
-                <div class="days">
-                <% _.each(days, function (day) { %>
-                    <div class="<%= day.classes %>"><%= day.day %></div>
-                <% }); %>
-                </div>
-            </div>
-        </div>
-    </div>
+    <div class="event-calendar js-event-calendar"></div>
     
     <script src="../node_modules/jquery/dist/jquery.js"></script>
     <script src="../dist/EventCalendar.js"></script>
-    <script>
-        (function ($) {
-            $(window).load(function() {
-                var eventCalendar = new pulsar.EventCalendar($('html'));
-                eventCalendar.init();
-            });
-        }(jQuery));
-    </script>
 </body>
 </html>
