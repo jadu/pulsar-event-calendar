@@ -2393,6 +2393,7 @@
       border-radius: 40px;
       display: block;
       font-family: 'FontAwesome';
+      font-weight: normal;
       height: 16px;
       line-height: 16px;
       position: absolute;
@@ -2414,7 +2415,23 @@
   .clndr .today > .day-contents {
     border-color: #2575b0;
     font-weight: bold; }
+  .clndr .event > .day-contents::after {
+    color: #297c46;
+    content: ""; }
+  .clndr .event > .day-contents:hover::after {
+    color: #c84d40;
+    content: ""; }
+  .clndr .selected > .day-contents:hover,
+  .clndr .inactive > .day-contents:hover {
+    font-weight: normal; }
+    .clndr .selected > .day-contents:hover::after,
+    .clndr .inactive > .day-contents:hover::after {
+      visibility: hidden; }
+  .clndr .selected.event-repeat > .day-contents:hover::after {
+    visibility: visible; }
   .clndr .event > .day-contents,
+  .clndr .event.event-repeat > .day-contents,
+  .clndr .selected.event-repeat > .day-contents,
   .clndr .selected > .day-contents,
   .clndr .selected.event-add > .day-contents,
   .clndr .selected.event-repeat-on > .day-contents {
@@ -2423,6 +2440,8 @@
     box-shadow: inset 0 0 0 3px #fff;
     color: #fff; }
     .clndr .event > .day-contents:hover,
+    .clndr .event.event-repeat > .day-contents:hover,
+    .clndr .selected.event-repeat > .day-contents:hover,
     .clndr .selected > .day-contents:hover,
     .clndr .selected.event-add > .day-contents:hover,
     .clndr .selected.event-repeat-on > .day-contents:hover {
@@ -2434,40 +2453,61 @@
   .clndr .event-add > .day-contents {
     background-color: #fff;
     border: 2px dotted #297c46;
+    color: #000;
     box-shadow: inset 0 0 0 3px #fff, inset 0 0 0 50px #cfefda; }
     .clndr .event-add > .day-contents::after {
-      content: "";
       color: #297c46;
-      font-weight: normal; }
+      content: ""; }
     .clndr .event-add > .day-contents:hover::after {
-      content: "";
-      color: #c84d40;
-      font-weight: normal; }
+      color: #000;
+      content: ""; }
   .clndr .event-repeat > .day-contents {
-    border-style: solid; }
+    background-color: #fff;
+    border: 2px solid #297c46;
+    color: #000;
+    box-shadow: inset 0 0 0 3px #fff, inset 0 0 0 50px #cfefda; }
     .clndr .event-repeat > .day-contents::after {
+      color: #297c46;
       content: ""; }
-  .clndr .event-del > .day-contents {
+    .clndr .event-repeat > .day-contents:hover::after {
+      color: #c84d40;
+      content: ""; }
+  .clndr .event-del > .day-contents,
+  .clndr .event.event-del > .day-contents {
     background-color: #fff;
     border: 2px dotted #c84d40;
     box-shadow: inset 0 0 0 3px #fff, inset 0 0 0 50px #f6e1de;
     color: #000; }
-    .clndr .event-del > .day-contents::after {
-      content: "";
+    .clndr .event-del > .day-contents::after,
+    .clndr .event.event-del > .day-contents::after {
       color: #c84d40;
-      font-weight: normal; }
-    .clndr .event-del > .day-contents:hover {
+      content: ""; }
+    .clndr .event-del > .day-contents:hover,
+    .clndr .event.event-del > .day-contents:hover {
       border-color: #c84d40; }
-    .clndr .event-del > .day-contents:hover::after {
-      content: "";
+    .clndr .event-del > .day-contents:hover::after,
+    .clndr .event.event-del > .day-contents:hover::after {
       color: #1e1e1e;
-      font-weight: normal; }
+      content: ""; }
+  .clndr .event.event-del > .day-contents:hover::after {
+    color: #297c46;
+    content: ""; }
+  .clndr .selected.event-repeat > .day-contents:hover::after,
   .clndr .event-repeat.event-del > .day-contents:hover::after {
-    content: "";
-    color: #297c46; }
+    color: #297c46;
+    content: ""; }
   .clndr .adjacent-month > .day-contents {
     background-color: #fff;
     border-color: #dedede;
     color: #737373; }
+  .clndr .event-calendar-summary {
+    list-style-type: none;
+    padding: 0; }
+    .clndr .event-calendar-summary li {
+      margin-bottom: 1em; }
+  .clndr .label {
+    background-color: #ccc;
+    border-radius: 4px;
+    padding: 0 4px; }
 
 /*# sourceMappingURL=event-calendar.css.map */
