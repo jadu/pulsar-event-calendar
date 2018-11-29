@@ -112,6 +112,7 @@ $font-family-monospace: 'Courier New', 'Andale Mono', 'Consolas', monospace !def
             border-radius: 40px;
             display: block;
             font-family: 'FontAwesome';
+            font-weight: normal;
             height: 16px;
             line-height: 16px;
             position: absolute;
@@ -144,7 +145,34 @@ $font-family-monospace: 'Courier New', 'Andale Mono', 'Consolas', monospace !def
         font-weight: bold;
     }
 
+    .event > .day-contents {
+        &::after {
+            color: $colour-success;
+            content: $fa-var-plus-circle;
+        }
+
+        &:hover::after {
+            color: $colour-danger;
+            content: $fa-var-ban;
+        }
+    }
+
+    .selected > .day-contents:hover,
+    .inactive > .day-contents:hover {
+        font-weight: normal;
+
+        &::after {
+            visibility: hidden;
+        }
+    }
+    
+    .selected.event-repeat > .day-contents:hover::after {
+        visibility: visible;
+    }
+
     .event > .day-contents,
+    .event.event-repeat > .day-contents,
+    .selected.event-repeat > .day-contents,
     .selected > .day-contents,
     .selected.event-add > .day-contents,
     .selected.event-repeat-on > .day-contents {
@@ -167,39 +195,47 @@ $font-family-monospace: 'Courier New', 'Andale Mono', 'Consolas', monospace !def
     .event-add > .day-contents {
         background-color: $colour-white;
         border: 2px dotted $colour-success;
+        color: $colour-text;
         box-shadow: inset 0 0 0 3px #fff, inset 0 0 0 50px $colour-success-light;
 
         &::after {
-            content: $fa-var-plus-circle;
             color: $colour-success;
-            font-weight: normal;
+            content: $fa-var-plus-circle;
         }
 
         &:hover::after {
+            color: $colour-text;
             content: $fa-var-times-circle;
-            color: $colour-danger;
-            font-weight: normal;
         }
     }
 
     .event-repeat > .day-contents {
-        border-style: solid;
+        background-color: $colour-white;
+        border: 2px solid $colour-success;
+        color: $colour-text;
+        box-shadow: inset 0 0 0 3px #fff, inset 0 0 0 50px $colour-success-light;
 
         &::after {
+            color: $colour-success;
             content: $fa-var-repeat;
+        }
+
+        &:hover::after {
+            color: $colour-danger;
+            content: $fa-var-ban;
         }
     }
 
-    .event-del > .day-contents {
+    .event-del > .day-contents,
+    .event.event-del > .day-contents {
         background-color: $colour-white;
         border: 2px dotted $colour-danger;
         box-shadow: inset 0 0 0 3px #fff, inset 0 0 0 50px $colour-danger-light;
         color: $colour-text;
 
         &::after {
-            content: $fa-var-times-circle;
             color: $colour-danger;
-            font-weight: normal;
+            content: $fa-var-ban;
         }
 
         &:hover {
@@ -207,21 +243,41 @@ $font-family-monospace: 'Courier New', 'Andale Mono', 'Consolas', monospace !def
         }
 
         &:hover::after {
-            content: $fa-var-minus-circle;
             color: $colour-black;
-            font-weight: normal;
+            content: $fa-var-times-circle;
         }
     }
 
-    .event-repeat.event-del > .day-contents:hover::after {
-        content: $fa-var-repeat;
+    .event.event-del > .day-contents:hover::after {
         color: $colour-success;
+        content: $fa-var-plus-circle;
+    }
+
+    .selected.event-repeat > .day-contents:hover::after,
+    .event-repeat.event-del > .day-contents:hover::after {
+        color: $colour-success;
+        content: $fa-var-repeat;
     }
 
     .adjacent-month > .day-contents {
         background-color: $colour-white;
         border-color: $colour-border-light;
         color: $colour-text-light;
+    }
+
+    .event-calendar-summary {
+        list-style-type: none;
+        padding: 0;
+
+        li {
+            margin-bottom: 1em;
+        }
+    }
+
+    .label {
+        background-color: #ccc;
+        border-radius: 4px;
+        padding: 0 4px;
     }
 
 }

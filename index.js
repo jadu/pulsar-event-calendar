@@ -3,13 +3,13 @@ const EventCal = require('./src/EventCalendar');
 
 $(function () {
 
-    // let myEvents = [
-    //     { date: '2018-11-24' },
-    //     { date: '2018-11-26' }
-    // ];
+    let myEvents = [
+        { date: '2019-07-25' },
+        { date: '2019-07-26' }
+    ];
 
     let startDate = '2019-07-04';
 
     const clndr = new EventCal($('html'));
-    clndr.init(startDate);
+    clndr.init(startDate, null, myEvents);
 });
