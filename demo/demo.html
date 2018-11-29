@@ -10,16 +10,57 @@
 <body>
     <h1>Pulsar Event Calendar Demo</h1>
 
-    <input class="js-ercal-start" type="date" value="2019-07-04" />
-    <select class="js-ercal-repeat">
-        <option value="no-repeat">No repeat</option>
-        <option value="daily">Daily</option>
-        <option value="weekly">Weekly</option>
-        <option value="two-weekly">Every two weeks</option>
-        <option value="monthly-day">Monthly, on this day of the month</option>
-        <option value="monthly-date">Monthly, on this date</option>
-        <option value="annually">Every year</option>
-    </select>
+    <fieldset>
+        <legend>Start date</legend>
+        
+        <input class="js-ercal-start" type="date" value="2019-07-04" />
+    </fieldset>
+    
+    <fieldset>
+        <legend>Repeat every</legend>
+
+        <select class="js-ercal-repeat">
+            <option value="no-repeat">No repeat</option>
+            <option value="daily">Daily</option>
+            <option value="weekly">Weekly</option>
+            <option value="two-weekly">Every two weeks</option>
+            <option value="monthly-day">Monthly, on this day of the month</option>
+            <option value="monthly-date">Monthly, on this date</option>
+            <option value="annually">Every year</option>
+        </select>
+    </fieldset>
+
+    <fieldset class="js-ercal-weekdays" style="display: none;">
+        <legend>Repeat on</legend>
+        <label>
+            <input value="1" name="ercal-weekdays" type="checkbox">
+            <span>MO</span>
+        </label>
+        <label>
+            <input value="2" name="ercal-weekdays" type="checkbox">
+            <span>TU</span>
+        </label>
+        <label>
+            <input value="3" name="ercal-weekdays" type="checkbox">
+            <span>WE</span>
+        </label>
+        <label>
+            <input value="4" name="ercal-weekdays" type="checkbox">
+            <span>TH</span>
+        </label>
+        <label>
+            <input value="5" name="ercal-weekdays" type="checkbox">
+            <span>FR</span>
+        </label>
+        <label>
+            <input value="6" name="ercal-weekdays" type="checkbox">
+            <span>SA</span>
+        </label>
+        <label>
+            <input value="7" name="ercal-weekdays" type="checkbox">
+            <span>SU</span>
+        </label>
+    </fieldset>
 
     <div class="event-calendar js-event-calendar"></div>
     
