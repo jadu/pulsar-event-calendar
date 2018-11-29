@@ -76,13 +76,13 @@ class EventCalendar {
                 </table>
                 <div class="event-calendar-review">
                     <ul class="event-calendar-summary">
-                        <li><i class="fa fa-repeat"></i> Repeat pattern</li>
-                        <li><i class="fa fa-plus-circle"></i> Additional repeat, based on user choice</li>
-                        <li><i class="fa fa-ban"></i> Event will <u>not</u> repeat, based on user choice</li>
+                        <li><i class="fa fa-repeat icon--success"></i> Repeat pattern</li>
+                        <li><i class="fa fa-plus-circle icon--success"></i> Additional repeat
+                            <span class="js-dates-to-add label label--success" style="display: none;"></span></li>
+                        <li><i class="fa fa-ban icon--danger"></i> Event will <u>not</u> repeat
+                            <span class="js-dates-to-del label label--danger" style="display: none;"></span></li>
                     </ul>
-                    <span class="js-dates-to-add" style="display: none;"></span>
-                    <span class="js-dates-to-del" style="display: none;"></span>
-                    <button class="js-ercal-reset" style="display: none;">Reset Calendar</button>
+                    <button class="js-ercal-reset" style="display: inline;">Reset Calendar</button>
                 </div>`;
 
         let precompiledTemplate = _.template(clndrTemplate);
@@ -235,7 +235,7 @@ class EventCalendar {
             else if ($elem.hasClass('event-del')) {
                 console.log('5');
                 //$elem.removeClass('event-del');
-                datesToDel.splice(datesToDel.indexOf(target), 1);
+                clndr.options.extras.datesToDel = datesToDel.filter(EventCalendar.matchDates.bind(this, date));
             }
         }
 

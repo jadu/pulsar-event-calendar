@@ -193,10 +193,10 @@ $font-family-monospace: 'Courier New', 'Andale Mono', 'Consolas', monospace !def
     }
 
     .event-add > .day-contents {
-        background-color: $colour-white;
-        border: 2px dotted $colour-success;
-        color: $colour-text;
-        box-shadow: inset 0 0 0 3px #fff, inset 0 0 0 50px $colour-success-light;
+        background-color: $colour-primary;
+        border: 2px solid $colour-black;
+        box-shadow: inset 0 0 0 3px $colour-white;
+        color: $colour-white;
 
         &::after {
             color: $colour-success;
@@ -210,10 +210,10 @@ $font-family-monospace: 'Courier New', 'Andale Mono', 'Consolas', monospace !def
     }
 
     .event-repeat > .day-contents {
-        background-color: $colour-white;
-        border: 2px solid $colour-success;
-        color: $colour-text;
-        box-shadow: inset 0 0 0 3px #fff, inset 0 0 0 50px $colour-success-light;
+        background-color: $colour-primary;
+        border: 2px solid $colour-black;
+        box-shadow: inset 0 0 0 3px $colour-white;
+        color: $colour-white;
 
         &::after {
             color: $colour-success;
@@ -270,157 +270,40 @@ $font-family-monospace: 'Courier New', 'Andale Mono', 'Consolas', monospace !def
         padding: 0;
 
         li {
-            margin-bottom: 1em;
+            line-height: 1.5em;
+            margin-bottom: .3em;
+        }
+
+        .fa {
+            margin-right: 10px;
+        }
+
+        .label {
+            margin-left: 10px;
         }
     }
 
     .label {
-        background-color: #ccc;
         border-radius: 4px;
+        line-height: 1.5em;
         padding: 0 4px;
     }
 
+    .label--success {
+        border: 2px solid $colour-black;
+    }
+
+    .label--danger {
+        // background-color: $colour-danger-light;
+        border: 2px dotted $colour-danger;
+    }
+
+    .icon--success {
+        color: $colour-success;
+    }
+
+    .icon--danger {
+        color: $colour-danger;
+    }
+
 }
-
-// .calendar__heading {
-//     text-align: center;
-//     font-family: $font-family-regular;
-// }
-
-// .calendar .form-choice {
-//     padding: 0 16px 0 0;
-// }
-
-// .calendar .form-choice .form-choice__label {
-//     background: none;
-//     border: 0;
-//     color: $colour-text;
-//     height: 100%;
-//     padding: 0;
-//     width: 100%;
-
-//     &:focus {
-//         outline: 3px solid $colour-focus;
-//     }
-
-//     &:hover {
-//         border: 1px solid $colour-grey;
-//         cursor: pointer;
-//         font-family: $font-family-regular;
-//     }
-
-//     &::after {
-//         background-color: $colour-white;
-//         border: 1px solid $colour-white;
-//         border-radius: 40px;
-//         display: block;
-//         font-family: 'FontAwesome';
-//         height: 16px;
-//         line-height: 16px;
-//         position: absolute;
-//         right: 0;
-//         text-align: center;
-//         top: 0;
-//         width: 16px;
-//     }
-
-//     &:hover,
-//     &:focus {
-//         &::after {
-//             content: '\f055';
-//             color: $colour-primary;
-//         }
-//     }
-// }
-
-// .calendar .form-choice .checkbox:checked + .form-choice__label:hover::after {
-//     content: '\f057';
-//     color: $colour-danger;
-// }
-
-// .calendar .form-choice.choice--to-add .checkbox:checked + .form-choice__label,
-// .calendar .form-choice.choice--to-add .checkbox:checked:focus + .form-choice__label {
-//     background-color: $colour-white;
-//     border: 2px dotted $colour-success;
-//     box-shadow: inset 0 0 0 3px $colour-white, inset 0 0 0 50px $colour-success-light;
-//     color: $colour-text;
-
-//     &::after {
-//         content: '\f055';
-//         color: $colour-success;
-//     }
-
-//     &:hover::after {
-//         content: '\f056';
-//         color: $colour-text;
-//     }
-// }
-
-// .calendar .form-choice.choice--to-remove.has-changed .form-choice__label {
-//     background-color: $colour-white;
-//     border: 2px dotted $colour-danger;
-//     box-shadow: inset 0 0 0 3px $colour-white, inset 0 0 0 50px $colour-danger-light;
-//     color: $colour-text;
-
-//     &::after {
-//         content: '\f057';
-//         color: $colour-danger;
-//     }
-
-//     &:hover::after {
-//         content: '\f056';
-//         color: $colour-text;
-//     }
-// }
-
-// .calendar-review__list {
-//     margin-bottom: 1em;
-
-//     li {
-//         font-family: $font-family-monospace;
-//     }
-// }
-
-// .list-heading {
-//     border-bottom: 1px solid $colour-border;
-//     display: block;
-//     font-family: $font-family-regular;
-//     margin-bottom: 1em;
-//     width: 100%;
-// }
-
-// .calendar-review li {
-//     background-color: $colour-white;
-//     border-radius: $border-radius;
-//     margin-left: -10px;
-//     padding: 0 10px;
-//     -webkit-transition: background-color 1s ease-in-out;
-// }
-
-// .calendar-review li.has-changed {
-//     background-color: $colour-info;
-//     -webkit-transition: background-color 0s ease-in-out;
-// }
-
-// .calendar-nav-prev {
-//     float: left;
-// }
-
-// .calendar-nav-next {
-//     float: right;
-//     margin-right: $gutter-width !important;
-// }
-
-// .form__control.calendar-nav-month,
-// .form__control.calendar-nav-year {
-//     height: 35px;
-//     line-height: 35px;
-// }
-
-// .form__control.calendar-nav-month {
-//     width: 30%;
-// }
-
-// .form__control.calendar-nav-year {
-//     width: 16%;
-// }

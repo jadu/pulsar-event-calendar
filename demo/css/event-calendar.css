@@ -2451,10 +2451,10 @@
     color: #737373;
     cursor: not-allowed; }
   .clndr .event-add > .day-contents {
-    background-color: #fff;
-    border: 2px dotted #297c46;
-    color: #000;
-    box-shadow: inset 0 0 0 3px #fff, inset 0 0 0 50px #cfefda; }
+    background-color: #2575b0;
+    border: 2px solid #1e1e1e;
+    box-shadow: inset 0 0 0 3px #fff;
+    color: #fff; }
     .clndr .event-add > .day-contents::after {
       color: #297c46;
       content: ""; }
@@ -2462,10 +2462,10 @@
       color: #000;
       content: ""; }
   .clndr .event-repeat > .day-contents {
-    background-color: #fff;
-    border: 2px solid #297c46;
-    color: #000;
-    box-shadow: inset 0 0 0 3px #fff, inset 0 0 0 50px #cfefda; }
+    background-color: #2575b0;
+    border: 2px solid #1e1e1e;
+    box-shadow: inset 0 0 0 3px #fff;
+    color: #fff; }
     .clndr .event-repeat > .day-contents::after {
       color: #297c46;
       content: ""; }
@@ -2504,10 +2504,23 @@
     list-style-type: none;
     padding: 0; }
     .clndr .event-calendar-summary li {
-      margin-bottom: 1em; }
+      line-height: 1.5em;
+      margin-bottom: .3em; }
+    .clndr .event-calendar-summary .fa {
+      margin-right: 10px; }
+    .clndr .event-calendar-summary .label {
+      margin-left: 10px; }
   .clndr .label {
-    background-color: #ccc;
     border-radius: 4px;
+    line-height: 1.5em;
     padding: 0 4px; }
+  .clndr .label--success {
+    border: 2px solid #1e1e1e; }
+  .clndr .label--danger {
+    border: 2px dotted #c84d40; }
+  .clndr .icon--success {
+    color: #297c46; }
+  .clndr .icon--danger {
+    color: #c84d40; }
 
 /*# sourceMappingURL=event-calendar.css.map */
