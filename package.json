@@ -28,7 +28,7 @@
         "build": "browserify index.js --outfile dist/EventCalendar.js",
         "jshint": "jshint .",
         "mocha": "mochify -r ./test/harness --recursive --reporter spec",
-        "test": "npm run jshint && npm run mocha"
+        "test": "npm run mocha"
     },
     "dependencies": {
         "clndr": "^1.4.7",

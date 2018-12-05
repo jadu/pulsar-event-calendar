@@ -1,5 +1,5 @@
 const $ = require('jquery');
-const EventCal = require('./src/EventCalendar');
+const EventCalendar = require('./src/EventCalendar');
 
 $(function () {
 
@@ -10,6 +10,6 @@ $(function () {
 
     let startDate = '2019-07-04';
 
-    const clndr = new EventCal($('html'));
+    const clndr = new EventCalendar($('html'));
     clndr.init(startDate, null, myEvents);
 });
