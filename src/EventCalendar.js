@@ -27,13 +27,18 @@ class EventCalendar {
     init (startDate, endDate, events) {
         if (typeof this.$html === 'undefined' || !this.$html.length) {
             throw new Error('$html must be passed to EventCalendar');
+        }   
+
+        let $container = this.$html.find('.js-event-calendar');
+
+        if (typeof $container === 'undefined' || !$container.length) {
+            throw new Error('EventCalendar requires a .js-event-calendar element present in the DOM');
         }
 
         let _self = this,
             clndrStart = (startDate) ? moment(startDate) : moment(new Date()).subtract(1, 'day'),
             clndrEnd = (endDate) ? moment(endDate) : moment(new Date()).add(15, 'years'),
             clndrEvents = (events) ? events : [],
-            $container = this.$html.find('.js-event-calendar'),
             $weekdayPicker = this.$html.find('.js-ercal-weekdays'),
             clndrTemplate = `
                 <div class='clndr-controls'>
@@ -281,8 +286,7 @@ class EventCalendar {
                 newPattern = clndr.options.selectedDate.recur().every(2).weeks();
                 break;
             case 'monthly-day':
-                // TODO: this doesn't work?
-                newPattern = clndr.options.selectedDate.recur().every(clndr.options.selectedDate.day()).daysOfMonth();
+                newPattern = clndr.options.selectedDate.recur().every(clndr.options.selectedDate.day()).daysOfWeek().every(0).weeksOfMonthByDay();
                 break;
             case 'monthly-date':
                 newPattern = clndr.options.selectedDate.recur().every(1).months();
@@ -456,7 +460,7 @@ class EventCalendar {
         this.updateReview(clndr);
 
         // Return to the initial view
-        clndr.today();
+        clndr.setMonth(clndr.options.startWithMonth.month());
     }
 
 }
