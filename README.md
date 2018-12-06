@@ -94,6 +94,8 @@ $(function () {
 
 # Repeat pattern
 
+An event can be set to reoccur on specific dates based on a repeat pattern, these patterns will be based on the `startDate` if defined (or the current day if it isn't).
+
 | Option | Value |
 | ------ | ----- |
 | No repeat | `no-repeat` |
@@ -160,3 +162,27 @@ This set of fields will be hidden until the `weekday` option is chosen.
     </label>
 </fieldset>
 ```
+
+## Saving the data
+
+As the user interacts with the calendar they will either add new dates to the list of upcoming occurences, or dates that should be removed from the list of upcoming occurences.
+
+The following data structures hold the date information which will need to be saved.
+
+## Recur pattern
+
+`clndr.recurPattern`
+
+The recurrence pattern which defines which dates should be added, because the pattern can potentially select thousands of dates, we don't store a list of dates this pattern will hit. That should be calculated by applying the pattern to the `startDate`.
+
+## Dates to add
+
+`clndr.options.extras.datesToAdd`
+
+An array of Moment objects referencing specific dates which the event should recur on, these are based on user-choice rather than the recur pattern.
+
+## Dates to delete
+
+`clndr.options.extras.datesToDel`
+
+An array of Moment objects referencing dates which already exist in the calendar (defined by the Selected Events) but which the user would like to remove from the list of selected events.
