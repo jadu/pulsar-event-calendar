@@ -16,7 +16,7 @@ npm install pulsar-event-calendar --save
 
 The Event Calendar requires an element with the `.js-event-calendar` class to be present in the DOM.
 
-```
+```html
 <div class="js-event-calendar"></div>
 ```
 
@@ -24,7 +24,7 @@ The Event Calendar requires an element with the `.js-event-calendar` class to be
 
 You will need to initialise the Event Calendar from a file within your Browserify bundle.
 
-```
+```javascript
 const $ = require('jquery');
 const EventCalendar = require('./src/EventCalendar');
 
@@ -38,7 +38,7 @@ $(function () {
 
 Include the Event Calendar styles into your existing Sass bundle.
 
-```
+```scss
 @import '/path/to/pulsar-event-calendar/src/scss/event-calendar.scss
 ```
 
@@ -48,7 +48,7 @@ Include the Event Calendar styles into your existing Sass bundle.
 
 The initial date which will be selected within the calendar can be passed as an initialisation option.
 
-```
+```javascript
 $(function () {
     let startDate = '2019-07-04';
 
@@ -63,7 +63,7 @@ Usually you would want to let the user choose a start date from a date field wit
 
 To automatically populate a list of already selected events you can pass an array of dates formatted as `YYYY-MM-DD`.
 
-```
+```javascript
 $(function () {
     let events = [
         { date: '2019-07-25' },
@@ -82,7 +82,7 @@ The Event Calendar can be constrained to not allow the user to navigate past a c
 
 Pass a Moment compatible date (like `YYYY-MM-DD`) as the second option to the `init()` method.
 
-```
+```javascript
 $(function () {
     let startDate = '2019-07-04',
         endDate = '2020-12-31';
@@ -106,7 +106,7 @@ $(function () {
 
 Event Calendar will look for a select field with the `js-ercal-repeat` class and update the calendar when the value of this field changes.
 
-```
+```html
 <label for="repeat">Repeat</legend>
 
 <select id="repeat" class="js-ercal-repeat">
@@ -126,7 +126,7 @@ The `weekly` option can allow the user to choose which days of the week the even
 
 This set of fields will be hidden until the `weekday` option is chosen.
 
-```
+```html
 <fieldset class="js-ercal-weekdays" style="display: none;">
     <legend>Repeat on</legend>
 
