@@ -169,19 +169,19 @@ As the user interacts with the calendar they will either add new dates to the li
 
 The following data structures hold the date information which will need to be saved.
 
-## Recur pattern
+### Recur pattern
 
 `clndr.recurPattern`
 
-The recurrence pattern which defines which dates should be added, because the pattern can potentially select thousands of dates, we don't store a list of dates this pattern will hit. That should be calculated by applying the pattern to the `startDate`.
+The recur pattern  defines which dates should be added, because the pattern can potentially select thousands of dates we don't store a list of dates this pattern will hit for performance reasons. Those can be calculated by applying the recur pattern to the `startDate`.
 
-## Dates to add
+### Dates to add
 
 `clndr.options.extras.datesToAdd`
 
 An array of Moment objects referencing specific dates which the event should recur on, these are based on user-choice rather than the recur pattern.
 
-## Dates to delete
+### Dates to delete
 
 `clndr.options.extras.datesToDel`
 
