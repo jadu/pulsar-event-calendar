@@ -36,7 +36,8 @@ class EventCalendar {
         }
 
         let _self = this,
-            clndrStart = (startDate) ? moment(startDate) : moment(new Date()).subtract(1, 'day'),
+            clndrSelected = (startDate) ? moment(startDate) : moment(new Date()),
+            clndrStart = (startDate) ? moment(startDate) : moment(new Date()).subtract(1, 'days'),
             clndrEnd = (endDate) ? moment(endDate) : moment(new Date()).add(15, 'years'),
             clndrEvents = (events) ? events : [],
             $weekdayPicker = this.$html.find('.js-ercal-weekdays'),
@@ -93,6 +94,8 @@ class EventCalendar {
 
         let precompiledTemplate = _.template(clndrTemplate);
 
+        moment.locale('en');
+
         let clndr = $container.clndr({
             clickEvents: {
                 click: function(target) {
@@ -111,7 +114,8 @@ class EventCalendar {
                 datesToAdd: [],
                 datesToDel: []
             },
-            selectedDate: clndrStart,
+            moment: moment,
+            selectedDate: clndrSelected,
             showAdjacentMonths: false,
             render: function (data) {
                 // monthNumerical is used to create the data-day attribute on day buttons
@@ -119,8 +123,7 @@ class EventCalendar {
 
                 return precompiledTemplate(data);
             },
-            startWithMonth: clndrStart,
-            weekOffset: 1
+            startWithMonth: clndrStart
         });
 
         // Reset all selected dates
@@ -157,6 +160,7 @@ class EventCalendar {
         _self.$html.find('[name="ercal-weekdays"]').on('change', function() {
             _self.toggleWeekday(clndr);
         });
+
     }
 
     toggleWeekday (clndr) {
