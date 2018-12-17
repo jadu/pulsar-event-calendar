@@ -9,6 +9,7 @@ describe('EventCalendar', () => {
     const clickEvent = $.Event('click');
     let $html,
         $body,
+        clndr,
         eventCalendar,
         eventCalendarWithoutHTML,
         customStartDate = '1981-07-04';
@@ -163,12 +164,29 @@ describe('EventCalendar', () => {
     describe('clicking a previously unselected date', () => {
         beforeEach(() => {
             eventCalendar.init('2018-07-01');
-
+            
             $html.find('[data-day="2018-07-04"]').trigger(clickEvent);
         });
         
-        it('should add the appropriate styling to the desired date', () => {
-            expect($html.find('[data-day="2018-07-04"]').hasClass('event-add')).to.be.true;
+        it('should add the appropriate styling to the target date', () => {
+            expect($html.find('[data-day="2018-07-04"]').parent().hasClass('event-add')).to.be.true;
+        });
+        
+        it('should add to target date the array of datesToAdd', () => {
+            //console.log(clndr.options.extras.datesToAdd);
+        });
+    });
+
+
+    describe('clicking a date before the startDate', () => {
+        beforeEach(() => {
+            eventCalendar.init('2018-07-04');
+
+            $html.find('[data-day="2018-07-01"]').trigger(clickEvent);
+        });
+
+        it('should not add any visual styling to the target date', () => {
+            expect($html.find('[data-day="2018-07-01"]').parent().hasClass('event-del event-add')).to.be.false;
         });
     });
 
