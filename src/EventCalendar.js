@@ -17,6 +17,7 @@ class EventCalendar {
      * EventCalendar
      * @constructor
      * @param {jQuery} $html - jQuery wrapper of the html node
+     * @param {jQuery} clndr - The clndr instance that is in use
      */
     constructor ($html) {
         this.$html = $html;
@@ -24,7 +25,19 @@ class EventCalendar {
     }
 
     /**
-     * Initialise
+     * 
+     * @param {string} startDate - Specifies the month and year which will be initially focused by the calendar, dates 
+     * before this will not be interactive. Will default to the user's current date if not supplied or is null 
+     * (format: YYYY-MM-DD).
+     * @param {string} endDate - Specififies the end of dates made available to the user. Defaults to 
+     * startDate + 15 years if not supplied. (format: YYYY-MM-DD).
+     * @param {array}  events - An array of simple dates that should be highlighted in the calendar as selected. 
+     *
+     * let exampleEvents = [
+     *    { date: 'YYYY-MM-DD' },
+     *    { date: 'YYYY-MM-DD' },
+     *    { date: 'YYYY-MM-DD' }
+     * ];
      */
     init (startDate, endDate, events) {
         if (typeof this.$html === 'undefined' || !this.$html.length) {
@@ -96,6 +109,7 @@ class EventCalendar {
 
         let precompiledTemplate = _.template(clndrTemplate);
 
+        // TODO: Finish making the week start on a Monday
         moment.locale('en');
 
         _self.clndr = $container.clndr({
@@ -164,9 +178,13 @@ class EventCalendar {
         });
 
         return _self.clndr;
-
     }
 
+    /**
+     * Toggle Weekday
+     * 
+     * Takes the values from the weekday checkboxes (MTWTFSS), defines that as a recur pattern, then paints it.
+     */
     toggleWeekday () {
         let _self = this,
             pattern = [];
@@ -182,8 +200,7 @@ class EventCalendar {
     /**
      * Toggle Day
      * 
-     * @param {*} clndr The calendar object
-     * @param {*} target The day being clicked
+     * @param {jquery} target The day being clicked
      * 
      * Fired when a day is clicked, and chooses which actions should be performed based on the classes present on the 
      * button's parent `<td>`
@@ -389,7 +406,7 @@ class EventCalendar {
     }
 
     styleToDel (target) {
-        let 
+        let _self = this,
             $elem = _self.clndr.element.find('[data-day="' + target.format('YYYY-MM-DD') + '"]');
         
         $elem.parent().removeClass('event-add').addClass('event-del');
@@ -483,10 +500,7 @@ class EventCalendar {
 
     getDates () {
         let _self = this;
-
-        console.log('dates');
-        console.log(_self.clndr.options.extras.datesToAdd);
-        
+        return _self.clndr.options.extras;
     }
 
 }

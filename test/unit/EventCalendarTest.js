@@ -161,19 +161,95 @@ describe('EventCalendar', () => {
     });
 
 
-    describe('clicking a previously unselected date', () => {
+    describe('choosing a previously unselected date', () => {
         beforeEach(() => {
             eventCalendar.init('2018-07-01');
-            
-            $html.find('[data-day="2018-07-04"]').trigger(clickEvent);
         });
         
         it('should add the appropriate styling to the target date', () => {
+            $html.find('[data-day="2018-07-04"]').click();
             expect($html.find('[data-day="2018-07-04"]').parent().hasClass('event-add')).to.be.true;
+        });
+
+        it('the datesToAdd and datesToDel arrays should be empty', () => {
+            let dates = eventCalendar.getDates();
+            expect(dates.datesToAdd.length).to.equal(0);
+            expect(dates.datesToDel.length).to.equal(0);
         });
         
         it('should add to target date the array of datesToAdd', () => {
-            //console.log(clndr.options.extras.datesToAdd);
+            $html.find('[data-day="2018-07-04"]').click();
+            
+            let dates = eventCalendar.getDates();
+            expect(dates.datesToAdd.length).to.equal(1);
+            expect(dates.datesToDel.length).to.equal(0);
+        });
+
+        it('should show the toAdd information in the review panel', () => {
+            $html.find('[data-day="2018-07-04"]').click();
+
+            expect($html.find('.js-dates-to-add').attr('style')).to.equal('display: inline;');
+        });
+
+        it('should update the toAdd information with the current number', () => {
+            $html.find('[data-day="2018-07-04"]').click();
+
+            expect($html.find('.js-dates-to-add').html()).to.equal('1 day will be added');
+        });
+
+        it('should not show the toDel information in the review panel', () => {
+            $html.find('[data-day="2018-07-04"]').click();
+
+            expect($html.find('.js-dates-to-del').attr('style')).to.equal('display: none;');
+        });
+
+        it('should not contain a count in the toDel information', () => {
+            $html.find('[data-day="2018-07-04"]').click();
+
+            expect($html.find('.js-dates-to-del').html()).to.equal('');
+        });
+    });
+
+    describe('choosing a previously selected date (one that was passed on init())', () => {
+        beforeEach(() => {
+            eventCalendar.init('2018-07-01', null, [{ date: '2018-07-04' }]);
+        });
+        
+        it('should add the appropriate styling to the target date', () => {
+            $html.find('[data-day="2018-07-04"]').click();
+            expect($html.find('[data-day="2018-07-04"]').parent().hasClass('event-del')).to.be.true;
+        });
+        
+        it('should add to target date the array of datesToDel', () => {
+            $html.find('[data-day="2018-07-04"]').click();
+            
+            let dates = eventCalendar.getDates();
+            expect(dates.datesToAdd.length).to.equal(0);
+            expect(dates.datesToDel.length).to.equal(1);
+        });
+
+        it('should show the toDel information in the review panel', () => {
+            $html.find('[data-day="2018-07-04"]').click();
+
+            expect($html.find('.js-dates-to-del').attr('style')).to.equal('display: inline;');
+        });
+
+        it('should update the toDel information with the current number', () => {
+            $html.find('[data-day="2018-07-04"]').click();
+
+            expect($html.find('.js-dates-to-del').html()).to.equal('1 day will be removed');
+        });
+
+        it('should not show the toAdd information in the review panel', () => {
+            $html.find('[data-day="2018-07-04"]').click();
+
+            expect($html.find('.js-dates-to-add').attr('style')).to.equal('display: none;');
+        });
+
+        it('should not contain a count in the toAdd information', () => {
+            $html.find('[data-day="2018-07-04"]').click();
+
+            expect($html.find('.js-dates-to-add').html()).to.equal('');
         });
     });
 
@@ -182,13 +258,65 @@ describe('EventCalendar', () => {
         beforeEach(() => {
             eventCalendar.init('2018-07-04');
 
-            $html.find('[data-day="2018-07-01"]').trigger(clickEvent);
+            $html.find('[data-day="2018-07-01"]').click();
         });
 
         it('should not add any visual styling to the target date', () => {
             expect($html.find('[data-day="2018-07-01"]').parent().hasClass('event-del event-add')).to.be.false;
         });
+
+        it('should not be added to the datesToAdd or datesToDel arrays', () => {
+            let dates = eventCalendar.getDates();
+
+            expect(dates.datesToAdd.length).to.equal(0);
+            expect(dates.datesToDel.length).to.equal(0);
+        });
     });
+
+
+    describe('clicking the next month arrow', () => {
+        beforeEach(() => {
+            eventCalendar.init('2018-01-01');
+            $html.find('.clndr-next-button').click();
+        });
+
+        it('should show the next month in the header', () => {
+            expect($html.find('.month').text()).to.equal('February 2018');
+        });
+    });
+
+
+    describe('clicking the previous month arrow', () => {
+        beforeEach(() => {
+            eventCalendar.init('2018-01-01');
+            $html.find('.clndr-next-button').click();
+            $html.find('.clndr-previous-button').click();
+        });
+
+        it('should show the previous month in the header', () => {
+            expect($html.find('.month').text()).to.equal('January 2018');
+        });
+    });
+
+    describe('clicking the reset button', () => {
+        beforeEach(() => {
+            eventCalendar.init('2018-01-01', null, [{ date: '2018-01-10' }]);
+        });
+        
+        it('should empty the datesToAdd and datesToDel arrays', () => {
+            $html.find('[data-day="2018-01-02"]').click();
+            $html.find('[data-day="2018-01-10"]').click();
+            let dates = eventCalendar.getDates();
+
+            expect(dates.datesToAdd.length).to.equal(1);
+            expect(dates.datesToDel.length).to.equal(1);
+
+            $html.find('.js-ercal-reset').click();
+            expect(dates.datesToAdd.length).to.equal(0);
+            expect(dates.datesToDel.length).to.equal(0);
+        });
+    });
+
 
 });
 
