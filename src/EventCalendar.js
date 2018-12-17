@@ -5,6 +5,7 @@
 'use strict';
 
 require('jquery');
+import $ from 'jquery';
 var moment = require('moment');
 require('moment-recur');
 window._ = require('underscore');
@@ -19,6 +20,7 @@ class EventCalendar {
      */
     constructor ($html) {
         this.$html = $html;
+        this.clndr;
     }
 
     /**
@@ -96,13 +98,13 @@ class EventCalendar {
 
         moment.locale('en');
 
-        let clndr = $container.clndr({
+        _self.clndr = $container.clndr({
             clickEvents: {
                 click: function(target) {
-                    _self.toggleDay(this, target);
+                    _self.toggleDay(target);
                 },
                 onMonthChange: function (month) {
-                    _self.paintMonth(this, month);
+                    _self.paintMonth(month);
                 },
             },
             constraints: {
@@ -128,7 +130,7 @@ class EventCalendar {
 
         // Reset all selected dates
         $container.on('click', '.js-ercal-reset', function() {
-            _self.resetCalendar(clndr);
+            _self.resetCalendar();
         });
 
         // Recalculate upcoming occurences based on the pattern dropdown
@@ -145,7 +147,7 @@ class EventCalendar {
             }
 
             // Unpaint the currently stored pattern
-            _self.paintMonth(clndr, clndr.month, 'clear');
+            _self.paintMonth(clndr.month, 'clear');
 
             /*
                 Set the new repeat pattern
@@ -153,17 +155,19 @@ class EventCalendar {
                 Any dates in the datesToAdd / datesToDel collections will maintain their state
                 and override the pattern
             */
-            _self.setPattern(clndr, pattern);
-            _self.paintMonth(clndr, clndr.month, 'repeat-on');
+            _self.setPattern(pattern);
+            _self.paintMonth(clndr.month, 'repeat-on');
         });
 
         _self.$html.find('[name="ercal-weekdays"]').on('change', function() {
-            _self.toggleWeekday(clndr);
+            _self.toggleWeekday();
         });
+
+        return _self.clndr;
 
     }
 
-    toggleWeekday (clndr) {
+    toggleWeekday () {
         let _self = this,
             pattern = [];
             
@@ -171,8 +175,8 @@ class EventCalendar {
             pattern.push($(this).val());
         });
 
-        _self.setPattern(clndr, 'weekdays', pattern);
-        _self.paintMonth(clndr, clndr.month, 'repeat-on');
+        _self.setPattern('weekdays', pattern);
+        _self.paintMonth(this.clndr.month, 'repeat-on');
     }
 
     /**
@@ -192,12 +196,13 @@ class EventCalendar {
      *                          or to prevent a pattern taking effect on this date
      *      5. Selected     - The start date for the repeat pattern
      */
-    toggleDay (clndr, target) {
-        let $elem = $(target.element),
+    toggleDay (target) {
+        let _self = this,
+            $elem = $(target.element),
             date = target.date,
             $control = $elem.find('.day-contents'),
-            datesToAdd = clndr.options.extras.datesToAdd,
-            datesToDel = clndr.options.extras.datesToDel;
+            datesToAdd = _self.clndr.options.extras.datesToAdd,
+            datesToDel = _self.clndr.options.extras.datesToDel;
             
         // Remove yellow focus outline on click
         $control.blur();
@@ -213,13 +218,13 @@ class EventCalendar {
             // If the button is currently [4. To Delete]
             if ($elem.hasClass('event-add')) {
                 // Unset it from [3. To Add] by removing it from the datesToAdd collection
-                clndr.options.extras.datesToAdd = datesToAdd.filter(EventCalendar.matchDates.bind(this, date));
+                _self.clndr.options.extras.datesToAdd = datesToAdd.filter(EventCalendar.matchDates.bind(this, date));
             }
             else if ($elem.hasClass('event-repeat')) {
                 
                 if ($elem.hasClass('event-del')) {
                     // Remove it from the datesToDel collection
-                    clndr.options.extras.datesToDel = datesToDel.filter(EventCalendar.matchDates.bind(this, date));
+                    _self.clndr.options.extras.datesToDel = datesToDel.filter(EventCalendar.matchDates.bind(this, date));
                 } 
                 else {
                     // Set it to [4. To Delete] by adding it to the datesToDel collection
@@ -239,7 +244,7 @@ class EventCalendar {
             // If the button is currently [5. Selected]
             else {
                 // Remove it from the datesToDel collection
-                clndr.options.extras.datesToDel = datesToDel.filter(EventCalendar.matchDates.bind(this, date));
+                _self.clndr.options.extras.datesToDel = datesToDel.filter(EventCalendar.matchDates.bind(this, date));
             }
         }
 
@@ -251,12 +256,12 @@ class EventCalendar {
             }
             else if ($elem.hasClass('event-del')) {
                 // Restore initial styling by removing it from the datesToDel collection
-                clndr.options.extras.datesToDel = datesToDel.filter(EventCalendar.matchDates.bind(this, date));
+                _self.clndr.options.extras.datesToDel = datesToDel.filter(EventCalendar.matchDates.bind(this, date));
             }
         }
 
-        this.paintMonth(clndr, clndr.month);
-        this.updateReview(clndr);
+        _self.paintMonth(_self.clndr.month);
+        _self.updateReview();
     }
 
     /**
@@ -269,7 +274,7 @@ class EventCalendar {
      * Takes the value of the pattern dropdown and generates a recur pattern based on the selected start date.
      * The pattern is saved and used when painting each month.
      */
-    setPattern (clndr, pattern, weekdays) {
+    setPattern (pattern, weekdays) {
         let _self = this,
             newPattern;
    
@@ -278,25 +283,25 @@ class EventCalendar {
                 newPattern = null;
                 break;
             case 'daily':
-                newPattern = clndr.options.selectedDate.recur().every(1).days();
+                newPattern = _self.clndr.options.selectedDate.recur().every(1).days();
                 break;
             case 'weekly':
-                newPattern = clndr.options.selectedDate.recur().every(1).weeks();
+                newPattern = _self.clndr.options.selectedDate.recur().every(1).weeks();
                 break;
             case 'weekdays':
-                newPattern = clndr.options.selectedDate.recur().every(weekdays).daysOfWeek();
+                newPattern = _self.clndr.options.selectedDate.recur().every(weekdays).daysOfWeek();
                 break
             case 'two-weekly':
-                newPattern = clndr.options.selectedDate.recur().every(2).weeks();
+                newPattern = _self.clndr.options.selectedDate.recur().every(2).weeks();
                 break;
             case 'monthly-day':
-                newPattern = clndr.options.selectedDate.recur().every(clndr.options.selectedDate.day()).daysOfWeek().every(0).weeksOfMonthByDay();
+                newPattern = _self.clndr.options.selectedDate.recur().every(_self.clndr.options.selectedDate.day()).daysOfWeek().every(0).weeksOfMonthByDay();
                 break;
             case 'monthly-date':
-                newPattern = clndr.options.selectedDate.recur().every(1).months();
+                newPattern = _self.clndr.options.selectedDate.recur().every(1).months();
                 break;
             case 'annually':
-                newPattern = clndr.options.selectedDate.recur().every(1).year();
+                newPattern = _self.clndr.options.selectedDate.recur().every(1).year();
                 break;
             default:
                 return false;
@@ -305,109 +310,115 @@ class EventCalendar {
         _self.recurPattern = newPattern;
     }
 
-    paintRepeatPattern (clndr, method) {    
+    paintRepeatPattern (method) {    
         let _self = this,
             recurDatesThisMonth = _self.recurPattern
-                                    .startDate(clndr.options.selectedDate)
-                                    .endDate(clndr.intervalEnd)
+                                    .startDate(_self.clndr.options.selectedDate)
+                                    .endDate(_self.clndr.intervalEnd)
                                     .all();
 
         var method = (method) ? method : 'repeat-on';
 
-        _self.paintDates(clndr, recurDatesThisMonth, method);
+        _self.paintDates(recurDatesThisMonth, method);
     }
 
-    paintDates (clndr, dates, method) {
+    paintDates (dates, method) {
         let _self = this;
    
         $.each(dates, function() {
             switch (method) {
                 case 'del':
-                    _self.styleToDel(clndr, this);
+                    _self.styleToDel(this);
                     break;
                 case 'clear':
-                    _self.styleClear(clndr, this);
+                    _self.styleClear(this);
                     break;
                 case 'repeat-on':
-                    _self.styleRepeatOn(clndr, this);
+                    _self.styleRepeatOn(this);
                     break;
                 case 'add':
                 default:
-                    _self.styleToAdd(clndr, this);
+                    _self.styleToAdd(this);
                     break;
             }
         });
     }
 
 
-    paintMonth (clndr, month, method) {
+    paintMonth (month, method) {
         let _self = this;
 
         // Unpaint the entire month, used to catch any dates resetting to neutral
-        _self.styleClearAll(clndr);
+        _self.styleClearAll();
 
         // Repeat pattern to paint for the displayed month
         if (_self.recurPattern != null) {
-            _self.paintRepeatPattern(clndr, method);
+            _self.paintRepeatPattern(method);
         }
 
         // Exceptions to paint as to-add
-        if (clndr.options.extras.datesToAdd.length) {
-            const datesToAdd = clndr.options.extras.datesToAdd
+        if (_self.clndr.options.extras.datesToAdd.length) {
+            const datesToAdd = _self.clndr.options.extras.datesToAdd
                                 .filter(EventCalendar.isInYear.bind(this, month))
                                 .filter(EventCalendar.isInMonth.bind(this, month));
 
             $.each(datesToAdd, function() {
-                _self.styleToAdd(clndr, this);
+                _self.styleToAdd(this);
             });
         }
         
         // Exceptions to paint as to-delete
-        if (clndr.options.extras.datesToDel.length) {
-            const datesToDel = clndr.options.extras.datesToDel
+        if (_self.clndr.options.extras.datesToDel.length) {
+            const datesToDel = _self.clndr.options.extras.datesToDel
                                 .filter(EventCalendar.isInYear.bind(this, month))
                                 .filter(EventCalendar.isInMonth.bind(this, month));
 
             $.each(datesToDel, function() {
-                _self.styleToDel(clndr, this);
+                _self.styleToDel(this);
             });
         }
         
-        _self.updateReview(clndr);
+        _self.updateReview();
     }
 
-    styleToAdd (clndr, target) {
-        let $elem = clndr.element.find('[data-day="' + target.format('YYYY-MM-DD') + '"]');
+    styleToAdd (target) {
+        let _self = this,
+            $elem = _self.clndr.element.find('[data-day="' + target.format('YYYY-MM-DD') + '"]');
 
         $elem.parent().addClass('event-add');
     }
 
-    styleToDel (clndr, target) {
-        let $elem = clndr.element.find('[data-day="' + target.format('YYYY-MM-DD') + '"]');
+    styleToDel (target) {
+        let 
+            $elem = _self.clndr.element.find('[data-day="' + target.format('YYYY-MM-DD') + '"]');
         
         $elem.parent().removeClass('event-add').addClass('event-del');
     }
 
-    styleRepeatOn (clndr, target) {
-        let $elem = clndr.element.find('[data-day="' + target.format('YYYY-MM-DD') + '"]');
+    styleRepeatOn (target) {
+        let _self = this,
+            $elem = _self.clndr.element.find('[data-day="' + target.format('YYYY-MM-DD') + '"]');
 
         $elem.parent().addClass('event-repeat');
     }
 
-    styleClear (clndr, target) {
-        let $elem = clndr.element.find('[data-day="' + target.format('YYYY-MM-DD') + '"]');
+    styleClear (target) {
+        let _self = this,
+            $elem = _self.clndr.element.find('[data-day="' + target.format('YYYY-MM-DD') + '"]');
         
         $elem.parent().removeClass('event-add event-del event-repeat');
     }
 
-    styleClearAll (clndr) {
-        let $elems = clndr.element.find('.day');
+    styleClearAll () {
+        let _self = this,
+            $elems = _self.clndr.element.find('.day');
         
         $elems.removeClass('event-add event-del event-repeat');
     }
 
-    styleReset (clndr, target) {
-        let $elem = clndr.element.find('[data-day="' + target.date.date._i + '"]');
+    styleReset (target) {
+        let _self = this,
+            $elem = _self.clndr.element.find('[data-day="' + target.date.date._i + '"]');
         
         $elem.parent().addClass('event-del');
     }
@@ -424,12 +435,13 @@ class EventCalendar {
         return a._i != b._i;
     }
     
-    updateReview (clndr) {
-        const numDatesToAdd = clndr.options.extras.datesToAdd.length,
-              numDatesToDel = clndr.options.extras.datesToDel.length,
-              datesToAddContainer = clndr.element.find('.js-dates-to-add'),
-              datesToDelContainer = clndr.element.find('.js-dates-to-del'),
-              resetButton = clndr.element.find('.js-calendar-reset');
+    updateReview () {
+        let _self = this,
+            numDatesToAdd = _self.clndr.options.extras.datesToAdd.length,
+            numDatesToDel = _self.clndr.options.extras.datesToDel.length,
+            datesToAddContainer = _self.clndr.element.find('.js-dates-to-add'),
+            datesToDelContainer = _self.clndr.element.find('.js-dates-to-del'),
+            resetButton = _self.clndr.element.find('.js-calendar-reset');
 
         if (numDatesToAdd > 0) {
             datesToAddContainer.html((numDatesToAdd === 1) 
@@ -455,16 +467,26 @@ class EventCalendar {
         }
     }
 
-    resetCalendar (clndr) {
+    resetCalendar () {
+        let _self = this;
+
         // Empty the lists of changes to add/del
-        clndr.options.extras.datesToAdd = [];
-        clndr.options.extras.datesToDel = [];
+        _self.clndr.options.extras.datesToAdd = [];
+        _self.clndr.options.extras.datesToDel = [];
         
         // Remove the review changes information
-        this.updateReview(clndr);
+        _self.updateReview();
 
         // Return to the initial view
-        clndr.setMonth(clndr.options.startWithMonth.month());
+        _self.clndr.setMonth(_self.clndr.options.startWithMonth.month());
+    }
+
+    getDates () {
+        let _self = this;
+
+        console.log('dates');
+        console.log(_self.clndr.options.extras.datesToAdd);
+        
     }
 
 }
