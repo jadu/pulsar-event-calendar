@@ -22,7 +22,7 @@
       <div class='fl pad1y space-right2'>
         <span class="strong">100% </span>
         <span class="quiet">Statements</span>
-        <span class='fraction'>161/161</span>
+        <span class='fraction'>627/627</span>
       </div>
       <div class='fl pad1y space-right2'>
         <span class="strong">100% </span>
@@ -32,12 +32,12 @@
       <div class='fl pad1y space-right2'>
         <span class="strong">100% </span>
         <span class="quiet">Functions</span>
-        <span class='fraction'>64/64</span>
+        <span class='fraction'>217/217</span>
       </div>
       <div class='fl pad1y space-right2'>
         <span class="strong">100% </span>
         <span class="quiet">Lines</span>
-        <span class='fraction'>161/161</span>
+        <span class='fraction'>627/627</span>
       </div>
     </div>
   </div>
@@ -365,7 +365,863 @@
 320
 321
 322
-323</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+323
+324
+325
+326
+327
+328
+329
+330
+331
+332
+333
+334
+335
+336
+337
+338
+339
+340
+341
+342
+343
+344
+345
+346
+347
+348
+349
+350
+351
+352
+353
+354
+355
+356
+357
+358
+359
+360
+361
+362
+363
+364
+365
+366
+367
+368
+369
+370
+371
+372
+373
+374
+375
+376
+377
+378
+379
+380
+381
+382
+383
+384
+385
+386
+387
+388
+389
+390
+391
+392
+393
+394
+395
+396
+397
+398
+399
+400
+401
+402
+403
+404
+405
+406
+407
+408
+409
+410
+411
+412
+413
+414
+415
+416
+417
+418
+419
+420
+421
+422
+423
+424
+425
+426
+427
+428
+429
+430
+431
+432
+433
+434
+435
+436
+437
+438
+439
+440
+441
+442
+443
+444
+445
+446
+447
+448
+449
+450
+451
+452
+453
+454
+455
+456
+457
+458
+459
+460
+461
+462
+463
+464
+465
+466
+467
+468
+469
+470
+471
+472
+473
+474
+475
+476
+477
+478
+479
+480
+481
+482
+483
+484
+485
+486
+487
+488
+489
+490
+491
+492
+493
+494
+495
+496
+497
+498
+499
+500
+501
+502
+503
+504
+505
+506
+507
+508
+509
+510
+511
+512
+513
+514
+515
+516
+517
+518
+519
+520
+521
+522
+523
+524
+525
+526
+527
+528
+529
+530
+531
+532
+533
+534
+535
+536
+537
+538
+539
+540
+541
+542
+543
+544
+545
+546
+547
+548
+549
+550
+551
+552
+553
+554
+555
+556
+557
+558
+559
+560
+561
+562
+563
+564
+565
+566
+567
+568
+569
+570
+571
+572
+573
+574
+575
+576
+577
+578
+579
+580
+581
+582
+583
+584
+585
+586
+587
+588
+589
+590
+591
+592
+593
+594
+595
+596
+597
+598
+599
+600
+601
+602
+603
+604
+605
+606
+607
+608
+609
+610
+611
+612
+613
+614
+615
+616
+617
+618
+619
+620
+621
+622
+623
+624
+625
+626
+627
+628
+629
+630
+631
+632
+633
+634
+635
+636
+637
+638
+639
+640
+641
+642
+643
+644
+645
+646
+647
+648
+649
+650
+651
+652
+653
+654
+655
+656
+657
+658
+659
+660
+661
+662
+663
+664
+665
+666
+667
+668
+669
+670
+671
+672
+673
+674
+675
+676
+677
+678
+679
+680
+681
+682
+683
+684
+685
+686
+687
+688
+689
+690
+691
+692
+693
+694
+695
+696
+697
+698
+699
+700
+701
+702
+703
+704
+705
+706
+707
+708
+709
+710
+711
+712
+713
+714
+715
+716
+717
+718
+719
+720
+721
+722
+723
+724
+725
+726
+727
+728
+729
+730
+731
+732
+733
+734
+735
+736
+737
+738
+739
+740
+741
+742
+743
+744
+745
+746
+747
+748
+749
+750
+751
+752
+753
+754
+755
+756
+757
+758
+759
+760
+761
+762
+763
+764
+765
+766
+767
+768
+769
+770
+771
+772
+773
+774
+775
+776
+777
+778
+779
+780
+781
+782
+783
+784
+785
+786
+787
+788
+789
+790
+791
+792
+793
+794
+795
+796
+797
+798
+799
+800
+801
+802
+803
+804
+805
+806
+807
+808
+809
+810
+811
+812
+813
+814
+815
+816
+817
+818
+819
+820
+821
+822
+823
+824
+825
+826
+827
+828
+829
+830
+831
+832
+833
+834
+835
+836
+837
+838
+839
+840
+841
+842
+843
+844
+845
+846
+847
+848
+849
+850
+851
+852
+853
+854
+855
+856
+857
+858
+859
+860
+861
+862
+863
+864
+865
+866
+867
+868
+869
+870
+871
+872
+873
+874
+875
+876
+877
+878
+879
+880
+881
+882
+883
+884
+885
+886
+887
+888
+889
+890
+891
+892
+893
+894
+895
+896
+897
+898
+899
+900
+901
+902
+903
+904
+905
+906
+907
+908
+909
+910
+911
+912
+913
+914
+915
+916
+917
+918
+919
+920
+921
+922
+923
+924
+925
+926
+927
+928
+929
+930
+931
+932
+933
+934
+935
+936
+937
+938
+939
+940
+941
+942
+943
+944
+945
+946
+947
+948
+949
+950
+951
+952
+953
+954
+955
+956
+957
+958
+959
+960
+961
+962
+963
+964
+965
+966
+967
+968
+969
+970
+971
+972
+973
+974
+975
+976
+977
+978
+979
+980
+981
+982
+983
+984
+985
+986
+987
+988
+989
+990
+991
+992
+993
+994
+995
+996
+997
+998
+999
+1000
+1001
+1002
+1003
+1004
+1005
+1006
+1007
+1008
+1009
+1010
+1011
+1012
+1013
+1014
+1015
+1016
+1017
+1018
+1019
+1020
+1021
+1022
+1023
+1024
+1025
+1026
+1027
+1028
+1029
+1030
+1031
+1032
+1033
+1034
+1035
+1036
+1037
+1038
+1039
+1040
+1041
+1042
+1043
+1044
+1045
+1046
+1047
+1048
+1049
+1050
+1051
+1052
+1053
+1054
+1055
+1056
+1057
+1058
+1059
+1060
+1061
+1062
+1063
+1064
+1065
+1066
+1067
+1068
+1069
+1070
+1071
+1072
+1073
+1074
+1075
+1076
+1077
+1078
+1079
+1080
+1081
+1082
+1083
+1084
+1085
+1086
+1087
+1088
+1089
+1090
+1091
+1092
+1093
+1094
+1095
+1096
+1097
+1098
+1099
+1100
+1101
+1102
+1103
+1104
+1105
+1106
+1107
+1108
+1109
+1110
+1111
+1112
+1113
+1114
+1115
+1116
+1117
+1118
+1119
+1120
+1121
+1122
+1123
+1124
+1125
+1126
+1127
+1128
+1129
+1130
+1131
+1132
+1133
+1134
+1135
+1136
+1137
+1138
+1139
+1140
+1141
+1142
+1143
+1144
+1145
+1146
+1147
+1148
+1149
+1150
+1151
+1152
+1153
+1154
+1155
+1156
+1157
+1158
+1159
+1160
+1161
+1162
+1163
+1164
+1165
+1166
+1167
+1168
+1169
+1170
+1171
+1172
+1173
+1174
+1175
+1176
+1177
+1178
+1179</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1×</span>
 <span class="cline-any cline-yes">1×</span>
@@ -382,14 +1238,55 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1×</span>
-<span class="cline-any cline-yes">39×</span>
-<span class="cline-any cline-yes">39×</span>
+<span class="cline-any cline-yes">156×</span>
+<span class="cline-any cline-yes">156×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">39×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">156×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1×</span>
-<span class="cline-any cline-yes">39×</span>
+<span class="cline-any cline-yes">156×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -577,6 +1474,42 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">6×</span>
+<span class="cline-any cline-yes">6×</span>
+<span class="cline-any cline-yes">6×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1×</span>
 <span class="cline-any cline-yes">1×</span>
 <span class="cline-any cline-yes">6×</span>
@@ -623,6 +1556,42 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1×</span>
 <span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">6×</span>
+<span class="cline-any cline-yes">6×</span>
+<span class="cline-any cline-yes">6×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
 <span class="cline-any cline-yes">2×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2×</span>
@@ -665,7 +1634,154 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">6×</span>
+<span class="cline-any cline-yes">6×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">31×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">28×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">9×</span>
+<span class="cline-any cline-yes">9×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">30×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">27×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">12×</span>
+<span class="cline-any cline-yes">12×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1×</span>
 <span class="cline-any cline-yes">1×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -674,6 +1790,16 @@
 <span class="cline-any cline-yes">1×</span>
 <span class="cline-any cline-yes">1×</span>
 <span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1×</span>
 <span class="cline-any cline-yes">1×</span>
@@ -681,7 +1807,593 @@
 <span class="cline-any cline-yes">1×</span>
 <span class="cline-any cline-yes">1×</span>
 <span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">9×</span>
+<span class="cline-any cline-yes">9×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">9×</span>
+<span class="cline-any cline-yes">9×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">9×</span>
+<span class="cline-any cline-yes">9×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">9×</span>
+<span class="cline-any cline-yes">9×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">12×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">12×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">12×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">8×</span>
+<span class="cline-any cline-yes">8×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">8×</span>
+<span class="cline-any cline-yes">8×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">8×</span>
+<span class="cline-any cline-yes">8×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">8×</span>
+<span class="cline-any cline-yes">8×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">8×</span>
+<span class="cline-any cline-yes">8×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">8×</span>
+<span class="cline-any cline-yes">8×</span>
+<span class="cline-any cline-yes">8×</span>
+<span class="cline-any cline-yes">8×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">8×</span>
+<span class="cline-any cline-yes">8×</span>
+<span class="cline-any cline-yes">8×</span>
+<span class="cline-any cline-yes">8×</span>
+<span class="cline-any cline-yes">8×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -705,7 +2417,48 @@ describe('EventCalendar', () =&gt; {
 &nbsp;
     beforeEach(() =&gt; {
         $html = $('&lt;div&gt;&lt;/div&gt;');
-        $body = $('&lt;body&gt;&lt;div class="js-event-calendar"&gt;&lt;/div&gt;&lt;/body&gt;').appendTo($html);
+        $body = $(`&lt;body&gt;
+        &lt;select class="js-ercal-repeat"&gt;
+            &lt;option value="no-repeat"&gt;No repeat&lt;/option&gt;
+            &lt;option value="daily"&gt;Daily&lt;/option&gt;
+            &lt;option value="weekly"&gt;Weekly&lt;/option&gt;
+            &lt;option value="two-weekly"&gt;Every two weeks&lt;/option&gt;
+            &lt;option value="monthly-day"&gt;Monthly, on this day of the month&lt;/option&gt;
+            &lt;option value="monthly-date"&gt;Monthly, on this date&lt;/option&gt;
+            &lt;option value="annually"&gt;Every year&lt;/option&gt;
+            &lt;option value="foo"&gt;This option should not exist&lt;/option&gt;
+        &lt;/select&gt;
+        &lt;fieldset class="js-ercal-weekdays" style="display: none;"&gt;
+            &lt;label&gt;
+                &lt;input value="1" name="ercal-weekdays" type="checkbox"&gt;
+                &lt;span&gt;MO&lt;/span&gt;
+            &lt;/label&gt;
+            &lt;label&gt;
+                &lt;input value="2" name="ercal-weekdays" type="checkbox"&gt;
+                &lt;span&gt;TU&lt;/span&gt;
+            &lt;/label&gt;
+            &lt;label&gt;
+                &lt;input value="3" name="ercal-weekdays" type="checkbox"&gt;
+                &lt;span&gt;WE&lt;/span&gt;
+            &lt;/label&gt;
+            &lt;label&gt;
+                &lt;input value="4" name="ercal-weekdays" type="checkbox"&gt;
+                &lt;span&gt;TH&lt;/span&gt;
+            &lt;/label&gt;
+            &lt;label&gt;
+                &lt;input value="5" name="ercal-weekdays" type="checkbox"&gt;
+                &lt;span&gt;FR&lt;/span&gt;
+            &lt;/label&gt;
+            &lt;label&gt;
+                &lt;input value="6" name="ercal-weekdays" type="checkbox"&gt;
+                &lt;span&gt;SA&lt;/span&gt;
+            &lt;/label&gt;
+            &lt;label&gt;
+                &lt;input value="7" name="ercal-weekdays" type="checkbox"&gt;
+                &lt;span&gt;SU&lt;/span&gt;
+            &lt;/label&gt;
+        &lt;/fieldset&gt;
+        &lt;div class="js-event-calendar"&gt;&lt;/div&gt;&lt;/body&gt;`).appendTo($html);
 &nbsp;
         eventCalendar = new EventCalendar($html);
     });
@@ -899,6 +2652,42 @@ describe('EventCalendar', () =&gt; {
         });
     });
 &nbsp;
+&nbsp;
+    describe('choosing then unchoosing a previously unselected date', () =&gt; {
+        beforeEach(() =&gt; {
+            eventCalendar.init('2018-07-01');
+            $html.find('[data-day="2018-07-04"]').click();
+            $html.find('[data-day="2018-07-04"]').click();
+        });
+        
+        it('should remove the ’to add’ styling from the target date', () =&gt; {
+            expect($html.find('[data-day="2018-07-04"]').parent().hasClass('event-add')).to.be.false;
+        });
+&nbsp;
+        it('the datesToAdd and datesToDel arrays should be empty', () =&gt; {
+            let dates = eventCalendar.getDates();
+            expect(dates.datesToAdd.length).to.equal(0);
+            expect(dates.datesToDel.length).to.equal(0);
+        });
+&nbsp;
+        it('should not show the toAdd information in the review panel', () =&gt; {
+            expect($html.find('.js-dates-to-add').attr('style')).to.equal('display: none;');
+        });
+&nbsp;
+        it('should not show the toDel information in the review panel', () =&gt; {
+            expect($html.find('.js-dates-to-del').attr('style')).to.equal('display: none;');
+        });
+&nbsp;
+        it('should not contain a count in the toAdd information', () =&gt; {
+            expect($html.find('.js-dates-to-add').html()).to.equal('');
+        });
+&nbsp;
+        it('should not contain a count in the toDel information', () =&gt; {
+            expect($html.find('.js-dates-to-del').html()).to.equal('');
+        });
+    });
+&nbsp;
+&nbsp;
     describe('choosing a previously selected date (one that was passed on init())', () =&gt; {
         beforeEach(() =&gt; {
             eventCalendar.init('2018-07-01', null, [{ date: '2018-07-04' }]);
@@ -940,6 +2729,42 @@ describe('EventCalendar', () =&gt; {
 &nbsp;
             expect($html.find('.js-dates-to-add').html()).to.equal('');
         });
+    });
+&nbsp;
+&nbsp;
+    describe('choosing then unchoosing a previously selected date (one that was passed on init())', () =&gt; {
+        beforeEach(() =&gt; {
+            eventCalendar.init('2018-07-01', null, [{ date: '2018-07-04' }]);
+            $html.find('[data-day="2018-07-04"]').click();
+            $html.find('[data-day="2018-07-04"]').click();
+        });
+        
+        it('should remove the appropriate styling from the target date', () =&gt; {
+            expect($html.find('[data-day="2018-07-04"]').parent().hasClass('event-del')).to.be.false;
+        });
+        
+        it('should remove the target date from the array of datesToDel', () =&gt; {
+            let dates = eventCalendar.getDates();
+            expect(dates.datesToAdd.length).to.equal(0);
+            expect(dates.datesToDel.length).to.equal(0);
+        });
+&nbsp;
+        it('should not show the toDel information in the review panel', () =&gt; {
+            expect($html.find('.js-dates-to-del').attr('style')).to.equal('display: none;');
+        });
+        
+        it('should not contain a count in the toDel information', () =&gt; {
+            expect($html.find('.js-dates-to-del').html()).to.equal('');
+        });
+&nbsp;
+        it('should not show the toAdd information in the review panel', () =&gt; {
+            expect($html.find('.js-dates-to-add').attr('style')).to.equal('display: none;');
+        });
+        
+        it('should not contain a count in the toAdd information', () =&gt; {
+            expect($html.find('.js-dates-to-add').html()).to.equal('');
+        });
+&nbsp;
     });
 &nbsp;
 &nbsp;
@@ -987,6 +2812,7 @@ describe('EventCalendar', () =&gt; {
         });
     });
 &nbsp;
+&nbsp;
     describe('clicking the reset button', () =&gt; {
         beforeEach(() =&gt; {
             eventCalendar.init('2018-01-01', null, [{ date: '2018-01-10' }]);
@@ -1006,6 +2832,748 @@ describe('EventCalendar', () =&gt; {
         });
     });
 &nbsp;
+    describe('choosing a pattern that doesn’t exist', () =&gt; {
+        beforeEach(() =&gt; {
+            eventCalendar.init('2018-01-02', '2018-02-27', [{ date: '2018-01-10' }]);
+            $html.find('.js-ercal-repeat').val('foo').trigger('change');
+        });
+        
+        it('should not store a recur pattern in the clndr instance', () =&gt; {
+            expect(eventCalendar.getRecurPattern()).to.be.null;
+        });
+&nbsp;
+        it('should not add any dates to the datesToAdd and datesToDel arrays', () =&gt; {
+            let dates = eventCalendar.getDates();
+&nbsp;
+            expect(dates.datesToAdd.length).to.equal(0);
+            expect(dates.datesToDel.length).to.equal(0);
+        });
+    });
+&nbsp;
+&nbsp;
+    describe('choosing the no-repeat’ pattern', () =&gt; {
+        beforeEach(() =&gt; {
+            eventCalendar.init('2018-01-02', '2018-02-27', [{ date: '2018-01-10' }]);
+            $html.find('.js-ercal-repeat').val('no-repeat').trigger('change');
+        });
+        
+        it('should not apply the repeat styling to any dates', () =&gt; {
+            $html.find('.day').each(function() {
+                expect($(this).hasClass('event-repeat')).to.be.false;
+            });
+        });
+&nbsp;
+        it('should not store a recur pattern in the clndr instance', () =&gt; {
+            expect(eventCalendar.getRecurPattern()).to.be.null;
+        });
+&nbsp;
+        it('should not apply the repeat styling to dates before the startDate', () =&gt; {
+            expect($html.find('.calendar-day-2018-01-01').hasClass('event-repeat')).to.be.false;
+        });
+&nbsp;
+        it('should not remove the event class from preexisting events', () =&gt; {
+            expect($html.find('.calendar-day-2018-01-10').hasClass('event')).to.be.true;
+        });
+&nbsp;
+        it('should also not paint anything for the next month', () =&gt; {
+            $html.find('.clndr-next-button').click();
+            $html.find('.day').each(function() {
+                expect($(this).hasClass('event-repeat')).to.be.false;
+            });
+        });
+&nbsp;
+        it('should not add any dates to the datesToAdd and datesToDel arrays', () =&gt; {
+            let dates = eventCalendar.getDates();
+&nbsp;
+            expect(dates.datesToAdd.length).to.equal(0);
+            expect(dates.datesToDel.length).to.equal(0);
+        });
+    });
+&nbsp;
+    describe('choosing the ’daily’ pattern', () =&gt; {
+        beforeEach(() =&gt; {
+            eventCalendar.init('2018-01-02', '2018-02-27', [{ date: '2018-01-10' }]);
+            $html.find('.js-ercal-repeat').val('daily').trigger('change');
+        });
+        
+        it('should apply the repeat styling to all dates', () =&gt; {
+            $html.find('.day:not(.calendar-day-2018-01-01)').each(function() {
+                expect($(this).hasClass('event-repeat')).to.be.true;
+            });
+        });
+&nbsp;
+        it('should store the recur pattern in the clndr instance', () =&gt; {
+            expect(eventCalendar.getRecurPattern().rules[0].measure).to.equal('days');
+            expect(eventCalendar.getRecurPattern().rules[0].units['1']).to.be.true;
+        });
+&nbsp;
+        it('should not apply the repeat styling to dates before the startDate', () =&gt; {
+            expect($html.find('.calendar-day-2018-01-01').hasClass('event-repeat')).to.be.false;
+        });
+&nbsp;
+        it('should not remove the event class from preexisting events', () =&gt; {
+            expect($html.find('.calendar-day-2018-01-10').hasClass('event')).to.be.true;
+        });
+&nbsp;
+        it('should also repaint the next month', () =&gt; {
+            $html.find('.clndr-next-button').click();
+            $html.find('.day:not(.calendar-day-2018-02-28)').each(function() {
+                expect($(this).hasClass('event-repeat')).to.be.true;
+            });
+        });
+&nbsp;
+        it('should not apply the repeat styling to dates after the endDate', () =&gt; {
+            $html.find('.clndr-next-button').click();
+            expect($html.find('.calendar-day-2018-02-28').hasClass('event-repeat')).to.be.false;
+        });
+&nbsp;
+        it('should not add any dates to the datesToAdd and datesToDel arrays', () =&gt; {
+            let dates = eventCalendar.getDates();
+&nbsp;
+            expect(dates.datesToAdd.length).to.equal(0);
+            expect(dates.datesToDel.length).to.equal(0);
+        });
+&nbsp;
+        it('should add toDelete styling to an item when clicked', () =&gt; {
+            let $target = $html.find('[data-day="2018-01-04"]'),
+                $parent = $html.find('.calendar-day-2018-01-04');
+&nbsp;
+            $target.click();
+            expect($parent.hasClass('event-del')).to.be.true;
+        });
+&nbsp;
+        it('should add clicked dates to the list of dates to delete', () =&gt; {
+            let $target = $html.find('[data-day="2018-01-04"]'),
+                $parent = $html.find('.calendar-day-2018-01-04');
+&nbsp;
+            $target.click();
+&nbsp;
+            let dates = eventCalendar.getDates();
+            expect(dates.datesToDel[0]._i).to.equal('2018-01-04');
+        });
+    });
+&nbsp;
+&nbsp;
+    describe('choosing the ’weekly’ pattern', () =&gt; {
+        beforeEach(() =&gt; {
+            eventCalendar.init('2018-01-02', '2018-02-27', [{ date: '2018-01-10' }]);
+            $html.find('.js-ercal-repeat').val('weekly').trigger('change');
+        });
+&nbsp;
+        it('should show the weekday picker', () =&gt; {
+            expect($html.find('.js-ercal-weekdays').attr('style')).to.equal('display: block;');
+        });
+        
+        it('should apply the repeat styling', () =&gt; {
+            let $days = $html.find('.day.event-repeat');
+            expect($days.length).to.equal(5);
+            expect($html.find('.calendar-day-2018-01-02').hasClass('event-repeat')).to.be.true;
+            expect($html.find('.calendar-day-2018-01-09').hasClass('event-repeat')).to.be.true;
+            expect($html.find('.calendar-day-2018-01-16').hasClass('event-repeat')).to.be.true;
+            expect($html.find('.calendar-day-2018-01-23').hasClass('event-repeat')).to.be.true;
+            expect($html.find('.calendar-day-2018-01-30').hasClass('event-repeat')).to.be.true;
+        });
+&nbsp;
+        it('should store the recur pattern in the clndr instance', () =&gt; {
+            expect(eventCalendar.getRecurPattern().rules[0].measure).to.equal('weeks');
+            expect(eventCalendar.getRecurPattern().rules[0].units['1']).to.be.true;
+        });
+&nbsp;
+        it('should apply the repeat styling to other specified weekdays', () =&gt; {
+            $html.find('[value="4"]').prop('checked', true).trigger('change');
+            
+            let $days = $html.find('.day.event-repeat');
+            expect($days.length).to.equal(9);
+            expect($html.find('.calendar-day-2018-01-02').hasClass('event-repeat')).to.be.true;
+            expect($html.find('.calendar-day-2018-01-09').hasClass('event-repeat')).to.be.true;
+            expect($html.find('.calendar-day-2018-01-16').hasClass('event-repeat')).to.be.true;
+            expect($html.find('.calendar-day-2018-01-23').hasClass('event-repeat')).to.be.true;
+            expect($html.find('.calendar-day-2018-01-30').hasClass('event-repeat')).to.be.true;
+&nbsp;
+            expect($html.find('.calendar-day-2018-01-04').hasClass('event-repeat')).to.be.true;
+            expect($html.find('.calendar-day-2018-01-11').hasClass('event-repeat')).to.be.true;
+            expect($html.find('.calendar-day-2018-01-18').hasClass('event-repeat')).to.be.true;
+            expect($html.find('.calendar-day-2018-01-25').hasClass('event-repeat')).to.be.true;
+        });
+&nbsp;
+        it('should not apply the repeat styling to dates before the startDate', () =&gt; {
+            expect($html.find('.calendar-day-2018-01-01').hasClass('event-repeat')).to.be.false;
+        });
+&nbsp;
+        it('should not remove the event class from preexisting events', () =&gt; {
+            expect($html.find('.calendar-day-2018-01-10').hasClass('event')).to.be.true;
+        });
+&nbsp;
+        it('should also repaint the next month', () =&gt; {
+            $html.find('.clndr-next-button').click();
+            let $days = $html.find('.day.event-repeat');
+            expect($days.length).to.equal(4);
+            expect($html.find('.calendar-day-2018-02-06').hasClass('event-repeat')).to.be.true;
+            expect($html.find('.calendar-day-2018-02-13').hasClass('event-repeat')).to.be.true;
+            expect($html.find('.calendar-day-2018-02-20').hasClass('event-repeat')).to.be.true;
+            expect($html.find('.calendar-day-2018-02-27').hasClass('event-repeat')).to.be.true;
+        });
+&nbsp;
+        it('should not apply the repeat styling to dates after the endDate', () =&gt; {
+            $html.find('.clndr-next-button').click();
+            expect($html.find('.calendar-day-2018-02-28').hasClass('event-repeat')).to.be.false;
+        });
+&nbsp;
+        it('should not add any dates to the datesToAdd and datesToDel arrays', () =&gt; {
+            let dates = eventCalendar.getDates();
+&nbsp;
+            expect(dates.datesToAdd.length).to.equal(0);
+            expect(dates.datesToDel.length).to.equal(0);
+        });
+&nbsp;
+        it('should add toDelete styling to an item when clicked', () =&gt; {
+            let $target = $html.find('[data-day="2018-01-09"]'),
+                $parent = $html.find('.calendar-day-2018-01-09');
+&nbsp;
+            $target.click();
+            expect($parent.hasClass('event-del')).to.be.true;
+        });
+&nbsp;
+        it('should add clicked dates to the list of dates to delete', () =&gt; {
+            let $target = $html.find('[data-day="2018-01-16"]');
+&nbsp;
+            $target.click();
+&nbsp;
+            let dates = eventCalendar.getDates();
+            expect(dates.datesToDel[0]._i).to.equal('2018-01-16');
+        });
+&nbsp;
+        it('should hide the weekday picker if a different repeat option is chosen', () =&gt; {
+            $html.find('.js-ercal-repeat').val('daily').trigger('change');
+            expect($html.find('.js-ercal-weekdays').attr('style')).to.equal('display: none;');
+        });
+    });
+&nbsp;
+&nbsp;
+    describe('choosing the ’two-weekly’ pattern', () =&gt; {
+        beforeEach(() =&gt; {
+            eventCalendar.init('2018-01-02', '2018-02-27', [{ date: '2018-01-10' }]);
+            $html.find('.js-ercal-repeat').val('two-weekly').trigger('change');
+        });
+        
+        it('should apply the repeat styling', () =&gt; {
+            let $days = $html.find('.day.event-repeat');
+            expect($days.length).to.equal(3);
+            expect($html.find('.calendar-day-2018-01-02').hasClass('event-repeat')).to.be.true;
+            expect($html.find('.calendar-day-2018-01-16').hasClass('event-repeat')).to.be.true;
+            expect($html.find('.calendar-day-2018-01-30').hasClass('event-repeat')).to.be.true;
+        });
+&nbsp;
+        it('should store the recur pattern in the clndr instance', () =&gt; {
+            expect(eventCalendar.getRecurPattern().rules[0].measure).to.equal('weeks');
+            expect(eventCalendar.getRecurPattern().rules[0].units['2']).to.be.true;
+        });
+&nbsp;
+        it('should not apply the repeat styling to dates before the startDate', () =&gt; {
+            expect($html.find('.calendar-day-2018-01-01').hasClass('event-repeat')).to.be.false;
+        });
+&nbsp;
+        it('should not remove the event class from preexisting events', () =&gt; {
+            expect($html.find('.calendar-day-2018-01-10').hasClass('event')).to.be.true;
+        });
+&nbsp;
+        it('should also repaint the next month', () =&gt; {
+            $html.find('.clndr-next-button').click();
+            let $days = $html.find('.day.event-repeat');
+            expect($days.length).to.equal(2);
+            expect($html.find('.calendar-day-2018-02-13').hasClass('event-repeat')).to.be.true;
+            expect($html.find('.calendar-day-2018-02-27').hasClass('event-repeat')).to.be.true;
+        });
+&nbsp;
+        it('should not apply the repeat styling to dates after the endDate', () =&gt; {
+            $html.find('.clndr-next-button').click();
+            expect($html.find('.calendar-day-2018-02-28').hasClass('event-repeat')).to.be.false;
+        });
+&nbsp;
+        it('should not add any dates to the datesToAdd and datesToDel arrays', () =&gt; {
+            let dates = eventCalendar.getDates();
+&nbsp;
+            expect(dates.datesToAdd.length).to.equal(0);
+            expect(dates.datesToDel.length).to.equal(0);
+        });
+&nbsp;
+        it('should add toDelete styling to an item when clicked', () =&gt; {
+            let $target = $html.find('[data-day="2018-01-16"]'),
+                $parent = $html.find('.calendar-day-2018-01-16');
+&nbsp;
+            $target.click();
+            expect($parent.hasClass('event-del')).to.be.true;
+        });
+&nbsp;
+        it('should add clicked dates to the list of dates to delete', () =&gt; {
+            let $target = $html.find('[data-day="2018-01-16"]');
+&nbsp;
+            $target.click();
+&nbsp;
+            let dates = eventCalendar.getDates();
+            expect(dates.datesToDel[0]._i).to.equal('2018-01-16');
+        });
+    });
+&nbsp;
+    describe('choosing the ’monthly on this date’ pattern', () =&gt; {
+        beforeEach(() =&gt; {
+            eventCalendar.init('2018-01-02', '2018-02-27', [{ date: '2018-01-10' }]);
+            $html.find('.js-ercal-repeat').val('monthly-date').trigger('change');
+        });
+        
+        it('should apply the repeat styling', () =&gt; {
+            let $days = $html.find('.day.event-repeat');
+            expect($days.length).to.equal(1);
+            expect($html.find('.calendar-day-2018-01-02').hasClass('event-repeat')).to.be.true;
+        });
+&nbsp;
+        it('should store the recur pattern in the clndr instance', () =&gt; {
+            expect(eventCalendar.getRecurPattern().rules[0].measure).to.equal('months');
+            expect(eventCalendar.getRecurPattern().rules[0].units['1']).to.be.true;
+        });
+&nbsp;
+        it('should not apply the repeat styling to dates before the startDate', () =&gt; {
+            expect($html.find('.calendar-day-2018-01-01').hasClass('event-repeat')).to.be.false;
+        });
+&nbsp;
+        it('should not remove the event class from preexisting events', () =&gt; {
+            expect($html.find('.calendar-day-2018-01-10').hasClass('event')).to.be.true;
+        });
+&nbsp;
+        it('should also repaint the next month', () =&gt; {
+            $html.find('.clndr-next-button').click();
+            let $days = $html.find('.day.event-repeat');
+            expect($days.length).to.equal(1);
+            expect($html.find('.calendar-day-2018-02-02').hasClass('event-repeat')).to.be.true;
+        });
+&nbsp;
+        it('should not apply the repeat styling to dates after the endDate', () =&gt; {
+            $html.find('.clndr-next-button').click();
+            expect($html.find('.calendar-day-2018-02-28').hasClass('event-repeat')).to.be.false;
+        });
+&nbsp;
+        it('should not add any dates to the datesToAdd and datesToDel arrays', () =&gt; {
+            let dates = eventCalendar.getDates();
+&nbsp;
+            expect(dates.datesToAdd.length).to.equal(0);
+            expect(dates.datesToDel.length).to.equal(0);
+        });
+&nbsp;
+        it('should add toDelete styling to an item when clicked', () =&gt; {
+            $html.find('.clndr-next-button').click();
+&nbsp;
+            let $target = $html.find('[data-day="2018-02-02"]'),
+                $parent = $html.find('.calendar-day-2018-02-02');
+&nbsp;
+            $target.click();
+&nbsp;
+            expect($parent.hasClass('event-del')).to.be.true;
+        });
+&nbsp;
+        it('should add clicked dates to the list of dates to delete', () =&gt; {
+            $html.find('.clndr-next-button').click();
+&nbsp;
+            let $target = $html.find('[data-day="2018-02-02"]');
+&nbsp;
+            $target.click();
+&nbsp;
+            let dates = eventCalendar.getDates();
+            expect(dates.datesToDel[0]._i).to.equal('2018-02-02');
+        });
+    });
+&nbsp;
+&nbsp;
+    describe('choosing the ’monthly on this day’ pattern', () =&gt; {
+        beforeEach(() =&gt; {
+            eventCalendar.init('2018-01-02', '2018-02-27', [{ date: '2018-01-10' }]);
+            $html.find('.js-ercal-repeat').val('monthly-day').trigger('change');
+        });
+        
+        it('should apply the repeat styling', () =&gt; {
+            let $days = $html.find('.day.event-repeat');
+            expect($days.length).to.equal(1);
+            expect($html.find('.calendar-day-2018-01-02').hasClass('event-repeat')).to.be.true;
+        });
+&nbsp;
+        it('should store the recur pattern in the clndr instance', () =&gt; {
+            expect(eventCalendar.getRecurPattern().rules[0].measure).to.equal('daysOfWeek');
+            expect(eventCalendar.getRecurPattern().rules[0].units['2']).to.be.true;
+        });
+&nbsp;
+        it('should not apply the repeat styling to dates before the startDate', () =&gt; {
+            expect($html.find('.calendar-day-2018-01-01').hasClass('event-repeat')).to.be.false;
+        });
+&nbsp;
+        it('should not remove the event class from preexisting events', () =&gt; {
+            expect($html.find('.calendar-day-2018-01-10').hasClass('event')).to.be.true;
+        });
+&nbsp;
+        it('should also repaint the next month', () =&gt; {
+            $html.find('.clndr-next-button').click();
+            let $days = $html.find('.day.event-repeat');
+            expect($days.length).to.equal(1);
+            expect($html.find('.calendar-day-2018-02-06').hasClass('event-repeat')).to.be.true;
+        });
+&nbsp;
+        it('should not apply the repeat styling to dates after the endDate', () =&gt; {
+            $html.find('.clndr-next-button').click();
+            expect($html.find('.calendar-day-2018-02-28').hasClass('event-repeat')).to.be.false;
+        });
+&nbsp;
+        it('should not add any dates to the datesToAdd and datesToDel arrays', () =&gt; {
+            let dates = eventCalendar.getDates();
+&nbsp;
+            expect(dates.datesToAdd.length).to.equal(0);
+            expect(dates.datesToDel.length).to.equal(0);
+        });
+&nbsp;
+        it('should add toDelete styling to an item when clicked', () =&gt; {
+            $html.find('.clndr-next-button').click();
+&nbsp;
+            let $target = $html.find('[data-day="2018-02-06"]'),
+                $parent = $html.find('.calendar-day-2018-02-06');
+&nbsp;
+            $target.click();
+&nbsp;
+            expect($parent.hasClass('event-del')).to.be.true;
+        });
+&nbsp;
+        it('should add clicked dates to the list of dates to delete', () =&gt; {
+            $html.find('.clndr-next-button').click();
+&nbsp;
+            let $target = $html.find('[data-day="2018-02-06"]');
+&nbsp;
+            $target.click();
+&nbsp;
+            let dates = eventCalendar.getDates();
+            expect(dates.datesToDel[0]._i).to.equal('2018-02-06');
+        });
+    });
+&nbsp;
+&nbsp;
+    describe('choosing the ’annually’ pattern', () =&gt; {
+        beforeEach(() =&gt; {
+            eventCalendar.init('2018-01-02', '2019-02-27', [{ date: '2018-01-10' }]);
+            $html.find('.js-ercal-repeat').val('annually').trigger('change');
+        });
+        
+        it('should apply the repeat styling', () =&gt; {
+            let $days = $html.find('.day.event-repeat');
+            expect($days.length).to.equal(1);
+            expect($html.find('.calendar-day-2018-01-02').hasClass('event-repeat')).to.be.true;
+        });
+&nbsp;
+        it('should store the recur pattern in the clndr instance', () =&gt; {
+            expect(eventCalendar.getRecurPattern().rules[0].measure).to.equal('years');
+            expect(eventCalendar.getRecurPattern().rules[0].units['1']).to.be.true;
+        });
+&nbsp;
+        it('should not apply the repeat styling to dates before the startDate', () =&gt; {
+            expect($html.find('.calendar-day-2018-01-01').hasClass('event-repeat')).to.be.false;
+        });
+&nbsp;
+        it('should not remove the event class from preexisting events', () =&gt; {
+            expect($html.find('.calendar-day-2018-01-10').hasClass('event')).to.be.true;
+        });
+&nbsp;
+        it('should also repaint the next year', () =&gt; {
+            for (var i = 0; i &lt; 12; i++) {
+                $html.find('.clndr-next-button').click();
+            }
+            let $days = $html.find('.day.event-repeat');
+            expect($days.length).to.equal(1);
+            expect($html.find('.calendar-day-2019-01-02').hasClass('event-repeat')).to.be.true;
+        });
+&nbsp;
+        it('should not apply the repeat styling to dates after the endDate', () =&gt; {
+            $html.find('.clndr-next-button').click();
+            expect($html.find('.calendar-day-2018-02-28').hasClass('event-repeat')).to.be.false;
+        });
+&nbsp;
+        it('should not add any dates to the datesToAdd and datesToDel arrays', () =&gt; {
+            let dates = eventCalendar.getDates();
+&nbsp;
+            expect(dates.datesToAdd.length).to.equal(0);
+            expect(dates.datesToDel.length).to.equal(0);
+        });
+&nbsp;
+        it('should add toDelete styling to an item when clicked', () =&gt; {
+            for (var i = 0; i &lt; 12; i++) {
+                $html.find('.clndr-next-button').click();
+            }
+&nbsp;
+            let $target = $html.find('[data-day="2019-01-02"]'),
+                $parent = $html.find('.calendar-day-2019-01-02');
+&nbsp;
+            $target.click();
+&nbsp;
+            expect($parent.hasClass('event-del')).to.be.true;
+        });
+&nbsp;
+        it('should add clicked dates to the list of dates to delete', () =&gt; {
+            for (var i = 0; i &lt; 12; i++) {
+                $html.find('.clndr-next-button').click();
+            }
+&nbsp;
+            let $target = $html.find('[data-day="2019-01-02"]');
+&nbsp;
+            $target.click();
+&nbsp;
+            let dates = eventCalendar.getDates();
+            expect(dates.datesToDel[0]._i).to.equal('2019-01-02');
+        });
+    });
+&nbsp;
+&nbsp;
+    describe('applying a pattern, then making changes to dates affected by that pattern', () =&gt; {
+        beforeEach(() =&gt; {
+            eventCalendar.init('2018-01-02', '2019-02-27');
+            $html.find('.js-ercal-repeat').val('weekly').trigger('change');
+            
+            $html.find('[data-day="2018-01-09"]').click(); // to del
+            $html.find('[data-day="2018-01-10"]').click(); // to add
+        });
+&nbsp;
+        it('should add toDel styling to dates being removed from the pattern', () =&gt; {
+            expect($html.find('.calendar-day-2018-01-09').hasClass('event-del')).to.be.true;
+            expect($html.find('.calendar-day-2018-01-09').hasClass('event-add')).to.be.false;
+            expect($html.find('.calendar-day-2018-01-09').hasClass('event-repeat')).to.be.true;
+        });
+&nbsp;
+        it('should add toAdd styling to dates being added outside of the pattern', () =&gt; {
+            expect($html.find('.calendar-day-2018-01-10').hasClass('event-del')).to.be.false;
+            expect($html.find('.calendar-day-2018-01-10').hasClass('event-add')).to.be.true;
+            expect($html.find('.calendar-day-2018-01-10').hasClass('event-repeat')).to.be.false;
+        });
+&nbsp;
+        it('should add the dates being removed from the pattern to the datesToDel arrays', () =&gt; {
+            let dates = eventCalendar.getDates();
+            expect(dates.datesToDel[0]._i).to.equal('2018-01-09');
+        });
+&nbsp;
+        it('should add the dates being added to the pattern to the datesToAdd arrays', () =&gt; {
+            let dates = eventCalendar.getDates();
+            expect(dates.datesToAdd[0]._i).to.equal('2018-01-10');
+        });
+&nbsp;
+        it('should show the toAdd information in the review panel', () =&gt; {
+            expect($html.find('.js-dates-to-add').attr('style')).to.equal('display: inline;');
+        });
+&nbsp;
+        it('should update the toAdd information with the current number', () =&gt; {
+            expect($html.find('.js-dates-to-add').html()).to.equal('1 day will be added');
+        });
+&nbsp;
+        it('should show the toDel information in the review panel', () =&gt; {
+            expect($html.find('.js-dates-to-del').attr('style')).to.equal('display: inline;');
+        });
+&nbsp;
+        it('should update the toDel information with the current number', () =&gt; {
+            expect($html.find('.js-dates-to-del').html()).to.equal('1 day will be removed');
+        });
+    });
+&nbsp;
+    describe('applying a pattern, making changes to dates affected by that pattern, then reverting those changes', () =&gt; {
+        beforeEach(() =&gt; {
+            eventCalendar.init('2018-01-02', '2019-02-27');
+            $html.find('.js-ercal-repeat').val('weekly').trigger('change');
+            
+            $html.find('[data-day="2018-01-09"]').click(); // to del
+            $html.find('[data-day="2018-01-10"]').click(); // to add
+&nbsp;
+            // revert
+            $html.find('[data-day="2018-01-09"]').click(); // to del
+            $html.find('[data-day="2018-01-10"]').click(); // to add
+        });
+&nbsp;
+        it('should remove toDel styling from dates previously being removed from the pattern', () =&gt; {
+            expect($html.find('.calendar-day-2018-01-09').hasClass('event-del')).to.be.false;
+            expect($html.find('.calendar-day-2018-01-09').hasClass('event-add')).to.be.false;
+            expect($html.find('.calendar-day-2018-01-09').hasClass('event-repeat')).to.be.true;
+        });
+&nbsp;
+        it('should remove toAdd styling to dates previously being added outside of the pattern', () =&gt; {
+            expect($html.find('.calendar-day-2018-01-10').hasClass('event-del')).to.be.false;
+            expect($html.find('.calendar-day-2018-01-10').hasClass('event-add')).to.be.false;
+            expect($html.find('.calendar-day-2018-01-10').hasClass('event-repeat')).to.be.false;
+        });
+&nbsp;
+        it('should remove the dates previously being removed from the pattern from the datesToDel arrays', () =&gt; {
+            let dates = eventCalendar.getDates();
+            expect(dates.datesToDel.length).to.equal(0);
+        });
+&nbsp;
+        it('should remove the dates previopusly being added to the pattern from the datesToAdd arrays', () =&gt; {
+            let dates = eventCalendar.getDates();
+            expect(dates.datesToAdd.length).to.equal(0);
+        });
+&nbsp;
+        it('should hide the toAdd information in the review panel', () =&gt; {
+            expect($html.find('.js-dates-to-add').attr('style')).to.equal('display: none;');
+        });
+&nbsp;
+        it('should remove the toAdd information', () =&gt; {
+            expect($html.find('.js-dates-to-add').html()).to.equal('');
+        });
+&nbsp;
+        it('should hide the toDel information in the review panel', () =&gt; {
+            expect($html.find('.js-dates-to-del').attr('style')).to.equal('display: none;');
+        });
+&nbsp;
+        it('should remove the toDel information', () =&gt; {
+            expect($html.find('.js-dates-to-del').html()).to.equal('');
+        });
+    });
+&nbsp;
+&nbsp;
+    describe('making date changes, then applying a pattern', () =&gt; {
+        beforeEach(() =&gt; {
+            eventCalendar.init('2018-01-02', '2019-02-27', [{ date: '2018-01-10' }]);
+            $html.find('[data-day="2018-01-04"]').click(); // to add
+            $html.find('[data-day="2018-01-10"]').click(); // to del
+            $html.find('.js-ercal-repeat').val('daily').trigger('change');
+        });
+&nbsp;
+        it('should replace the toAdd styling with the repeat styling', () =&gt; {
+            expect($html.find('.calendar-day-2018-01-04').hasClass('event-del')).to.be.false;
+            expect($html.find('.calendar-day-2018-01-04').hasClass('event-add')).to.be.true;
+            expect($html.find('.calendar-day-2018-01-04').hasClass('event-repeat')).to.be.true;
+        });
+&nbsp;
+        it('should maintain the toDel styling rather than the repeat styling', () =&gt; {
+            expect($html.find('.calendar-day-2018-01-10').hasClass('event-add')).to.be.false;
+            expect($html.find('.calendar-day-2018-01-10').hasClass('event-del')).to.be.true;
+        });
+&nbsp;
+        it('should not remove the dates from the datesToAdd arrays', () =&gt; {
+            let dates = eventCalendar.getDates();
+            expect(dates.datesToAdd[0]._i).to.equal('2018-01-04');
+        });
+&nbsp;
+        it('should not remove the dates from the datesToDel arrays', () =&gt; {
+            let dates = eventCalendar.getDates();
+            expect(dates.datesToDel[0]._i).to.equal('2018-01-10');
+        });
+&nbsp;
+        it('should show the toAdd information in the review panel', () =&gt; {
+            expect($html.find('.js-dates-to-add').attr('style')).to.equal('display: inline;');
+        });
+&nbsp;
+        it('should update the toAdd information with the current number', () =&gt; {
+            expect($html.find('.js-dates-to-add').html()).to.equal('1 day will be added');
+        });
+&nbsp;
+        it('should show the toDel information in the review panel', () =&gt; {
+            expect($html.find('.js-dates-to-del').attr('style')).to.equal('display: inline;');
+        });
+&nbsp;
+        it('should update the toDel information with the current number', () =&gt; {
+            expect($html.find('.js-dates-to-del').html()).to.equal('1 day will be removed');
+        });
+    });
+&nbsp;
+    describe('making date changes, then applying a pattern, then removing the pattern', () =&gt; {
+        beforeEach(() =&gt; {
+            eventCalendar.init('2018-01-02', '2019-02-27', [{ date: '2018-01-10' }]);
+            $html.find('[data-day="2018-01-04"]').click(); // to add
+            $html.find('[data-day="2018-01-10"]').click(); // to del
+            $html.find('.js-ercal-repeat').val('daily').trigger('change');
+            $html.find('.js-ercal-repeat').val('no-repeat').trigger('change');
+        });
+&nbsp;
+        it('should maintain the toAdd styling on dates to add rather than the repeat styling', () =&gt; {
+            expect($html.find('.calendar-day-2018-01-04').hasClass('event-add')).to.be.true;
+            expect($html.find('.calendar-day-2018-01-04').hasClass('event-del')).to.be.false;
+        });
+&nbsp;
+        it('should maintain the toDel styling on dates to delete rather than the repeat styling', () =&gt; {
+            expect($html.find('.calendar-day-2018-01-10').hasClass('event-add')).to.be.false;
+            expect($html.find('.calendar-day-2018-01-10').hasClass('event-del')).to.be.true;
+        });
+&nbsp;
+        it('should not remove the dates from the datesToAdd arrays', () =&gt; {
+            let dates = eventCalendar.getDates();
+            expect(dates.datesToAdd[0]._i).to.equal('2018-01-04');
+        });
+&nbsp;
+        it('should not remove the dates from the datesToDel arrays', () =&gt; {
+            let dates = eventCalendar.getDates();
+            expect(dates.datesToDel[0]._i).to.equal('2018-01-10');
+        });
+&nbsp;
+        it('should show the toAdd information in the review panel', () =&gt; {
+            expect($html.find('.js-dates-to-add').attr('style')).to.equal('display: inline;');
+        });
+&nbsp;
+        it('should update the toAdd information with the current number', () =&gt; {
+            expect($html.find('.js-dates-to-add').html()).to.equal('1 day will be added');
+        });
+&nbsp;
+        it('should show the toDel information in the review panel', () =&gt; {
+            expect($html.find('.js-dates-to-del').attr('style')).to.equal('display: inline;');
+        });
+&nbsp;
+        it('should update the toDel information with the current number', () =&gt; {
+            expect($html.find('.js-dates-to-del').html()).to.equal('1 day will be removed');
+        });
+    });
+&nbsp;
+&nbsp;
+    describe('applying a pattern, excluding a date from that pattern, then changing to a pattern which doesn’t hit the same date', () =&gt; {
+        beforeEach(() =&gt; {
+            eventCalendar.init('2018-01-02');
+            $html.find('.js-ercal-repeat').val('weekly').trigger('change');
+            $html.find('[data-day="2018-01-09"]').click(); // to del
+            $html.find('.js-ercal-repeat').val('two-weekly').trigger('change');
+        });
+&nbsp;
+        it('should maintain the toDel styling on the target date', () =&gt; {
+            expect($html.find('.calendar-day-2018-01-09').hasClass('event-repeat')).to.be.false;
+            expect($html.find('.calendar-day-2018-01-09').hasClass('event-del')).to.be.true;
+        });
+&nbsp;
+        it('should store the target date in the datesToDel array', () =&gt; {
+            let dates = eventCalendar.getDates();
+            expect(dates.datesToDel[0]._i).to.equal('2018-01-09');
+        });
+&nbsp;
+        it('should show the toDel information in the review panel', () =&gt; {
+            expect($html.find('.js-dates-to-del').attr('style')).to.equal('display: inline;');
+        });
+&nbsp;
+        it('should update the toDel information with the current number', () =&gt; {
+            expect($html.find('.js-dates-to-del').html()).to.equal('1 day will be removed');
+        });
+    });
+&nbsp;
+    describe('applying a pattern, excluding a date from that pattern, then changing to a pattern which doesn’t hit the same date, then clicking the target date again', () =&gt; {
+        beforeEach(() =&gt; {
+            eventCalendar.init('2018-01-02', '2019-02-27');
+            $html.find('.js-ercal-repeat').val('weekly').trigger('change');
+            $html.find('[data-day="2018-01-09"]').click(); // to del
+            $html.find('.js-ercal-repeat').val('two-weekly').trigger('change');
+            $html.find('[data-day="2018-01-09"]').click(); // to del
+        });
+&nbsp;
+        it('should maintain the toDel styling on the target date', () =&gt; {
+            expect($html.find('.calendar-day-2018-01-09').hasClass('event-repeat')).to.be.false;
+            expect($html.find('.calendar-day-2018-01-09').hasClass('event-add')).to.be.false;
+            expect($html.find('.calendar-day-2018-01-09').hasClass('event-del')).to.be.false;
+        });
+&nbsp;
+        it('should remove the target date from the datesToDel array', () =&gt; {
+            let dates = eventCalendar.getDates();
+            expect(dates.datesToDel.length).to.equal(0);
+        });
+&nbsp;
+        it('should remove the toDel information from the review panel', () =&gt; {
+            expect($html.find('.js-dates-to-del').attr('style')).to.equal('display: none;');
+        });
+&nbsp;
+        it('should remove the value from the toDel information', () =&gt; {
+            expect($html.find('.js-dates-to-del').html()).to.equal('');
+        });
+    });
 &nbsp;
 });
 &nbsp;
@@ -1015,7 +3583,7 @@ describe('EventCalendar', () =&gt; {
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Mon Dec 17 2018 16:18:10 GMT+0000 (GMT)
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Tue Dec 18 2018 16:59:05 GMT+0000 (GMT)
 </div>
 </div>
 <script src="../../prettify.js"></script>
