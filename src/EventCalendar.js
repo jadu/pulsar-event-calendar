@@ -161,7 +161,7 @@ class EventCalendar {
             }
 
             // Unpaint the currently stored pattern
-            _self.paintMonth(clndr.month, 'clear');
+            _self.paintMonth(_self.clndr.month, 'clear');
 
             /*
                 Set the new repeat pattern
@@ -170,7 +170,7 @@ class EventCalendar {
                 and override the pattern
             */
             _self.setPattern(pattern);
-            _self.paintMonth(clndr.month, 'repeat-on');
+            _self.paintMonth(_self.clndr.month, 'repeat-on');
         });
 
         _self.$html.find('[name="ercal-weekdays"]').on('change', function() {
@@ -296,9 +296,6 @@ class EventCalendar {
             newPattern;
    
         switch (pattern) {
-            case 'no-repeat':
-                newPattern = null;
-                break;
             case 'daily':
                 newPattern = _self.clndr.options.selectedDate.recur().every(1).days();
                 break;
@@ -321,18 +318,22 @@ class EventCalendar {
                 newPattern = _self.clndr.options.selectedDate.recur().every(1).year();
                 break;
             default:
-                return false;
+                newPattern = null;
+                break;
         }
-        
+
         _self.recurPattern = newPattern;
     }
 
     paintRepeatPattern (method) {    
-        let _self = this,
-            recurDatesThisMonth = _self.recurPattern
+        let _self = this;
+
+        let recurDatesThisMonth = _self.recurPattern
                                     .startDate(_self.clndr.options.selectedDate)
-                                    .endDate(_self.clndr.intervalEnd)
+                                    .endDate(_self.clndr.options.constraints.endDate)
                                     .all();
+
+        //_self.clndr.options.constraints.endDate
 
         var method = (method) ? method : 'repeat-on';
 
@@ -344,18 +345,12 @@ class EventCalendar {
    
         $.each(dates, function() {
             switch (method) {
-                case 'del':
-                    _self.styleToDel(this);
-                    break;
-                case 'clear':
-                    _self.styleClear(this);
-                    break;
                 case 'repeat-on':
                     _self.styleRepeatOn(this);
                     break;
-                case 'add':
+                case 'clear':
                 default:
-                    _self.styleToAdd(this);
+                    _self.styleClear(this);
                     break;
             }
         });
@@ -433,13 +428,6 @@ class EventCalendar {
         $elems.removeClass('event-add event-del event-repeat');
     }
 
-    styleReset (target) {
-        let _self = this,
-            $elem = _self.clndr.element.find('[data-day="' + target.date.date._i + '"]');
-        
-        $elem.parent().addClass('event-del');
-    }
-
     static isInMonth (dateToCompareTo, date) {
         return date.month() === dateToCompareTo.month();
     }
@@ -501,6 +489,11 @@ class EventCalendar {
     getDates () {
         let _self = this;
         return _self.clndr.options.extras;
+    }
+
+    getRecurPattern () {
+        let _self = this;
+        return _self.recurPattern;
     }
 
 }

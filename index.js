@@ -8,8 +8,8 @@ $(function () {
         { date: '2018-01-26' }
     ];
 
-    let startDate   = '2018-01-04';
-    let endDate     = '2019-01-10';
+    let startDate   = '2018-01-02';
+    let endDate     = '2018-01-20';
 
     const clndr = new EventCalendar($('html'));
     clndr.init(startDate, endDate, myEvents);
