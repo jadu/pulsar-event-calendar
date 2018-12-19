@@ -152,6 +152,7 @@ class EventCalendar {
         _self.$patternField.on('change', function() {
             let pattern = $(this).val();
 
+            // Show the weekday picker if the pattern is `weekly`
             if (pattern === 'weekly') {
                 _self.$html.find('[name="ercal-weekdays"][value="' + clndrStart.day() + '"]').prop('checked', true);
                 $weekdayPicker.show();
