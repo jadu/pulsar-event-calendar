@@ -53,6 +53,7 @@
         "grunt-sass": "^1.1.0",
         "jshint": "^2.8.0",
         "matchdep": "^2.0.0",
+        "minimatch": ">=3.0.2",
         "mochify": "^2.19.0",
         "mochify-istanbul": "^2.4.2",
         "sinon": "~1.15",
