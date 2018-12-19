@@ -1,7 +1,5 @@
 language: javascript
 
-cache: npm
-
 before_install:
   - npm install -g npm@5.5.1
 
