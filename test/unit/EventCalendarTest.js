@@ -498,6 +498,20 @@ describe('EventCalendar', () => {
             expect(dates.datesToAdd.length).to.equal(0);
             expect(dates.datesToDel.length).to.equal(0);
         });
+
+        it('should clear the stored pattern', () => {
+            $html.find('.js-ercal-repeat').val('daily').trigger('change');
+            $html.find('.js-ercal-reset').click();
+
+            expect(eventCalendar.getRecurPattern()).to.be.null;
+        });
+
+        it('should reset the pattern field', () => {
+            $html.find('.js-ercal-repeat').val('daily').trigger('change');
+            $html.find('.js-ercal-reset').click();
+
+            expect($html.find('.js-ercal-repeat').val()).to.equal('no-repeat');
+        });
     });
 
     describe('choosing a pattern that doesn’t exist', () => {

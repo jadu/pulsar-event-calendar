@@ -9,12 +9,21 @@ $(function () {
     ];
 
     let startDate   = '2018-01-02';
-    let endDate     = '2018-01-20';
+    let endDate     = '2018-02-20';
 
     const clndr = new EventCalendar($('html'));
     clndr.init(startDate, endDate, myEvents);
 
-    $('#js-get').on('click', function() {
-        clndr.getDates();
-    })
+    /**
+     * Basic getter examples
+     */
+    $('.js-get-example').on('click', function() {
+        let exampleDates = clndr.getDates();
+        console.log(exampleDates);
+    });
+
+    $('.js-get-pattern').on('click', function() {
+        let examplePattern = clndr.getRecurPattern();
+        console.log(examplePattern);
+    });
 });

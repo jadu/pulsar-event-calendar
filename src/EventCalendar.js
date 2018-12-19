@@ -20,6 +20,7 @@ class EventCalendar {
      */
     constructor ($html) {
         this.$html = $html;
+        this.$patternField;
         this.clndr;
     }
 
@@ -55,7 +56,7 @@ class EventCalendar {
             clndrStart = (startDate) ? moment(startDate) : moment(new Date()).subtract(1, 'days'),
             clndrEnd = (endDate) ? moment(endDate) : moment(new Date()).add(15, 'years'),
             clndrEvents = (events) ? events : [],
-            $weekdayPicker = this.$html.find('.js-ercal-weekdays'),
+            $weekdayPicker = _self.$html.find('.js-ercal-weekdays'),
             clndrTemplate = `
                 <div class='clndr-controls'>
                     <div class='clndr-control-button'>
@@ -104,7 +105,7 @@ class EventCalendar {
                         <li><i class="fa fa-ban icon--danger"></i> Event will <u>not</u> repeat
                             <span class="js-dates-to-del label label--danger" style="display: none;"></span></li>
                     </ul>
-                    <button class="js-ercal-reset" style="display: inline;">Reset Calendar</button>
+                    <button class="js-ercal-reset">Reset Calendar</button>
                 </div>`;
 
         let precompiledTemplate = _.template(clndrTemplate);
@@ -144,8 +145,11 @@ class EventCalendar {
             _self.resetCalendar();
         });
 
+        // Store a reference to the pattern field as it’s also used in the resetCalendar() method.
+        _self.$patternField = _self.$html.find('.js-ercal-repeat');
+
         // Recalculate upcoming occurences based on the pattern dropdown
-        _self.$html.find('.js-ercal-repeat').on('change', function() {
+        _self.$patternField.on('change', function() {
             let pattern = $(this).val();
 
             if (pattern === 'weekly') {
@@ -525,6 +529,12 @@ class EventCalendar {
         // Empty the lists of changes to add/del
         _self.clndr.options.extras.datesToAdd = [];
         _self.clndr.options.extras.datesToDel = [];
+
+        // Empty the stored recur pattern
+        _self.setPattern(null);
+
+        // Reset the recur pattern field
+        _self.$patternField.val('no-repeat');
         
         // Remove the review changes information
         _self.updateReview();
