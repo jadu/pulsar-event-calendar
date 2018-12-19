@@ -58,7 +58,7 @@ Include the Event Calendar styles into your existing Sass bundle.
 
 ## Usage
 
-### Start date
+### Start date (optional)
 
 The initial date which will be selected within the calendar can be passed as an initialisation option.
 
@@ -72,6 +72,15 @@ $(function () {
 ```
 
 Usually you would want to let the user choose a start date from a date field withn the user interface, you can bind a change event to this field.
+
+If no start date is supplied, or the value is `null`, the calendar will default to `today`.
+
+```javascript
+$(function () {
+    const clndr = new EventCalendar($('html'));
+    clndr.init();
+});
+```
 
 ## Selected events
 
@@ -90,7 +99,7 @@ $(function () {
 });
 ```
 
-## End Date
+## End Date (optional)
 
 The Event Calendar can be constrained to not allow the user to navigate past a certain date. This defaults to `today + 15 years`.
 
