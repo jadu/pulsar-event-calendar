@@ -145,7 +145,7 @@ class EventCalendar {
             _self.resetCalendar();
         });
 
-        // Store a reference to the pattern field as it’s also used in the resetCalendar() method.
+        // Store a reference to the pattern field as it’s also used in the resetCalendar() method
         _self.$patternField = _self.$html.find('.js-ercal-repeat');
 
         // Recalculate upcoming occurences based on the pattern dropdown
@@ -175,6 +175,7 @@ class EventCalendar {
             _self.paintMonth(_self.clndr.month, 'repeat-on');
         });
 
+        // Watch for changes to the weekday picker (only visible when the pattern is `weekly`)
         _self.$html.find('[name="ercal-weekdays"]').on('change', function() {
             _self.toggleWeekday();
         });
