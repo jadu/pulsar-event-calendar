@@ -12,7 +12,7 @@ $(function () {
     let endDate     = '2018-01-20';
 
     const clndr = new EventCalendar($('html'));
-    clndr.init(startDate, endDate, myEvents);
+    clndr.init(startDate, null, myEvents);
 
     $('#js-get').on('click', function() {
         clndr.getDates();

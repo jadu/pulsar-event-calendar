@@ -252,6 +252,37 @@ describe('EventCalendar', () => {
     });
 
 
+    describe('choosing multiple previously unselected dates', () => {
+        beforeEach(() => {
+            eventCalendar.init('2018-07-01');
+            $html.find('[data-day="2018-07-04"]').click();
+            $html.find('[data-day="2018-07-05"]').click();
+        });
+        
+        it('should add to target dates the array of datesToAdd', () => {
+            let dates = eventCalendar.getDates();
+            expect(dates.datesToAdd.length).to.equal(2);
+            expect(dates.datesToDel.length).to.equal(0);
+        });
+
+        it('should show the toAdd information in the review panel', () => {
+            expect($html.find('.js-dates-to-add').attr('style')).to.equal('display: inline;');
+        });
+
+        it('should update the toAdd information with the current number', () => {
+            expect($html.find('.js-dates-to-add').html()).to.equal('2 days will be added');
+        });
+
+        it('should not show the toDel information in the review panel', () => {
+            expect($html.find('.js-dates-to-del').attr('style')).to.equal('display: none;');
+        });
+
+        it('should not contain a count in the toDel information', () => {
+            expect($html.find('.js-dates-to-del').html()).to.equal('');
+        });
+    });
+
+
     describe('choosing then unchoosing a previously unselected date', () => {
         beforeEach(() => {
             eventCalendar.init('2018-07-01');
@@ -326,6 +357,37 @@ describe('EventCalendar', () => {
         it('should not contain a count in the toAdd information', () => {
             $html.find('[data-day="2018-07-04"]').click();
 
+            expect($html.find('.js-dates-to-add').html()).to.equal('');
+        });
+    });
+
+
+    describe('choosing multiple previously selected dates (ones that was passed on init())', () => {
+        beforeEach(() => {
+            eventCalendar.init('2018-07-01', null, [{ date: '2018-07-04' }, { date: '2018-07-05' }]);
+            $html.find('[data-day="2018-07-04"]').click();
+            $html.find('[data-day="2018-07-05"]').click();
+        });
+        
+        it('should add to target dates the array of datesToDel', () => {
+            let dates = eventCalendar.getDates();
+            expect(dates.datesToAdd.length).to.equal(0);
+            expect(dates.datesToDel.length).to.equal(2);
+        });
+
+        it('should show the toDel information in the review panel', () => {
+            expect($html.find('.js-dates-to-del').attr('style')).to.equal('display: inline;');
+        });
+
+        it('should update the toDel information with the current number', () => {
+            expect($html.find('.js-dates-to-del').html()).to.equal('2 days will be removed');
+        });
+
+        it('should not show the toAdd information in the review panel', () => {
+            expect($html.find('.js-dates-to-add').attr('style')).to.equal('display: none;');
+        });
+
+        it('should not contain a count in the toAdd information', () => {
             expect($html.find('.js-dates-to-add').html()).to.equal('');
         });
     });
