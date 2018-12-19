@@ -1243,15 +1243,5 @@ describe('EventCalendar', () => {
         });
     });
 
-    describe('attempting to provide events that occur after the end date', () => {
-        beforeEach(() => {
-            eventCalendar.init('2018-01-01', '2018-01-02', [{ date: '2018-01-03' }]);
-        });
-
-        it('should not apply selected styling to the out-of-bound date', () => {
-            expect($html.find('.calendar-day-2018-01-03').hasClass('event')).to.be.false;
-        });
-    });
-
 });
 
