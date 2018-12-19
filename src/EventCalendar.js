@@ -109,8 +109,10 @@ class EventCalendar {
 
         let precompiledTemplate = _.template(clndrTemplate);
 
-        // TODO: Finish making the week start on a Monday
-        moment.locale('en');
+        // Remove out-of-bounds dates from those supplied in `events` and throw a console warning to inform developers
+        // why expected dates may not be present in the calendar.
+        console.log(clndrEnd);
+        console.log(clndrEvents);
 
         _self.clndr = $container.clndr({
             clickEvents: {
@@ -136,10 +138,10 @@ class EventCalendar {
             render: function (data) {
                 // monthNumerical is used to create the data-day attribute on day buttons
                 data.monthNumerical = moment().month(data.month).format('MM');
-
                 return precompiledTemplate(data);
             },
-            startWithMonth: clndrStart
+            startWithMonth: clndrStart,
+            weekOffset: 1
         });
 
         // Reset all selected dates
@@ -554,4 +556,3 @@ class EventCalendar {
 }
 
 module.exports = EventCalendar;
-

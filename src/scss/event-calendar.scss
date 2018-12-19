@@ -8,7 +8,7 @@ $border-radius:         4px !default;
 
 $colour-background:     #fafafa !default;
 $colour-border:         #bebebe !default;
-$colour-border-light:   #dedede !default;
+$colour-border-light:   #fff !default;
 $colour-focus:          #ffbf47 !default;
 $colour-grey:           #7e7e7e !default;
 $colour-info:           #a4d2df !default;
@@ -187,9 +187,21 @@ $font-family-monospace: 'Courier New', 'Andale Mono', 'Consolas', monospace !def
     }
 
     .inactive > .day-contents {
+        background-color: $colour-background;
         border-color: $colour-border-light;
+        box-shadow: none;
         color: $colour-text-light;
         cursor: not-allowed;
+
+        &::before,
+        &::after {
+            display: none;
+        }
+
+        &:hover {
+            border-color: $colour-border-light;
+            cursor: not-allowed;
+        }
     }
 
     .event-add > .day-contents {

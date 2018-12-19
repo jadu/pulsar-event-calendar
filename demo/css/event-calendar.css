@@ -2345,7 +2345,7 @@
 .clndr {
   font-family: "Helvetica Neue", "Helvetica", "Arial", sans-serif; }
   .clndr .clndr-controls {
-    border-bottom: 1px solid #dedede;
+    border-bottom: 1px solid #fff;
     display: flex;
     line-height: 48px;
     vertical-align: middle; }
@@ -2447,9 +2447,16 @@
     .clndr .selected.event-repeat-on > .day-contents:hover {
       border-color: #1e1e1e; }
   .clndr .inactive > .day-contents {
-    border-color: #dedede;
+    background-color: #fafafa;
+    border-color: #fff;
+    box-shadow: none;
     color: #737373;
     cursor: not-allowed; }
+    .clndr .inactive > .day-contents::before, .clndr .inactive > .day-contents::after {
+      display: none; }
+    .clndr .inactive > .day-contents:hover {
+      border-color: #fff;
+      cursor: not-allowed; }
   .clndr .event-add > .day-contents {
     background-color: #2575b0;
     border: 2px solid #1e1e1e;
@@ -2498,7 +2505,7 @@
     content: ""; }
   .clndr .adjacent-month > .day-contents {
     background-color: #fff;
-    border-color: #dedede;
+    border-color: #fff;
     color: #737373; }
   .clndr .event-calendar-summary {
     list-style-type: none;
