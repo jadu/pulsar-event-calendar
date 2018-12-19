@@ -109,11 +109,6 @@ class EventCalendar {
 
         let precompiledTemplate = _.template(clndrTemplate);
 
-        // Remove out-of-bounds dates from those supplied in `events` and throw a console warning to inform developers
-        // why expected dates may not be present in the calendar.
-        console.log(clndrEnd);
-        console.log(clndrEvents);
-
         _self.clndr = $container.clndr({
             clickEvents: {
                 click: function(target) {
