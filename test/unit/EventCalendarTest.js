@@ -11,8 +11,7 @@ describe('EventCalendar', () => {
         $body,
         clndr,
         eventCalendar,
-        eventCalendarWithoutHTML,
-        customStartDate = '1981-07-04';
+        eventCalendarWithoutHTML;
 
     beforeEach(() => {
         $html = $('<div></div>');
@@ -89,6 +88,9 @@ describe('EventCalendar', () => {
             }).to.throw('EventCalendar requires a .js-event-calendar element present in the DOM');
         });
 
+        it('should start the week on a Monday', () => {
+            expect($html.find('.header-day:first-of-type').text()).to.equal('M');
+        });
     });
 
 
@@ -130,13 +132,13 @@ describe('EventCalendar', () => {
 
     describe('when a start date is provided', () => {
         beforeEach(() => {
-            eventCalendar.init(customStartDate);
+            eventCalendar.init('2018-01-02');
         });
 
         it('should select the specified date', () => {
             let selectedDate = $html.find('.selected > .day-contents').data('day');
 
-            expect(selectedDate).to.equal(customStartDate);
+            expect(selectedDate).to.equal('2018-01-02');
         });
 
         it('should not set the current date to inactive', () => {
@@ -148,7 +150,7 @@ describe('EventCalendar', () => {
         });
 
         it('should show the month & year in text form (start month)', () => {
-            let todayMonthYear = moment(customStartDate).format('MMMM YYYY');
+            let todayMonthYear = moment('2018-01-02').format('MMMM YYYY');
 
             expect($html.find('.month').text()).to.equal(todayMonthYear);
         });
@@ -159,6 +161,11 @@ describe('EventCalendar', () => {
 
         it('should show the next month arrow', () => {
             expect($html.find('.clndr-next-button').hasClass('inactive')).to.be.false;
+        });
+
+        it('should have the correct week offset', () => {
+            console.log($html.find('tbody td:first-of-type').attr('class'));
+            expect($html.find('tbody > tr:first-of-type > td:first-of-type').hasClass('calendar-day-2018-01-01')).to.be.true;
         });
     });
 
@@ -1233,6 +1240,16 @@ describe('EventCalendar', () => {
 
         it('should remove the value from the toDel information', () => {
             expect($html.find('.js-dates-to-del').html()).to.equal('');
+        });
+    });
+
+    describe('attempting to provide events that occur after the end date', () => {
+        beforeEach(() => {
+            eventCalendar.init('2018-01-01', '2018-01-02', [{ date: '2018-01-03' }]);
+        });
+
+        it('should not apply selected styling to the out-of-bound date', () => {
+            expect($html.find('.calendar-day-2018-01-03').hasClass('event')).to.be.false;
         });
     });
 
