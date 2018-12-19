@@ -2,17 +2,26 @@ const $ = require('jquery');
 const EventCalendar = require('./src/EventCalendar');
 
 $(function () {
+    const calendar = new EventCalendar($('html'));
+    
+    /**
+     * Simple init() method which will default to startDate = today / endDate = today + 15 years
+     */
+    calendar.init();
 
-    let myEvents = [
-        { date: '2018-01-25' },
-        { date: '2018-01-26' }
-    ];
+    /**
+     * More detailed example with saved events, start date and end date
+     */
 
-    let startDate   = '2018-01-02';
-    let endDate     = '2018-02-20';
+    // let myEvents = [
+    //     { date: '2019-01-25' },
+    //     { date: '2019-02-10' }
+    // ];
 
-    const clndr = new EventCalendar($('html'));
-    clndr.init(startDate, endDate, myEvents);
+    // let startDate   = '2019-01-02';
+    // let endDate     = '2019-02-20';
+
+    // calendar.init(startDate, endDate, myEvents);
 
     /**
      * Basic getter examples
