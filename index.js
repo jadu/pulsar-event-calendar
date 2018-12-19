@@ -24,7 +24,7 @@ $(function () {
     // calendar.init(startDate, endDate, myEvents);
 
     /**
-     * Basic getter examples
+     * Basic getter examples, used to log data to the console in demo/demo.html
      */
     $('.js-get-example').on('click', function() {
         let exampleDates = clndr.getDates();
