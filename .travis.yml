@@ -1,4 +1,4 @@
-language: javascript
+language: node_js
 
 before_install:
   - npm install -g npm@5.5.1
