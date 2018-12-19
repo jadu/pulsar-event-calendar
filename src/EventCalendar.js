@@ -14,10 +14,9 @@ require('clndr');
 class EventCalendar {
 
     /**
-     * EventCalendar
      * @constructor
-     * @param {jQuery} $html - jQuery wrapper of the html node
-     * @param {jQuery} clndr - The clndr instance that is in use
+     * @param {jQuery} $html jQuery wrapper of the html node
+     * @param {jQuery} clndr The clndr instance that is in use
      */
     constructor ($html) {
         this.$html = $html;
@@ -25,13 +24,14 @@ class EventCalendar {
     }
 
     /**
+     * Initalises the event calendar providing the correct markup is present within the DOM (as per README.md).
      * 
-     * @param {string} startDate - Specifies the month and year which will be initially focused by the calendar, dates 
+     * @param {string} startDate Specifies the month and year which will be initially focused by the calendar, dates 
      * before this will not be interactive. Will default to the user's current date if not supplied or is null 
-     * (format: YYYY-MM-DD).
-     * @param {string} endDate - Specififies the end of dates made available to the user. Defaults to 
-     * startDate + 15 years if not supplied. (format: YYYY-MM-DD).
-     * @param {array}  events - An array of simple dates that should be highlighted in the calendar as selected. 
+     * (format: YYYY-MM-DD)
+     * @param {string} endDate Specififies the end of dates made available to the user. Defaults to 
+     * startDate + 15 years if not supplied. (format: YYYY-MM-DD)
+     * @param {array} events An array of simple dates that should be highlighted in the calendar as selected
      *
      * let exampleEvents = [
      *    { date: 'YYYY-MM-DD' },
@@ -164,7 +164,7 @@ class EventCalendar {
             _self.paintMonth(_self.clndr.month, 'clear');
 
             /*
-                Set the new repeat pattern
+                Set the new recurrence pattern
 
                 Any dates in the datesToAdd / datesToDel collections will maintain their state
                 and override the pattern
@@ -181,8 +181,6 @@ class EventCalendar {
     }
 
     /**
-     * Toggle Weekday
-     * 
      * Takes the values from the weekday checkboxes (MTWTFSS), defines that as a recur pattern, then paints it.
      */
     toggleWeekday () {
@@ -198,20 +196,18 @@ class EventCalendar {
     }
 
     /**
-     * Toggle Day
+     * Fired when a day is clicked, and chooses which actions should be performed based on the classes present on the 
+     * button's parent `<td>`.
      * 
      * @param {jquery} target The day being clicked
      * 
-     * Fired when a day is clicked, and chooses which actions should be performed based on the classes present on the 
-     * button's parent `<td>`
-     * 
      * States:
      *      1. Netural      - The default state of the button
-     *      2. To Repeat    - Defined by the repeat pattern, to be added to the list of selected dates when saved
+     *      2. To Repeat    - Defined by the recurrence pattern, to be added to the list of selected dates when saved
      *      3. To Add       - Defined by user selection, to be added to the list of selected dates when saved
      *      4. To Delete    - Defined by user selection, To be removed from the list of selected dates when saved, 
      *                          or to prevent a pattern taking effect on this date
-     *      5. Selected     - The start date for the repeat pattern
+     *      5. Selected     - The start date for the recurrence pattern
      */
     toggleDay (target) {
         let _self = this,
@@ -282,14 +278,11 @@ class EventCalendar {
     }
 
     /**
-     * Set Pattern
-     * 
-     * @param {*} clndr 
-     * @param {*} pattern 
-     * @param {*} method 
-     * 
      * Takes the value of the pattern dropdown and generates a recur pattern based on the selected start date.
      * The pattern is saved and used when painting each month.
+     * 
+     * @param {string} pattern The type of pattern to be applied
+     * @param {array} weekdays A list of selected weekdays (numbered 0 through 6) to be used for the 'weekdays' pattern.
      */
     setPattern (pattern, weekdays) {
         let _self = this,
@@ -325,25 +318,22 @@ class EventCalendar {
         _self.recurPattern = newPattern;
     }
 
+    /**
+     * Calculates the dates within the currently viewed month which should be painted by the recurrence pattern, and paints
+     * or unpaints them according to the `method`. The pattern will be retrieved from the clndr instance.
+     * 
+     * @param {string} method `repeat-on` will paint the dates, `clear` will unpaint them
+     */
     paintRepeatPattern (method) {    
         let _self = this,
+            paintMethod = (method) ? method : 'repeat-on',
             recurDatesThisMonth = _self.recurPattern
                                     .startDate(_self.clndr.options.selectedDate)
                                     .endDate(_self.clndr.options.constraints.endDate)
                                     .all();
 
-        //_self.clndr.options.constraints.endDate
-
-        var method = (method) ? method : 'repeat-on';
-
-        _self.paintDates(recurDatesThisMonth, method);
-    }
-
-    paintDates (dates, method) {
-        let _self = this;
-   
-        $.each(dates, function() {
-            switch (method) {
+        $.each(recurDatesThisMonth, function() {
+            switch (paintMethod) {
                 case 'repeat-on':
                     _self.styleRepeatOn(this);
                     break;
@@ -355,14 +345,21 @@ class EventCalendar {
         });
     }
 
-
+    /**
+     * Triggered when navigating through or making any changes to the calendar. Takes the dates stored in the 
+     * `datesToAdd` and `datesToDel` arrays as well as the currently stored recurrence pattern and paints the dates
+     * appropriately. Also triggers the updating of the review panel when finished.
+     * 
+     * @param {moment} month A moment object representing the currently viewed month
+     * @param {string} method `repeat-on` will paint the dates, `clear` will unpaint them
+     */
     paintMonth (month, method) {
         let _self = this;
 
         // Unpaint the entire month, used to catch any dates resetting to neutral
         _self.styleClearAll();
 
-        // Repeat pattern to paint for the displayed month
+        // Recurrence pattern to paint for the displayed month
         if (_self.recurPattern != null) {
             _self.paintRepeatPattern(method);
         }
@@ -392,6 +389,11 @@ class EventCalendar {
         _self.updateReview();
     }
 
+    /**
+     * Style a date which should be added to the list of active dates
+     * 
+     * @param {moment} target The date to style
+     */
     styleToAdd (target) {
         let _self = this,
             $elem = _self.clndr.element.find('[data-day="' + target.format('YYYY-MM-DD') + '"]');
@@ -399,6 +401,11 @@ class EventCalendar {
         $elem.parent().addClass('event-add');
     }
 
+    /**
+     * Style a date which should be removed from the list of active dates
+     * 
+     * @param {moment} target The date to style
+     */
     styleToDel (target) {
         let _self = this,
             $elem = _self.clndr.element.find('[data-day="' + target.format('YYYY-MM-DD') + '"]');
@@ -406,6 +413,11 @@ class EventCalendar {
         $elem.parent().removeClass('event-add').addClass('event-del');
     }
 
+    /**
+     * Style a date which will be affected by the recurrence pattern and added to the list of active dates
+     * 
+     * @param {moment} target The date to style
+     */
     styleRepeatOn (target) {
         let _self = this,
             $elem = _self.clndr.element.find('[data-day="' + target.format('YYYY-MM-DD') + '"]');
@@ -413,6 +425,11 @@ class EventCalendar {
         $elem.parent().addClass('event-repeat');
     }
 
+    /**
+     * Remove styling from a date and reset it to the 'neutral' state
+     * 
+     * @param {moment} target The date to style
+     */
     styleClear (target) {
         let _self = this,
             $elem = _self.clndr.element.find('[data-day="' + target.format('YYYY-MM-DD') + '"]');
@@ -420,6 +437,9 @@ class EventCalendar {
         $elem.parent().removeClass('event-add event-del event-repeat');
     }
 
+    /**
+     * Restore all dates to their initial state (when the calendar was initialised)
+     */
     styleClearAll () {
         let _self = this,
             $elems = _self.clndr.element.find('.day');
@@ -427,18 +447,42 @@ class EventCalendar {
         $elems.removeClass('event-add event-del event-repeat');
     }
 
+    /**
+     * Check whether `date` is in the same month as `dateToCompareTo`
+     * 
+     * @param {moment} dateToCompareTo Haystack
+     * @param {moment} date Needle
+     */
     static isInMonth (dateToCompareTo, date) {
         return date.month() === dateToCompareTo.month();
     }
     
+    /**
+     * Check whether `date` is in the same year as `dateToCompareTo`
+     * 
+     * @param {moment} dateToCompareTo Haystack
+     * @param {moment} date Needle
+     */
     static isInYear (dateToCompareTo, date) {
         return date.year() === dateToCompareTo.year();
     }
 
+    /**
+     * Check whether two moment instances are the same date
+     * 
+     * @param {moment} a Haystack
+     * @param {moment} b Needle
+     */
     static matchDates (a, b) {
         return a._i != b._i;
     }
     
+    /**
+     * Updates the review panel to detail the number of exceptions being applied outside of any recurrence pattern. Controls
+     * the visibility of certain elements and updates text counters.
+     * 
+     * Triggered by the paintMonth() method.
+     */
     updateReview () {
         let _self = this,
             numDatesToAdd = _self.clndr.options.extras.datesToAdd.length,
@@ -447,6 +491,7 @@ class EventCalendar {
             datesToDelContainer = _self.clndr.element.find('.js-dates-to-del'),
             resetButton = _self.clndr.element.find('.js-calendar-reset');
 
+        // Dates being added (outside of any recurrence pattern)
         if (numDatesToAdd > 0) {
             datesToAddContainer.html((numDatesToAdd === 1) 
                 ? numDatesToAdd + ' day will be added' : numDatesToAdd + ' days will be added').show();
@@ -455,6 +500,7 @@ class EventCalendar {
             datesToAddContainer.html('').hide();
         }
 
+        // Dates being removed (outside of any recurrence pattern)
         if (numDatesToDel > 0) {
             datesToDelContainer.html((numDatesToDel === 1) 
                 ? numDatesToDel + ' day will be removed' : numDatesToDel + ' days will be removed').show();
@@ -463,6 +509,7 @@ class EventCalendar {
             datesToDelContainer.html('').hide();
         }
 
+        // Show the reset button if changes are to be made
         if (numDatesToAdd != 0 || numDatesToDel != 0) {
             resetButton.show();
         }
@@ -471,6 +518,10 @@ class EventCalendar {
         }
     }
 
+    /**
+     * Reverts all user changes to their initial state (when the calendar was initialised) and return the user to the 
+     * initial view the calendar was loaded on (either `today` or the `startDate`).
+     */
     resetCalendar () {
         let _self = this;
 
@@ -485,16 +536,21 @@ class EventCalendar {
         _self.clndr.setMonth(_self.clndr.options.startWithMonth.month());
     }
 
+    /**
+     * Retrieve the contents of the `datesToAdd` and `datesToDel` arrays.
+     */
     getDates () {
         let _self = this;
         return _self.clndr.options.extras;
     }
 
+    /**
+     * Retrieve the currently stored recurrence pattern.
+     */
     getRecurPattern () {
         let _self = this;
         return _self.recurPattern;
     }
-
 }
 
 module.exports = EventCalendar;
