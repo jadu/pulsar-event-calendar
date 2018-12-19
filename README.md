@@ -12,6 +12,20 @@ Install via NPM.
 npm install pulsar-event-calendar --save
 ```
 
+### Tests
+
+Run the test suite to check expected functionality.
+
+```
+npm test
+```
+
+Generate a code coverage report, which can be viewed by opening `/coverage/lcov-report/index.html`
+
+```
+npm run coverage
+```
+
 ### HTML
 
 The Event Calendar requires an element with the `.js-event-calendar` class to be present in the DOM.
