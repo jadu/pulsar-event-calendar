@@ -1,9 +1,10 @@
 language: js
 
 before_install:
-  - npm i npm@latest -g
+  - npm i -g npm
 
 before_script:
+  - npm install
   - mkdir -p dist/
 
 script:
