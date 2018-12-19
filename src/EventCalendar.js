@@ -326,9 +326,8 @@ class EventCalendar {
     }
 
     paintRepeatPattern (method) {    
-        let _self = this;
-
-        let recurDatesThisMonth = _self.recurPattern
+        let _self = this,
+            recurDatesThisMonth = _self.recurPattern
                                     .startDate(_self.clndr.options.selectedDate)
                                     .endDate(_self.clndr.options.constraints.endDate)
                                     .all();
