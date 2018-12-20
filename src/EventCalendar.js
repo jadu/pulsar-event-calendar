@@ -21,6 +21,7 @@ class EventCalendar {
     constructor ($html) {
         this.$html = $html;
         this.$patternField;
+        this.$ariaLiveRegion;
         this.clndr;
     }
 
@@ -58,16 +59,17 @@ class EventCalendar {
             clndrEvents = (events) ? events : [],
             $weekdayPicker = _self.$html.find('.js-ercal-weekdays'),
             clndrTemplate = `
-                <div class='clndr-controls'>
+                <div class='clndr-controls' role='navigation'>
                     <div class='clndr-control-button'>
-                        <button class='clndr-previous-button' aria-label='Go to the previous month'>&lsaquo;</button>
+                        <button class='clndr-previous-button' aria-controls='event-calendar' aria-label='Go to the previous month'>&lsaquo;</button>
                     </div>
                     <div class='month' id='aria-clndr-title' aria-live='polite'><%= month %> <%= year %></div>
                     <div class='clndr-control-button rightalign'>
-                        <button class='clndr-next-button' aria-label='Go to the next month'>&rsaquo;</button>
+                        <button class='clndr-next-button' aria-controls='event-calendar' aria-label='Go to the next month'>&rsaquo;</button>
                     </div>
                 </div>
-                <table class='clndr-table' border='0' cellspacing='0' cellpadding='0'>
+                <span class="js-ercal-status hide" role="alert" aria-live="polite">live region</span>
+                <table id='event-calendar' class='clndr-table' border='0' cellspacing='0' cellpadding='0'>
                     <thead>
                         <tr class='header-days'>
                         <% for (var i = 0; i < daysOfTheWeek.length; i++) { %>
@@ -75,7 +77,7 @@ class EventCalendar {
                         <% } %>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody aria-live="polite">
                     <% for (var i = 0; i < numberOfRows; i++) { %>
                         <tr>
                         <% for (var j = 0; j < 7; j++){ %>
@@ -86,7 +88,7 @@ class EventCalendar {
                                 <button 
                                     class='day-contents' 
                                     data-day="<%= year %>-<%= monthNumerical %>-<%= daysLeadingZero %>" 
-                                    aria-label="<%= days[d].day %> <%= month %>, <%= year %>. <% if (days[d].classes.indexOf('selected') >= 0) { %><%= ariaStartDate %><% } else if (days[d].classes.indexOf('event') >= 0) { %><%= ariaSelected %><% } else { %><%= ariaUnselected %><% } %>"
+                                    aria-label="<% if (days[d].classes.indexOf('selected') >= 0) { %><%= ariaStartDate %><% } else if (days[d].classes.indexOf('event') >= 0) { %><%= ariaSelected %><% } %> <%= days[d].day %> <%= month %>, <%= year %>.<% if (days[d].classes.indexOf('selected') <= 0 && days[d].classes.indexOf('event') <= 0) { %> <%= ariaUnselected %><% } %>"
                                     <% 
                                         if (days[d].classes.indexOf('inactive') >= 0 && 
                                         days[d].classes.indexOf('selected') <= 0) { 
@@ -138,9 +140,9 @@ class EventCalendar {
             render: function (data) {
                 // monthNumerical is used to create the data-day attribute on day buttons
                 data.monthNumerical = moment().month(data.month).format('MM');
-                data.ariaStartDate = 'This is the event start date';
-                data.ariaSelected = 'Selected. Event will repeat on this day';
-                data.ariaUnselected = 'Unselected';
+                data.ariaStartDate = 'This is the event start date. Clicking this button will have no effect.';
+                data.ariaSelected = 'Selected. Event will repeat on';
+                data.ariaUnselected = 'Unselected.';
                 return precompiledTemplate(data);
             },
             startWithMonth: clndrStart,
@@ -155,9 +157,13 @@ class EventCalendar {
         // Store a reference to the pattern field as it’s also used in the resetCalendar() method
         _self.$patternField = _self.$html.find('.js-ercal-repeat');
 
+        // Store a reference to the aria alert status element used to update screen readers when things change
+        _self.$ariaLiveRegion = _self.$html.find('.js-ercal-status');
+
         // Recalculate upcoming occurences based on the pattern dropdown
         _self.$patternField.on('change', function() {
-            let pattern = $(this).val();
+            let $elem = $(this),
+                pattern = $elem.val();
 
             // Show the weekday picker if the pattern is `weekly`
             if (pattern === 'weekly') {
@@ -402,11 +408,26 @@ class EventCalendar {
      */
     styleToAdd (target) {
         let _self = this,
-            $elem = _self.clndr.element.find('[data-day="' + target.format('YYYY-MM-DD') + '"]');
+            $elem = _self.clndr.element.find('[data-day="' + target.format('YYYY-MM-DD') + '"]'),
+            ariaLabel = 'Selected. Event will repeat on ' + target.format('DD MMMM, YYYY');
 
-        $elem.attr('aria-label', target.format('DD MMMM, YYYY') + '. Selected. Event will repeat on this day')
+        $elem.attr('aria-label', ariaLabel)
              .parent()
              .addClass('event-add');
+
+        // Announce the new status through a live region (instead of the previous status)
+        _self.updateLiveRegion(ariaLabel);
+    }
+
+    /**
+     * Make screen readers announce the `message` by updating a hidden aria-live region within the template
+     * 
+     * @param {string} message The text to be announced by the screen reader
+     */
+    updateLiveRegion (message) {
+        let _self = this;
+
+        _self.$ariaLiveRegion.text(message);
     }
 
     /**
@@ -418,7 +439,7 @@ class EventCalendar {
         let _self = this,
             $elem = _self.clndr.element.find('[data-day="' + target.format('YYYY-MM-DD') + '"]');
         
-        $elem.attr('aria-label', target.format('DD MMMM, YYYY') + '. Removed. Event will no longer repeat on this day')
+        $elem.attr('aria-label', 'Removed. Event will no longer repeat on ' + target.format('DD MMMM, YYYY'))
              .parent()
              .removeClass('event-add')
              .addClass('event-del');
@@ -433,7 +454,7 @@ class EventCalendar {
         let _self = this,
             $elem = _self.clndr.element.find('[data-day="' + target.format('YYYY-MM-DD') + '"]');
 
-        $elem.attr('aria-label', target.format('DD MMMM, YYYY') + '. Event will repeat on this day based on the chosen repeat pattern')
+        $elem.attr('aria-label', 'Event will repeat on ' + target.format('DD MMMM, YYYY') + ' based on the chosen repeat pattern')
              .parent()
              .addClass('event-repeat');
     }

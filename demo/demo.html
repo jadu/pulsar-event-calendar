@@ -11,9 +11,10 @@
     <h1>Pulsar Event Calendar Demo</h1>
     
     <fieldset>
-        <legend>Repeat every</legend>
-
-        <select class="js-ercal-repeat">
+        <legend>Pattern</legend>
+    
+        <label for="ercal-repeat">Repeat</label>
+        <select id="ercal-repeat" class="js-ercal-repeat">
             <option value="no-repeat">No repeat</option>
             <option value="daily">Daily</option>
             <option value="weekly">Weekly</option>
@@ -28,31 +29,31 @@
         <legend>Repeat on</legend>
         <label>
             <input value="1" name="ercal-weekdays" type="checkbox">
-            <span>MO</span>
+            <span aria-label="Monday">MO</span>
         </label>
         <label>
             <input value="2" name="ercal-weekdays" type="checkbox">
-            <span>TU</span>
+            <span aria-label="Tuesday">TU</span>
         </label>
         <label>
             <input value="3" name="ercal-weekdays" type="checkbox">
-            <span>WE</span>
+            <span aria-label="Wednesday">WE</span>
         </label>
         <label>
             <input value="4" name="ercal-weekdays" type="checkbox">
-            <span>TH</span>
+            <span aria-label="Thursday">TH</span>
         </label>
         <label>
             <input value="5" name="ercal-weekdays" type="checkbox">
-            <span>FR</span>
+            <span aria-label="Friday">FR</span>
         </label>
         <label>
             <input value="6" name="ercal-weekdays" type="checkbox">
-            <span>SA</span>
+            <span aria-label="Saturday">SA</span>
         </label>
         <label>
             <input value="7" name="ercal-weekdays" type="checkbox">
-            <span>SU</span>
+            <span aria-label="Sunday">SU</span>
         </label>
     </fieldset>
 
