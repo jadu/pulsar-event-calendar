@@ -53,7 +53,7 @@ class EventCalendar {
 
         let _self = this,
             clndrSelected = (startDate) ? moment(startDate) : moment(new Date()),
-            clndrStart = (startDate) ? moment(startDate) : moment(new Date()).subtract(1, 'days'),
+            clndrStart = (startDate) ? moment(startDate) : moment(new Date()),
             clndrEnd = (endDate) ? moment(endDate) : moment(new Date()).add(15, 'years'),
             clndrEvents = (events) ? events : [],
             $weekdayPicker = _self.$html.find('.js-ercal-weekdays'),
