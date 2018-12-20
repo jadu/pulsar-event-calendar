@@ -172,6 +172,7 @@ $font-family-monospace: 'Courier New', 'Andale Mono', 'Consolas', monospace !def
 
     .event > .day-contents,
     .event.event-repeat > .day-contents,
+    .selected.inactive > .day-contents,
     .selected.event-repeat > .day-contents,
     .selected > .day-contents,
     .selected.event-add > .day-contents,

@@ -106,8 +106,8 @@ describe('EventCalendar', () => {
             expect(selectedDate).to.equal(today);
         });
 
-        it('should not set the current date to inactive', () => {
-            expect($html.find('.selected').hasClass('inactive')).to.be.false;
+        it('should set the current date to .today', () => {
+            expect($html.find('.selected').hasClass('today')).to.be.true;
         });
 
         it('should constrain the available dates to the day before the startDate', () => {
@@ -636,7 +636,20 @@ describe('EventCalendar', () => {
     });
 
 
-    describe('choosing the ’weekly’ pattern', () => {
+    describe('choosing the ’weekly’ pattern without a startDate', () => {
+        beforeEach(() => {
+            eventCalendar.init();
+            $html.find('.js-ercal-repeat').val('weekly').trigger('change');
+        });
+
+        it('should select the current weekday in the weekday picker', () => {
+            let dow = moment(new Date()).day();
+            expect($html.find('[value="' + dow + '"]').prop('checked')).to.be.true;
+        });
+    });
+
+
+    describe('choosing the ’weekly’ pattern with a startDate', () => {
         beforeEach(() => {
             eventCalendar.init('2018-01-02', '2018-02-27', [{ date: '2018-01-10' }]);
             $html.find('.js-ercal-repeat').val('weekly').trigger('change');
@@ -654,6 +667,10 @@ describe('EventCalendar', () => {
             expect($html.find('.calendar-day-2018-01-16').hasClass('event-repeat')).to.be.true;
             expect($html.find('.calendar-day-2018-01-23').hasClass('event-repeat')).to.be.true;
             expect($html.find('.calendar-day-2018-01-30').hasClass('event-repeat')).to.be.true;
+        });
+
+        it('should select the weekday in the weekday picker', () => {
+            expect($html.find('[value="2"]').prop('checked')).to.be.true;
         });
 
         it('should store the recur pattern in the clndr instance', () => {
