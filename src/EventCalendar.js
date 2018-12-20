@@ -220,9 +220,6 @@ class EventCalendar {
             $control = $elem.find('.day-contents'),
             datesToAdd = _self.clndr.options.extras.datesToAdd,
             datesToDel = _self.clndr.options.extras.datesToDel;
-            
-        // Remove yellow focus outline on click
-        $control.blur();
 
         // Don't allow interactions on dates in the past, or the event start date
         if ($elem.hasClass('inactive') || $elem.hasClass('selected')) {
