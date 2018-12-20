@@ -114,6 +114,16 @@ describe('EventCalendar', () => {
             expect($html.find('.selected').prev().hasClass('inactive')).to.be.true;
         });
 
+        it('should disable dates in the past to prevent keyboard navigation', () => {
+            let date = moment(new Date()).subtract(1, 'day').format('YYYY-MM-DD');
+            expect($html.find('[data-day="' + date + '"]').attr('disabled')).to.equal('disabled');
+        });
+
+        it('should not disable dates in the future', () => {
+            let date = moment(new Date()).add(1, 'day').format('YYYY-MM-DD');
+            expect($html.find('[data-day="' + date + '"]').attr('disabled')).to.be.undefined;
+        });
+
         it('should show the month & year in text form (today)', () => {
             let todayMonthYear = moment(new Date()).format('MMMM YYYY');
 
@@ -143,6 +153,14 @@ describe('EventCalendar', () => {
 
         it('should not set the current date to inactive', () => {
             expect($html.find('.selected').hasClass('inactive')).to.be.false;
+        });
+
+        it('should disable dates in the past to prevent keyboard navigation', () => {
+            expect($html.find('[data-day="2018-01-01"]').attr('disabled')).to.equal('disabled');
+        });
+
+        it('should not disable dates in the future', () => {
+            expect($html.find('[data-day="2018-01-03"]').attr('disabled')).to.be.undefined;
         });
 
         it('should constrain the available dates to the day before the startDate', () => {

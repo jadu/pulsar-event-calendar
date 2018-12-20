@@ -70,23 +70,24 @@ class EventCalendar {
                 <table class='clndr-table' border='0' cellspacing='0' cellpadding='0'>
                     <thead>
                         <tr class='header-days'>
-                        <% for(var i = 0; i < daysOfTheWeek.length; i++) { %>
+                        <% for (var i = 0; i < daysOfTheWeek.length; i++) { %>
                             <td class='header-day'><%= daysOfTheWeek[i] %></td>
                         <% } %>
                         </tr>
                     </thead>
                     <tbody>
-                    <% for(var i = 0; i < numberOfRows; i++){ %>
+                    <% for (var i = 0; i < numberOfRows; i++){ %>
                         <tr>
-                        <% for(var j = 0; j < 7; j++){ %>
+                        <% for (var j = 0; j < 7; j++){ %>
                         <% var d = j + i * 7; %>
                             <% var daysLeadingZero = days[d].day < 10 ? '0' + days[d].day : days[d].day; %>
                             <td class='<%= days[d].classes %>'>
-                            <% if(days[d].day.length != 0) { %>
+                            <% if (days[d].day.length != 0) { %>
                                 <button 
                                     class='day-contents' 
                                     data-day="<%= year %>-<%= monthNumerical %>-<%= daysLeadingZero %>" 
                                     aria-label="<%= days[d].day %> <%= month %>, <%= year %>"
+                                    <% if (days[d].classes.indexOf('inactive') >= 0) { %> disabled<% } %>
                                 >
                                     <%= days[d].day %>
                                 </button>
