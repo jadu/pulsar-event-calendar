@@ -60,11 +60,11 @@ class EventCalendar {
             clndrTemplate = `
                 <div class='clndr-controls'>
                     <div class='clndr-control-button'>
-                        <button class='clndr-previous-button'>&lsaquo;</button>
+                        <button class='clndr-previous-button' aria-label='Go to the previous month'>&lsaquo;</button>
                     </div>
-                    <div class='month' id='aria-clndr-title'><%= month %> <%= year %></div>
+                    <div class='month' id='aria-clndr-title' aria-live='polite'><%= month %> <%= year %></div>
                     <div class='clndr-control-button rightalign'>
-                        <button class='clndr-next-button'>&rsaquo;</button>
+                        <button class='clndr-next-button' aria-label='Go to the next month'>&rsaquo;</button>
                     </div>
                 </div>
                 <table class='clndr-table' border='0' cellspacing='0' cellpadding='0'>
@@ -76,7 +76,7 @@ class EventCalendar {
                         </tr>
                     </thead>
                     <tbody>
-                    <% for (var i = 0; i < numberOfRows; i++){ %>
+                    <% for (var i = 0; i < numberOfRows; i++) { %>
                         <tr>
                         <% for (var j = 0; j < 7; j++){ %>
                         <% var d = j + i * 7; %>
@@ -86,8 +86,11 @@ class EventCalendar {
                                 <button 
                                     class='day-contents' 
                                     data-day="<%= year %>-<%= monthNumerical %>-<%= daysLeadingZero %>" 
-                                    aria-label="<%= days[d].day %> <%= month %>, <%= year %>"
-                                    <% if (days[d].classes.indexOf('inactive') >= 0) { %> disabled<% } %>
+                                    aria-label="<%= days[d].day %> <%= month %>, <%= year %>. <% if (days[d].classes.indexOf('selected') >= 0) { %><%= ariaStartDate %><% } else if (days[d].classes.indexOf('event') >= 0) { %><%= ariaSelected %><% } else { %><%= ariaUnselected %><% } %>"
+                                    <% 
+                                        if (days[d].classes.indexOf('inactive') >= 0 && 
+                                        days[d].classes.indexOf('selected') <= 0) { 
+                                    %> disabled<% } %>
                                 >
                                     <%= days[d].day %>
                                 </button>
@@ -135,6 +138,9 @@ class EventCalendar {
             render: function (data) {
                 // monthNumerical is used to create the data-day attribute on day buttons
                 data.monthNumerical = moment().month(data.month).format('MM');
+                data.ariaStartDate = 'This is the event start date';
+                data.ariaSelected = 'Selected. Event will repeat on this day';
+                data.ariaUnselected = 'Unselected';
                 return precompiledTemplate(data);
             },
             startWithMonth: clndrStart,
@@ -217,7 +223,6 @@ class EventCalendar {
         let _self = this,
             $elem = $(target.element),
             date = target.date,
-            $control = $elem.find('.day-contents'),
             datesToAdd = _self.clndr.options.extras.datesToAdd,
             datesToDel = _self.clndr.options.extras.datesToDel;
 
@@ -399,7 +404,9 @@ class EventCalendar {
         let _self = this,
             $elem = _self.clndr.element.find('[data-day="' + target.format('YYYY-MM-DD') + '"]');
 
-        $elem.parent().addClass('event-add');
+        $elem.attr('aria-label', target.format('DD MMMM, YYYY') + '. Selected. Event will repeat on this day')
+             .parent()
+             .addClass('event-add');
     }
 
     /**
@@ -411,7 +418,10 @@ class EventCalendar {
         let _self = this,
             $elem = _self.clndr.element.find('[data-day="' + target.format('YYYY-MM-DD') + '"]');
         
-        $elem.parent().removeClass('event-add').addClass('event-del');
+        $elem.attr('aria-label', target.format('DD MMMM, YYYY') + '. Removed. Event will no longer repeat on this day')
+             .parent()
+             .removeClass('event-add')
+             .addClass('event-del');
     }
 
     /**
@@ -423,7 +433,9 @@ class EventCalendar {
         let _self = this,
             $elem = _self.clndr.element.find('[data-day="' + target.format('YYYY-MM-DD') + '"]');
 
-        $elem.parent().addClass('event-repeat');
+        $elem.attr('aria-label', target.format('DD MMMM, YYYY') + '. Event will repeat on this day based on the chosen repeat pattern')
+             .parent()
+             .addClass('event-repeat');
     }
 
     /**
@@ -434,8 +446,10 @@ class EventCalendar {
     styleClear (target) {
         let _self = this,
             $elem = _self.clndr.element.find('[data-day="' + target.format('YYYY-MM-DD') + '"]');
-        
-        $elem.parent().removeClass('event-add event-del event-repeat');
+
+        $elem.attr('aria-label', target.format('DD MMMM, YYYY') + '.')
+             .parent()
+             .removeClass('event-add event-del event-repeat');
     }
 
     /**
@@ -443,10 +457,22 @@ class EventCalendar {
      */
     styleClearAll () {
         let _self = this,
-            $elems = _self.clndr.element.find('.day');
+            $elems = _self.clndr.element.find('.day-contents');
         
-        $elems.removeClass('event-add event-del event-repeat');
-    }
+            $elems.each(function() {
+                let $elem = $(this),
+                    $elemParent = $elem.parent(),
+                    ariaLabel = 'Unselected';
+
+                // If event was passed in the `events` array, it will be reset back to `.selected` and needs labelling
+                if ($elemParent.attr('class').indexOf('event') >= 0) {
+                    ariaLabel = 'Selected. Event will repeat on this day';
+                }
+
+                $elem.attr('aria-label', moment($elem.data('day')).format('DD MMMM, YYYY') + '. ' + ariaLabel);
+                $elemParent.removeClass('event-add event-del event-repeat');
+            });
+        }
 
     /**
      * Check whether `date` is in the same month as `dateToCompareTo`
