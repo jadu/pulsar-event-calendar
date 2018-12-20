@@ -27,12 +27,12 @@ $(function () {
      * Basic getter examples, used to log data to the console in demo/demo.html
      */
     $('.js-get-example').on('click', function() {
-        let exampleDates = clndr.getDates();
+        let exampleDates = calendar.getDates();
         console.log(exampleDates);
     });
 
     $('.js-get-pattern').on('click', function() {
-        let examplePattern = clndr.getRecurPattern();
+        let examplePattern = calendar.getRecurPattern();
         console.log(examplePattern);
     });
 });
