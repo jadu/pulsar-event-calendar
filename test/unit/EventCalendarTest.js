@@ -110,6 +110,10 @@ describe('EventCalendar', () => {
             expect($html.find('.selected').hasClass('today')).to.be.true;
         });
 
+        it('should add an aria label indicating the start date', () => {
+            expect($html.find('.selected > button').attr('aria-label')).to.contain('This is the event start date');
+        });
+
         it('should constrain the available dates to the day before the startDate', () => {
             expect($html.find('.selected').prev().hasClass('inactive')).to.be.true;
         });
@@ -227,6 +231,21 @@ describe('EventCalendar', () => {
     });
 
 
+    describe('passing events to the init() method', () => {
+        beforeEach(() => {
+            eventCalendar.init('2018-07-01', null, [{ date: '2018-07-04' }]);
+        });
+        
+        it('should add the appropriate styling to the date', () => {
+            expect($html.find('[data-day="2018-07-04"]').parent().hasClass('event')).to.be.true;
+        });
+
+        it('should add the appropriate aria-label to the date', () => {
+            expect($html.find('[data-day="2018-07-04"]').attr('aria-label')).to.contain('Selected');
+        });
+    });
+
+
     describe('choosing a previously unselected date', () => {
         beforeEach(() => {
             eventCalendar.init('2018-07-01');
@@ -235,6 +254,11 @@ describe('EventCalendar', () => {
         it('should add the appropriate styling to the target date', () => {
             $html.find('[data-day="2018-07-04"]').click();
             expect($html.find('[data-day="2018-07-04"]').parent().hasClass('event-add')).to.be.true;
+        });
+
+        it('should add the appropriate aria label the target date', () => {
+            $html.find('[data-day="2018-07-04"]').click();
+            expect($html.find('[data-day="2018-07-04"]').attr('aria-label')).to.contain('Selected. Event will repeat on this day');
         });
 
         it('the datesToAdd and datesToDel arrays should be empty', () => {
@@ -450,7 +474,10 @@ describe('EventCalendar', () => {
         it('should not contain a count in the toAdd information', () => {
             expect($html.find('.js-dates-to-add').html()).to.equal('');
         });
-
+        
+        it('should reset the aria label to the ’selected’ state', () => {
+            expect($html.find('[data-day="2018-07-04"]').attr('aria-label')).to.contain('Selected. Event will repeat on this day');
+        });
     });
 
 
@@ -530,7 +557,14 @@ describe('EventCalendar', () => {
 
             expect($html.find('.js-ercal-repeat').val()).to.equal('no-repeat');
         });
+
+        it('should reset the aria label', () => {
+            $html.find('[data-day="2018-01-10"]').click();
+            $html.find('.js-ercal-reset').click();
+            expect($html.find('[data-day="2018-01-10"]').attr('aria-label')).to.contain('Selected. Event will repeat on this day');
+        });
     });
+
 
     describe('choosing a pattern that doesn’t exist', () => {
         beforeEach(() => {
@@ -589,6 +623,7 @@ describe('EventCalendar', () => {
             expect(dates.datesToDel.length).to.equal(0);
         });
     });
+
 
     describe('choosing the ’daily’ pattern', () => {
         beforeEach(() => {
