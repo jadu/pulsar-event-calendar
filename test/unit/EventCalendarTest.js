@@ -258,7 +258,7 @@ describe('EventCalendar', () => {
 
         it('should add the appropriate aria label the target date', () => {
             $html.find('[data-day="2018-07-04"]').click();
-            expect($html.find('[data-day="2018-07-04"]').attr('aria-label')).to.contain('Selected. Event will repeat on this day');
+            expect($html.find('[data-day="2018-07-04"]').attr('aria-label')).to.contain('Selected. Event will repeat');
         });
 
         it('the datesToAdd and datesToDel arrays should be empty', () => {
@@ -476,7 +476,7 @@ describe('EventCalendar', () => {
         });
         
         it('should reset the aria label to the ’selected’ state', () => {
-            expect($html.find('[data-day="2018-07-04"]').attr('aria-label')).to.contain('Selected. Event will repeat on this day');
+            expect($html.find('[data-day="2018-07-04"]').attr('aria-label')).to.contain('Selected. Event will repeat');
         });
     });
 
@@ -561,7 +561,7 @@ describe('EventCalendar', () => {
         it('should reset the aria label', () => {
             $html.find('[data-day="2018-01-10"]').click();
             $html.find('.js-ercal-reset').click();
-            expect($html.find('[data-day="2018-01-10"]').attr('aria-label')).to.contain('Selected. Event will repeat on this day');
+            expect($html.find('[data-day="2018-01-10"]').attr('aria-label')).to.contain('Selected. Event will repeat on');
         });
     });
 
