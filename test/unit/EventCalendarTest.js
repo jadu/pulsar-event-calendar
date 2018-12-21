@@ -1239,6 +1239,31 @@ describe('EventCalendar', () => {
         });
     });
 
+
+    describe('making date changes, applying a pattern that affects the same date, then changing the date again', () => {
+        beforeEach(() => {
+            eventCalendar.init('2018-01-02', '2019-02-27', [{ date: '2018-01-10' }]);
+            $html.find('[data-day="2018-01-04"]').click(); // to add
+            $html.find('[data-day="2018-01-10"]').click(); // to del
+            $html.find('.js-ercal-repeat').val('daily').trigger('change');
+            $html.find('[data-day="2018-01-04"]').click();
+            $html.find('[data-day="2018-01-10"]').click();
+        });
+
+        it('should revert the date to repeat back to dates to del ', () => {
+            expect($html.find('.calendar-day-2018-01-04').hasClass('event-repeat')).to.be.true;
+            expect($html.find('.calendar-day-2018-01-04').hasClass('event-add')).to.be.false;
+            expect($html.find('.calendar-day-2018-01-04').hasClass('event-del')).to.be.true;
+        });
+
+        it('should revert dates to delete back to the dates to repeat', () => {
+            expect($html.find('.calendar-day-2018-01-04').hasClass('event-repeat')).to.be.true;
+            expect($html.find('.calendar-day-2018-01-04').hasClass('event-add')).to.be.false;
+            expect($html.find('.calendar-day-2018-01-04').hasClass('event-del')).to.be.true;
+        });
+    });
+
+
     describe('making date changes, then applying a pattern, then removing the pattern', () => {
         beforeEach(() => {
             eventCalendar.init('2018-01-02', '2019-02-27', [{ date: '2018-01-10' }]);

@@ -237,6 +237,10 @@ $font-family-monospace: 'Courier New', 'Andale Mono', 'Consolas', monospace !def
             color: $colour-danger;
             content: $fa-var-ban;
         }
+
+        &:focus {
+            box-shadow: 0 0 0 3px $colour-focus, inset 0 0 0 3px $colour-white;
+        }
     }
 
     .event-del > .day-contents,
@@ -258,6 +262,10 @@ $font-family-monospace: 'Courier New', 'Andale Mono', 'Consolas', monospace !def
         &:hover::after {
             color: $colour-black;
             content: $fa-var-times-circle;
+        }
+
+        &:focus {
+            box-shadow: 0 0 0 3px $colour-focus, inset 0 0 0 3px #fff, inset 0 0 0 50px $colour-danger-light;
         }
     }
 

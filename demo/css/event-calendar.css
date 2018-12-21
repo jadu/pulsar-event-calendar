@@ -2481,6 +2481,8 @@
     .clndr .event-repeat > .day-contents:hover::after {
       color: #c84d40;
       content: ""; }
+    .clndr .event-repeat > .day-contents:focus {
+      box-shadow: 0 0 0 3px #ffbf47, inset 0 0 0 3px #fff; }
   .clndr .event-del > .day-contents,
   .clndr .event.event-del > .day-contents {
     background-color: #fff;
@@ -2498,6 +2500,9 @@
     .clndr .event.event-del > .day-contents:hover::after {
       color: #1e1e1e;
       content: ""; }
+    .clndr .event-del > .day-contents:focus,
+    .clndr .event.event-del > .day-contents:focus {
+      box-shadow: 0 0 0 3px #ffbf47, inset 0 0 0 3px #fff, inset 0 0 0 50px #f6e1de; }
   .clndr .event.event-del > .day-contents:hover::after {
     color: #297c46;
     content: ""; }
