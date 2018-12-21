@@ -371,7 +371,7 @@ describe('EventCalendar', () => {
         });
 
         it('should update the status in the live region', () => {
-            expect($html.find('.js-ercal-status').text()).contains('Unselected. Event will not repeat on 04 July, 2018');
+            expect($html.find('.js-ercal-status').text()).contains('Unselected. Event will not repeat on 4 July, 2018');
         });
     });
 
@@ -421,7 +421,7 @@ describe('EventCalendar', () => {
         it('should update the status in the live region', () => {
             $html.find('[data-day="2018-07-04"]').click();
 
-            expect($html.find('.js-ercal-status').text()).contains('Removed. Event will no longer repeat on 04 July, 2018');
+            expect($html.find('.js-ercal-status').text()).contains('Removed. Event will no longer repeat on 4 July, 2018');
         });
     });
 
@@ -491,7 +491,7 @@ describe('EventCalendar', () => {
         });
         
         it('should reset the aria label to the ’selected’ state', () => {
-            expect($html.find('[data-day="2018-07-04"]').attr('aria-label')).to.contain('04 July, 2018. Selected. Event will repeat on this day');
+            expect($html.find('[data-day="2018-07-04"]').attr('aria-label')).to.contain('4 July, 2018. Selected. Event will repeat on this day');
         });
     });
 
