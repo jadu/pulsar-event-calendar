@@ -22,6 +22,8 @@ class EventCalendar {
         this.$html = $html;
         this.$patternField;
         this.$ariaLiveRegion;
+        this.dateFormat = 'YYYY-MM-DD';
+        this.dateFormatLong = 'D MMMM, YYYY';
         this.clndr;
     }
 
@@ -244,7 +246,7 @@ class EventCalendar {
             if ($elem.hasClass('event-add') && $elem.hasClass('event-repeat')) {
                 // Unset it from [3. To Add] by removing it from the datesToAdd collection
                 _self.clndr.options.extras.datesToAdd = datesToAdd.filter(EventCalendar.matchDates.bind(this, date));
-                
+
                 // Set it to [4. To Delete] by adding it to the datesToDel collection
                 datesToDel.push(date);
             }
@@ -254,7 +256,7 @@ class EventCalendar {
                 _self.clndr.options.extras.datesToAdd = datesToAdd.filter(EventCalendar.matchDates.bind(this, date));
 
                 // Announce the new status through a live region (instead of the previous status)
-                _self.updateLiveRegion('Unselected. Event will not repeat on ' + date.format('DD MMMM, YYYY'));
+                _self.updateLiveRegion('Unselected. Event will not repeat on ' + date.format(_self.dateFormatLong));
             }
             else if ($elem.hasClass('event-repeat')) {
                 
@@ -419,8 +421,8 @@ class EventCalendar {
      */
     styleToAdd (target) {
         let _self = this,
-            $elem = _self.clndr.element.find('[data-day="' + target.format('YYYY-MM-DD') + '"]'),
-            ariaLabel = 'Selected. Event will repeat on ' + target.format('DD MMMM, YYYY');
+            $elem = _self.clndr.element.find('[data-day="' + target.format(_self.dateFormat) + '"]'),
+            ariaLabel = 'Selected. Event will repeat on ' + target.format(_self.dateFormatLong);
 
         $elem.attr('aria-label', ariaLabel)
              .parent()
@@ -448,8 +450,8 @@ class EventCalendar {
      */
     styleToDel (target) {
         let _self = this,
-            $elem = _self.clndr.element.find('[data-day="' + target.format('YYYY-MM-DD') + '"]'),
-            ariaLabel = 'Removed. Event will no longer repeat on ' + target.format('DD MMMM, YYYY');
+            $elem = _self.clndr.element.find('[data-day="' + target.format(_self.dateFormat) + '"]'),
+            ariaLabel = 'Removed. Event will no longer repeat on ' + target.format(_self.dateFormatLong);
         
         $elem.attr('aria-label', ariaLabel)
              .parent()
@@ -467,9 +469,9 @@ class EventCalendar {
      */
     styleRepeatOn (target) {
         let _self = this,
-            $elem = _self.clndr.element.find('[data-day="' + target.format('YYYY-MM-DD') + '"]');
+            $elem = _self.clndr.element.find('[data-day="' + target.format(_self.dateFormat) + '"]');
 
-        $elem.attr('aria-label', 'Event will repeat on ' + target.format('DD MMMM, YYYY') + ' based on the chosen repeat pattern')
+        $elem.attr('aria-label', 'Event will repeat on ' + target.format(_self.dateFormatLong) + ' based on the chosen repeat pattern')
              .parent()
              .addClass('event-repeat');
     }
@@ -481,14 +483,14 @@ class EventCalendar {
      */
     styleClear (target) {
         let _self = this,
-            $elem = _self.clndr.element.find('[data-day="' + target.format('YYYY-MM-DD') + '"]');
+            $elem = _self.clndr.element.find('[data-day="' + target.format(_self.dateFormat) + '"]');
 
-        $elem.attr('aria-label', target.format('DD MMMM, YYYY') + '.')
+        $elem.attr('aria-label', target.format(_self.dateFormatLong) + '.')
              .parent()
              .removeClass('event-add event-del event-repeat');
 
         // Announce the new status through a live region (instead of the previous status)
-        _self.updateLiveRegion('Unselected. Event will not repeat on ' + target.format('DD MMMM, YYYY'));
+        _self.updateLiveRegion('Unselected. Event will not repeat on ' + target.format(_self.dateFormatLong));
     }
 
     /**
@@ -501,7 +503,7 @@ class EventCalendar {
             $elems.each(function() {
                 let $elem = $(this),
                     $elemParent = $elem.parent(),
-                    date = moment($elem.data('day')).format('DD MMMM, YYYY'),
+                    date = moment($elem.data('day')).format(_self.dateFormatLong),
                     ariaLabel = 'Unselected';
 
                 // If event was passed in the `events` array, it will be reset back to `.selected` and needs labelling
