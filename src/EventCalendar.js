@@ -240,8 +240,16 @@ class EventCalendar {
         // If a date is not already selected
         if (!$elem.hasClass('event')) {
             
+            // If the button had 'event-add', then a pattern applied over the top
+            if ($elem.hasClass('event-add') && $elem.hasClass('event-repeat')) {
+                // Unset it from [3. To Add] by removing it from the datesToAdd collection
+                _self.clndr.options.extras.datesToAdd = datesToAdd.filter(EventCalendar.matchDates.bind(this, date));
+                
+                // Set it to [4. To Delete] by adding it to the datesToDel collection
+                datesToDel.push(date);
+            }
             // If the button is currently [4. To Delete]
-            if ($elem.hasClass('event-add')) {
+            else if ($elem.hasClass('event-add')) {
                 // Unset it from [3. To Add] by removing it from the datesToAdd collection
                 _self.clndr.options.extras.datesToAdd = datesToAdd.filter(EventCalendar.matchDates.bind(this, date));
 
