@@ -241,7 +241,6 @@ class EventCalendar {
     
         // If a date is not already selected
         if (!$elem.hasClass('event')) {
-            
             // If the button had 'event-add', then a pattern applied over the top
             if ($elem.hasClass('event-add') && $elem.hasClass('event-repeat')) {
                 // Unset it from [3. To Add] by removing it from the datesToAdd collection
@@ -259,7 +258,6 @@ class EventCalendar {
                 _self.updateLiveRegion('Unselected. Event will not repeat on ' + date.format(_self.dateFormatLong));
             }
             else if ($elem.hasClass('event-repeat')) {
-                
                 if ($elem.hasClass('event-del')) {
                     // Remove it from the datesToDel collection
                     _self.clndr.options.extras.datesToDel = datesToDel.filter(EventCalendar.matchDates.bind(this, date));
@@ -399,7 +397,7 @@ class EventCalendar {
                 _self.styleToAdd(this);
             });
         }
-        
+
         // Exceptions to paint as to-delete
         if (_self.clndr.options.extras.datesToDel.length) {
             const datesToDel = _self.clndr.options.extras.datesToDel
@@ -410,7 +408,7 @@ class EventCalendar {
                 _self.styleToDel(this);
             });
         }
-        
+
         _self.updateReview();
     }
 
@@ -452,12 +450,12 @@ class EventCalendar {
         let _self = this,
             $elem = _self.clndr.element.find('[data-day="' + target.format(_self.dateFormat) + '"]'),
             ariaLabel = 'Removed. Event will no longer repeat on ' + target.format(_self.dateFormatLong);
-        
+
         $elem.attr('aria-label', ariaLabel)
              .parent()
              .removeClass('event-add')
              .addClass('event-del');
-        
+
         // Announce the new status through a live region (instead of the previous status)
         _self.updateLiveRegion(ariaLabel);
     }
@@ -499,7 +497,7 @@ class EventCalendar {
     styleClearAll (target) {
         let _self = this,
             $elems = _self.clndr.element.find('.day-contents');
-        
+
             $elems.each(function() {
                 let $elem = $(this),
                     $elemParent = $elem.parent(),
@@ -603,7 +601,7 @@ class EventCalendar {
 
         // Reset the recur pattern field
         _self.$patternField.val('no-repeat');
-        
+
         // Remove the review changes information
         _self.updateReview();
 
