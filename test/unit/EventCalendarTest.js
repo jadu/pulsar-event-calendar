@@ -298,6 +298,11 @@ describe('EventCalendar', () => {
 
             expect($html.find('.js-dates-to-del').html()).to.equal('');
         });
+
+        it('should update the status in the live region', () => {
+            $html.find('[data-day="2018-07-04"]').click();
+            expect($html.find('.js-ercal-status').text()).contains('Selected. Event will repeat on');
+        });
     });
 
 
@@ -364,6 +369,10 @@ describe('EventCalendar', () => {
         it('should not contain a count in the toDel information', () => {
             expect($html.find('.js-dates-to-del').html()).to.equal('');
         });
+
+        it('should update the status in the live region', () => {
+            expect($html.find('.js-ercal-status').text()).contains('Unselected. Event will not repeat on 04 July, 2018');
+        });
     });
 
 
@@ -407,6 +416,12 @@ describe('EventCalendar', () => {
             $html.find('[data-day="2018-07-04"]').click();
 
             expect($html.find('.js-dates-to-add').html()).to.equal('');
+        });
+
+        it('should update the status in the live region', () => {
+            $html.find('[data-day="2018-07-04"]').click();
+
+            expect($html.find('.js-ercal-status').text()).contains('Removed. Event will no longer repeat on 04 July, 2018');
         });
     });
 
@@ -476,7 +491,7 @@ describe('EventCalendar', () => {
         });
         
         it('should reset the aria label to the ’selected’ state', () => {
-            expect($html.find('[data-day="2018-07-04"]').attr('aria-label')).to.contain('Selected. Event will repeat');
+            expect($html.find('[data-day="2018-07-04"]').attr('aria-label')).to.contain('04 July, 2018. Selected. Event will repeat on this day');
         });
     });
 

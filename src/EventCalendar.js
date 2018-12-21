@@ -68,7 +68,7 @@ class EventCalendar {
                         <button class='clndr-next-button' aria-controls='event-calendar' aria-label='Go to the next month'>&rsaquo;</button>
                     </div>
                 </div>
-                <span class="js-ercal-status hide" role="alert" aria-live="polite">live region</span>
+                <span class="js-ercal-status hide" role="alert" aria-live="polite"></span>
                 <table id='event-calendar' class='clndr-table' border='0' cellspacing='0' cellpadding='0'>
                     <thead>
                         <tr class='header-days'>
@@ -244,6 +244,9 @@ class EventCalendar {
             if ($elem.hasClass('event-add')) {
                 // Unset it from [3. To Add] by removing it from the datesToAdd collection
                 _self.clndr.options.extras.datesToAdd = datesToAdd.filter(EventCalendar.matchDates.bind(this, date));
+
+                // Announce the new status through a live region (instead of the previous status)
+                _self.updateLiveRegion('Unselected. Event will not repeat on ' + date.format('DD MMMM, YYYY'));
             }
             else if ($elem.hasClass('event-repeat')) {
                 
@@ -437,12 +440,16 @@ class EventCalendar {
      */
     styleToDel (target) {
         let _self = this,
-            $elem = _self.clndr.element.find('[data-day="' + target.format('YYYY-MM-DD') + '"]');
+            $elem = _self.clndr.element.find('[data-day="' + target.format('YYYY-MM-DD') + '"]'),
+            ariaLabel = 'Removed. Event will no longer repeat on ' + target.format('DD MMMM, YYYY');
         
-        $elem.attr('aria-label', 'Removed. Event will no longer repeat on ' + target.format('DD MMMM, YYYY'))
+        $elem.attr('aria-label', ariaLabel)
              .parent()
              .removeClass('event-add')
              .addClass('event-del');
+        
+        // Announce the new status through a live region (instead of the previous status)
+        _self.updateLiveRegion(ariaLabel);
     }
 
     /**
@@ -471,18 +478,22 @@ class EventCalendar {
         $elem.attr('aria-label', target.format('DD MMMM, YYYY') + '.')
              .parent()
              .removeClass('event-add event-del event-repeat');
+
+        // Announce the new status through a live region (instead of the previous status)
+        _self.updateLiveRegion('Unselected. Event will not repeat on ' + target.format('DD MMMM, YYYY'));
     }
 
     /**
      * Restore all dates to their initial state (when the calendar was initialised)
      */
-    styleClearAll () {
+    styleClearAll (target) {
         let _self = this,
             $elems = _self.clndr.element.find('.day-contents');
         
             $elems.each(function() {
                 let $elem = $(this),
                     $elemParent = $elem.parent(),
+                    date = moment($elem.data('day')).format('DD MMMM, YYYY'),
                     ariaLabel = 'Unselected';
 
                 // If event was passed in the `events` array, it will be reset back to `.selected` and needs labelling
@@ -490,7 +501,7 @@ class EventCalendar {
                     ariaLabel = 'Selected. Event will repeat on this day';
                 }
 
-                $elem.attr('aria-label', moment($elem.data('day')).format('DD MMMM, YYYY') + '. ' + ariaLabel);
+                $elem.attr('aria-label',  date + '. ' + ariaLabel);
                 $elemParent.removeClass('event-add event-del event-repeat');
             });
         }
