@@ -4,7 +4,6 @@
 
 'use strict';
 
-require('jquery');
 import $ from 'jquery';
 var moment = require('moment');
 require('moment-recur');
@@ -55,10 +54,10 @@ class EventCalendar {
         }
 
         let _self = this,
-            clndrSelected = (startDate) ? moment(startDate) : moment(new Date()),
-            clndrStart = (startDate) ? moment(startDate) : moment(new Date()),
-            clndrEnd = (endDate) ? moment(endDate) : moment(new Date()).add(15, 'years'),
-            clndrEvents = (events) ? events : [],
+            clndrSelected = startDate ? moment(startDate) : moment(new Date()),
+            clndrStart = startDate ? moment(startDate) : moment(new Date()),
+            clndrEnd = endDate ? moment(endDate) : moment(new Date()).add(15, 'years'),
+            clndrEvents = events ? events : [],
             $weekdayPicker = _self.$html.find('.js-ercal-weekdays'),
             clndrTemplate = `
                 <div class='clndr-controls' role='navigation'>
@@ -349,7 +348,7 @@ class EventCalendar {
      */
     paintRepeatPattern (method) {    
         let _self = this,
-            paintMethod = (method) ? method : 'repeat-on',
+            paintMethod = method ? method : 'repeat-on',
             recurDatesThisMonth = _self.recurPattern
                                     .startDate(_self.clndr.options.selectedDate)
                                     .endDate(_self.clndr.options.constraints.endDate)
