@@ -50,7 +50,7 @@ class EventCalendar {
 
         let $container = this.$html.find('.js-event-calendar');
 
-        if (typeof $container === 'undefined' || !$container.length) {
+        if (!$container.length) {
             throw new Error('EventCalendar requires a .js-event-calendar element present in the DOM');
         }
 
