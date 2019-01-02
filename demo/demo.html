@@ -25,36 +25,38 @@
         </select>
     </fieldset>
 
-    <fieldset class="js-ercal-weekdays" style="display: none;">
-        <legend>Repeat on</legend>
-        <label>
-            <input value="1" name="ercal-weekdays" type="checkbox">
-            <span aria-label="Monday">MO</span>
-        </label>
-        <label>
-            <input value="2" name="ercal-weekdays" type="checkbox">
-            <span aria-label="Tuesday">TU</span>
-        </label>
-        <label>
-            <input value="3" name="ercal-weekdays" type="checkbox">
-            <span aria-label="Wednesday">WE</span>
-        </label>
-        <label>
-            <input value="4" name="ercal-weekdays" type="checkbox">
-            <span aria-label="Thursday">TH</span>
-        </label>
-        <label>
-            <input value="5" name="ercal-weekdays" type="checkbox">
-            <span aria-label="Friday">FR</span>
-        </label>
-        <label>
-            <input value="6" name="ercal-weekdays" type="checkbox">
-            <span aria-label="Saturday">SA</span>
-        </label>
-        <label>
-            <input value="7" name="ercal-weekdays" type="checkbox">
-            <span aria-label="Sunday">SU</span>
-        </label>
+    <fieldset class="form__group js-ercal-weekdays" style="display: none;">
+        <legend class="control__label">Repeat on</legend>
+        <div class="controls">
+            <label class="choice-bubble">
+                <input value="1" name="ercal-weekdays" type="checkbox" class="choice-bubble__checkbox">
+                <span class="choice-bubble__label" aria-label="Monday">MO</span>
+            </label>
+            <label class="choice-bubble">
+                <input value="2" name="ercal-weekdays" type="checkbox" class="choice-bubble__checkbox">
+                <span class="choice-bubble__label" aria-label="Tuesday">TU</span>
+            </label>
+            <label class="choice-bubble">
+                <input value="3" name="ercal-weekdays" type="checkbox" class="choice-bubble__checkbox">
+                <span class="choice-bubble__label" aria-label="Wednesday">WE</span>
+            </label>
+            <label class="choice-bubble">
+                <input value="4" name="ercal-weekdays" type="checkbox" class="choice-bubble__checkbox">
+                <span class="choice-bubble__label" aria-label="Thursday">TH</span>
+            </label>
+            <label class="choice-bubble">
+                <input value="5" name="ercal-weekdays" type="checkbox" class="choice-bubble__checkbox">
+                <span class="choice-bubble__label" aria-label="Friday">FR</span>
+            </label>
+            <label class="choice-bubble">
+                <input value="6" name="ercal-weekdays" type="checkbox" class="choice-bubble__checkbox">
+                <span class="choice-bubble__label" aria-label="Saturday">SA</span>
+            </label>
+            <label class="choice-bubble">
+                <input value="7" name="ercal-weekdays" type="checkbox" class="choice-bubble__checkbox">
+                <span class="choice-bubble__label" aria-label="Sunday">SU</span>
+            </label>
+        </div>
     </fieldset>
 
     <div class="event-calendar js-event-calendar"></div>

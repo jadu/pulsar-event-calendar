@@ -2536,14 +2536,42 @@
     color: #297c46; }
   .clndr .icon--danger {
     color: #c84d40; }
-  .clndr .hide {
-    border: 0 !important;
-    clip: rect(0 0 0 0) !important;
-    height: 1px !important;
-    margin: -1px !important;
-    overflow: hidden !important;
-    padding: 0 !important;
-    position: absolute !important;
-    width: 1px !important; }
+
+/**
+ * Choice bubbles for weekday picker, separated out as they're not within the .clndr namespace
+ */
+.choice-bubble:hover {
+  cursor: pointer;
+  font-weight: bold; }
+  .choice-bubble:hover > .choice-bubble__label {
+    border-color: #7e7e7e; }
+
+.choice-bubble__label {
+  background-color: #fafafa;
+  border: 1px solid #bebebe;
+  border-radius: 48px;
+  display: inline-block;
+  font-size: 1em;
+  height: 48px;
+  position: relative;
+  text-align: center;
+  user-select: none;
+  width: 48px;
+  line-height: 48px; }
+  .choice-bubble__checkbox:checked + .choice-bubble__label {
+    background-color: #2575b0;
+    border: 2px solid #1e1e1e;
+    box-shadow: inset 0 0 0 3px #fff;
+    color: #fff; }
+
+.choice-bubble__checkbox {
+  border: 0;
+  clip: rect(0 0 0 0);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  width: 1px; }
 
 /*# sourceMappingURL=event-calendar.css.map */

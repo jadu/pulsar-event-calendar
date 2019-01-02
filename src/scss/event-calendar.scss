@@ -326,15 +326,49 @@ $font-family-monospace: 'Courier New', 'Andale Mono', 'Consolas', monospace !def
     .icon--danger {
         color: $colour-danger;
     }
+}
 
-    .hide {
-        border: 0 !important;
-        clip: rect(0 0 0 0) !important;
-        height: 1px !important;
-        margin: -1px !important;
-        overflow: hidden !important;
-        padding: 0 !important;
-        position: absolute !important;
-        width: 1px !important;
+/**
+ * Choice bubbles for weekday picker, separated out as they're not within the .clndr namespace
+ */
+
+.choice-bubble:hover {
+    cursor: pointer;
+    font-weight: bold;
+
+    > .choice-bubble__label {
+        border-color: $colour-grey;
     }
+}
+
+.choice-bubble__label {
+    background-color: $colour-background;
+    border: 1px solid $colour-border;
+    border-radius: $line-height-base * 2;
+    display: inline-block;
+    font-size: 1em;
+    height: $line-height-base * 2;
+    position: relative;
+    text-align: center;
+    user-select: none;
+    width: $line-height-base * 2;
+    line-height: $line-height-base * 2;
+
+    .choice-bubble__checkbox:checked + & {
+        background-color: $colour-primary;
+        border: 2px solid $colour-black;
+        box-shadow: inset 0 0 0 3px $colour-white;
+        color: $colour-white;
+    }
+}
+    
+.choice-bubble__checkbox {
+    border: 0;
+    clip: rect(0 0 0 0);
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+    width: 1px;
 }
