@@ -89,10 +89,10 @@ class EventCalendar {
                                 <button 
                                     class='day-contents' 
                                     data-day="<%= year %>-<%= monthNumerical %>-<%= daysLeadingZero %>" 
-                                    aria-label="<% if (days[d].classes.indexOf('selected') >= 0) { %><%= ariaStartDate %><% } else if (days[d].classes.indexOf('event') >= 0) { %><%= ariaSelected %><% } %> <%= days[d].day %> <%= month %>, <%= year %>.<% if (days[d].classes.indexOf('selected') <= 0 && days[d].classes.indexOf('event') <= 0) { %> <%= ariaUnselected %><% } %>"
+                                    aria-label="<% if (days[d].classes.indexOf('selected') !== -1) { %><%= ariaStartDate %><% } else if (days[d].classes.indexOf('event') !== -1) { %><%= ariaSelected %><% } %> <%= days[d].day %> <%= month %>, <%= year %>.<% if (days[d].classes.indexOf('selected') === -1 && days[d].classes.indexOf('event') === -1) { %> <%= ariaUnselected %><% } %>"
                                     <% 
-                                        if (days[d].classes.indexOf('inactive') >= 0 && 
-                                        days[d].classes.indexOf('selected') <= 0) { 
+                                        if (days[d].classes.indexOf('inactive') !== -1 && 
+                                        days[d].classes.indexOf('selected') === -1) { 
                                     %> disabled<% } %>
                                 >
                                     <%= days[d].day %>
@@ -386,9 +386,7 @@ class EventCalendar {
                                 .filter(EventCalendar.isInYear.bind(this, month))
                                 .filter(EventCalendar.isInMonth.bind(this, month));
 
-            $.each(datesToAdd, function() {
-                _self.styleToAdd(this);
-            });
+            datesToAdd.forEach(_self.styleToAdd.bind(_self));
         }
 
         // Exceptions to paint as to-delete
@@ -397,9 +395,7 @@ class EventCalendar {
                                 .filter(EventCalendar.isInYear.bind(this, month))
                                 .filter(EventCalendar.isInMonth.bind(this, month));
 
-            $.each(datesToDel, function() {
-                _self.styleToDel(this);
-            });
+            datesToDel.forEach(_self.styleToDel.bind(_self));
         }
 
         _self.updateReview();
@@ -430,6 +426,11 @@ class EventCalendar {
      */
     updateLiveRegion (message) {
         let _self = this;
+
+        // Protect against misconfiguration
+        if (_self.$ariaLiveRegion === undefined) {
+            return;
+        }
 
         _self.$ariaLiveRegion.text(message);
     }
