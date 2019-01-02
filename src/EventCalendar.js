@@ -119,12 +119,8 @@ class EventCalendar {
 
         _self.clndr = $container.clndr({
             clickEvents: {
-                click: function(target) {
-                    _self.toggleDay(target);
-                },
-                onMonthChange: function (month) {
-                    _self.paintMonth(month);
-                },
+                click: _self.toggleDay.bind(_self),
+                onMonthChange: _self.paintMonth.bind(_self)
             },
             constraints: {
                 startDate: clndrStart,
