@@ -346,6 +346,7 @@ $font-family-monospace: 'Courier New', 'Andale Mono', 'Consolas', monospace !def
     border: 1px solid $colour-border;
     border-radius: $line-height-base * 2;
     display: inline-block;
+    font-family: $font-family;
     font-size: 1em;
     height: $line-height-base * 2;
     position: relative;
@@ -362,7 +363,8 @@ $font-family-monospace: 'Courier New', 'Andale Mono', 'Consolas', monospace !def
     }
 }
     
-.choice-bubble__checkbox {
+.choice-bubble__checkbox,
+.clndr-hide {
     border: 0;
     clip: rect(0 0 0 0);
     height: 1px;

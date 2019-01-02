@@ -2551,6 +2551,7 @@
   border: 1px solid #bebebe;
   border-radius: 48px;
   display: inline-block;
+  font-family: "Helvetica Neue", "Helvetica", "Arial", sans-serif;
   font-size: 1em;
   height: 48px;
   position: relative;
@@ -2564,7 +2565,8 @@
     box-shadow: inset 0 0 0 3px #fff;
     color: #fff; }
 
-.choice-bubble__checkbox {
+.choice-bubble__checkbox,
+.clndr-hide {
   border: 0;
   clip: rect(0 0 0 0);
   height: 1px;

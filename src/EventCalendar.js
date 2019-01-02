@@ -70,7 +70,7 @@ class EventCalendar {
                         <button class='clndr-next-button' aria-controls='event-calendar' aria-label='Go to the next month'>&rsaquo;</button>
                     </div>
                 </div>
-                <span class="js-ercal-status hide" role="alert" aria-live="polite"></span>
+                <span class="js-ercal-status clndr-hide" role="alert" aria-live="polite"></span>
                 <table id='event-calendar' class='clndr-table' border='0' cellspacing='0' cellpadding='0'>
                     <thead>
                         <tr class='header-days'>
