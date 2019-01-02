@@ -189,8 +189,6 @@ class EventCalendar {
         _self.$html.find('[name="ercal-weekdays"]').on('change', function() {
             _self.toggleWeekday();
         });
-
-        return _self.clndr;
     }
 
     /**
@@ -231,7 +229,7 @@ class EventCalendar {
 
         // Don't allow interactions on dates in the past, or the event start date
         if ($elem.hasClass('inactive') || $elem.hasClass('selected')) {
-            return false;
+            return;
         }
     
         // If a date is not already selected
