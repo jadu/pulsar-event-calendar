@@ -131,6 +131,12 @@ An event can be set to reoccur on specific dates based on a repeat pattern, thes
 
 Event Calendar will look for a select field with the `js-ercal-repeat` class and update the calendar when the value of this field changes.
 
+## Daily
+
+Will create a recur pattern covering all dates between the `startDate` and the `endDate`.
+
+![daily](https://user-images.githubusercontent.com/18653/50346323-ef69d800-0529-11e9-946c-b7d7897ce591.gif)
+
 ```html
 <label for="repeat">Repeat</legend>
 
@@ -145,7 +151,37 @@ Event Calendar will look for a select field with the `js-ercal-repeat` class and
 </select>
 ```
 
-## Weekday choice
+## Weekly
+
+Will create a pattern covering all dates occurring on the same weekday as the startDate. It will also show the weekday picker allowing the user to add additional weekdays.
+
+![weekdays](https://user-images.githubusercontent.com/18653/50346543-99e1fb00-052a-11e9-8bb0-a9111b56031c.gif)
+
+## Every two weeks
+
+Will create a pattern covering all dates occurring on the same day of the week in two-weekly intervals.
+
+![two-weekly](https://user-images.githubusercontent.com/18653/50346661-eb8a8580-052a-11e9-90e5-51dc7dd2a1d6.gif)
+
+## Monthly, on this day of the month
+
+Will create a pattern covering all dates occurring on the same day of the month (e.g. the first Thursday).
+
+![monthly-day](https://user-images.githubusercontent.com/18653/50346717-1ffe4180-052b-11e9-944e-d420222c692a.gif)
+
+## Montly, on this date
+
+Will create a pattern covering all dates occurring on the same date of the month (e.g. The 10th of the month).
+
+![monthly-date](https://user-images.githubusercontent.com/18653/50346781-605dbf80-052b-11e9-86b1-703e8dbab36f.gif)
+
+## Every year
+
+Will create a pattern covering all dates occurring on the same date each year.
+
+![annually](https://user-images.githubusercontent.com/18653/50346848-8edb9a80-052b-11e9-83e5-ac9ef1339eee.gif)
+
+# Weekday choice
 
 The `weekly` option can allow the user to choose which days of the week the event should occur. Event Calendar will look for a `.js-ercal-weekdays` element containing checkboxes for each weekday, which require the `name="ercal-weekdays"` attribute. 
 
@@ -198,14 +234,20 @@ The following data structures hold the date information which will need to be sa
 
 The recur pattern  defines which dates should be added, because the pattern can potentially select thousands of dates we don't store a list of dates this pattern will hit for performance reasons. Those can be calculated by applying the recur pattern to the `startDate`.
 
+The [getRecurPattern()](https://github.com/jadu/pulsar-event-calendar/blob/initial-build/src/EventCalendar.js#L623) getter will return the current recur pattern object.
+
 ### Dates to add
 
 `clndr.options.extras.datesToAdd`
 
 An array of Moment objects referencing specific dates which the event should recur on, these are based on user-choice rather than the recur pattern.
 
+The [getDates()](https://github.com/jadu/pulsar-event-calendar/blob/initial-build/src/EventCalendar.js#L615) getter will return both the `datesToAdd` and `datesToDel` arrays.
+
 ### Dates to delete
 
 `clndr.options.extras.datesToDel`
 
 An array of Moment objects referencing dates which already exist in the calendar (defined by the Selected Events) but which the user would like to remove from the list of selected events.
+
+The [getDates()](https://github.com/jadu/pulsar-event-calendar/blob/initial-build/src/EventCalendar.js#L615) getter will return both the `datesToAdd` and `datesToDel` arrays.

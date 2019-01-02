@@ -4,12 +4,11 @@
 
 'use strict';
 
-require('jquery');
 import $ from 'jquery';
-var moment = require('moment');
-require('moment-recur');
+import moment from 'moment';
+import 'moment-recur';
 window._ = require('underscore');
-require('clndr');
+import 'clndr';
 
 class EventCalendar {
 
@@ -50,15 +49,15 @@ class EventCalendar {
 
         let $container = this.$html.find('.js-event-calendar');
 
-        if (typeof $container === 'undefined' || !$container.length) {
+        if (!$container.length) {
             throw new Error('EventCalendar requires a .js-event-calendar element present in the DOM');
         }
 
         let _self = this,
-            clndrSelected = (startDate) ? moment(startDate) : moment(new Date()),
-            clndrStart = (startDate) ? moment(startDate) : moment(new Date()),
-            clndrEnd = (endDate) ? moment(endDate) : moment(new Date()).add(15, 'years'),
-            clndrEvents = (events) ? events : [],
+            clndrSelected = startDate ? moment(startDate) : moment(new Date()),
+            clndrStart = startDate ? moment(startDate) : moment(new Date()),
+            clndrEnd = endDate ? moment(endDate) : moment(new Date()).add(15, 'years'),
+            clndrEvents = events ? events : [],
             $weekdayPicker = _self.$html.find('.js-ercal-weekdays'),
             clndrTemplate = `
                 <div class='clndr-controls' role='navigation'>
@@ -90,10 +89,10 @@ class EventCalendar {
                                 <button 
                                     class='day-contents' 
                                     data-day="<%= year %>-<%= monthNumerical %>-<%= daysLeadingZero %>" 
-                                    aria-label="<% if (days[d].classes.indexOf('selected') >= 0) { %><%= ariaStartDate %><% } else if (days[d].classes.indexOf('event') >= 0) { %><%= ariaSelected %><% } %> <%= days[d].day %> <%= month %>, <%= year %>.<% if (days[d].classes.indexOf('selected') <= 0 && days[d].classes.indexOf('event') <= 0) { %> <%= ariaUnselected %><% } %>"
+                                    aria-label="<% if (days[d].classes.indexOf('selected') !== -1) { %><%= ariaStartDate %><% } else if (days[d].classes.indexOf('event') !== -1) { %><%= ariaSelected %><% } %> <%= days[d].day %> <%= month %>, <%= year %>.<% if (days[d].classes.indexOf('selected') === -1 && days[d].classes.indexOf('event') === -1) { %> <%= ariaUnselected %><% } %>"
                                     <% 
-                                        if (days[d].classes.indexOf('inactive') >= 0 && 
-                                        days[d].classes.indexOf('selected') <= 0) { 
+                                        if (days[d].classes.indexOf('inactive') !== -1 && 
+                                        days[d].classes.indexOf('selected') === -1) { 
                                     %> disabled<% } %>
                                 >
                                     <%= days[d].day %>
@@ -120,12 +119,8 @@ class EventCalendar {
 
         _self.clndr = $container.clndr({
             clickEvents: {
-                click: function(target) {
-                    _self.toggleDay(target);
-                },
-                onMonthChange: function (month) {
-                    _self.paintMonth(month);
-                },
+                click: _self.toggleDay.bind(_self),
+                onMonthChange: _self.paintMonth.bind(_self)
             },
             constraints: {
                 startDate: clndrStart,
@@ -194,8 +189,6 @@ class EventCalendar {
         _self.$html.find('[name="ercal-weekdays"]').on('change', function() {
             _self.toggleWeekday();
         });
-
-        return _self.clndr;
     }
 
     /**
@@ -236,7 +229,7 @@ class EventCalendar {
 
         // Don't allow interactions on dates in the past, or the event start date
         if ($elem.hasClass('inactive') || $elem.hasClass('selected')) {
-            return false;
+            return;
         }
     
         // If a date is not already selected
@@ -244,7 +237,7 @@ class EventCalendar {
             // If the button had 'event-add', then a pattern applied over the top
             if ($elem.hasClass('event-add') && $elem.hasClass('event-repeat')) {
                 // Unset it from [3. To Add] by removing it from the datesToAdd collection
-                _self.clndr.options.extras.datesToAdd = datesToAdd.filter(EventCalendar.matchDates.bind(this, date));
+                _self.clndr.options.extras.datesToAdd = datesToAdd.filter(EventCalendar.doesNotMatchDate.bind(this, date));
 
                 // Set it to [4. To Delete] by adding it to the datesToDel collection
                 datesToDel.push(date);
@@ -252,7 +245,7 @@ class EventCalendar {
             // If the button is currently [4. To Delete]
             else if ($elem.hasClass('event-add')) {
                 // Unset it from [3. To Add] by removing it from the datesToAdd collection
-                _self.clndr.options.extras.datesToAdd = datesToAdd.filter(EventCalendar.matchDates.bind(this, date));
+                _self.clndr.options.extras.datesToAdd = datesToAdd.filter(EventCalendar.doesNotMatchDate.bind(this, date));
 
                 // Announce the new status through a live region (instead of the previous status)
                 _self.updateLiveRegion('Unselected. Event will not repeat on ' + date.format(_self.dateFormatLong));
@@ -260,7 +253,7 @@ class EventCalendar {
             else if ($elem.hasClass('event-repeat')) {
                 if ($elem.hasClass('event-del')) {
                     // Remove it from the datesToDel collection
-                    _self.clndr.options.extras.datesToDel = datesToDel.filter(EventCalendar.matchDates.bind(this, date));
+                    _self.clndr.options.extras.datesToDel = datesToDel.filter(EventCalendar.doesNotMatchDate.bind(this, date));
                 } 
                 else {
                     // Set it to [4. To Delete] by adding it to the datesToDel collection
@@ -280,7 +273,7 @@ class EventCalendar {
             // If the button is currently [5. Selected]
             else {
                 // Remove it from the datesToDel collection
-                _self.clndr.options.extras.datesToDel = datesToDel.filter(EventCalendar.matchDates.bind(this, date));
+                _self.clndr.options.extras.datesToDel = datesToDel.filter(EventCalendar.doesNotMatchDate.bind(this, date));
             }
         }
 
@@ -292,7 +285,7 @@ class EventCalendar {
             }
             else if ($elem.hasClass('event-del')) {
                 // Restore initial styling by removing it from the datesToDel collection
-                _self.clndr.options.extras.datesToDel = datesToDel.filter(EventCalendar.matchDates.bind(this, date));
+                _self.clndr.options.extras.datesToDel = datesToDel.filter(EventCalendar.doesNotMatchDate.bind(this, date));
             }
         }
 
@@ -349,7 +342,7 @@ class EventCalendar {
      */
     paintRepeatPattern (method) {    
         let _self = this,
-            paintMethod = (method) ? method : 'repeat-on',
+            paintMethod = method ? method : 'repeat-on',
             recurDatesThisMonth = _self.recurPattern
                                     .startDate(_self.clndr.options.selectedDate)
                                     .endDate(_self.clndr.options.constraints.endDate)
@@ -393,9 +386,7 @@ class EventCalendar {
                                 .filter(EventCalendar.isInYear.bind(this, month))
                                 .filter(EventCalendar.isInMonth.bind(this, month));
 
-            $.each(datesToAdd, function() {
-                _self.styleToAdd(this);
-            });
+            datesToAdd.forEach(_self.styleToAdd.bind(_self));
         }
 
         // Exceptions to paint as to-delete
@@ -404,9 +395,7 @@ class EventCalendar {
                                 .filter(EventCalendar.isInYear.bind(this, month))
                                 .filter(EventCalendar.isInMonth.bind(this, month));
 
-            $.each(datesToDel, function() {
-                _self.styleToDel(this);
-            });
+            datesToDel.forEach(_self.styleToDel.bind(_self));
         }
 
         _self.updateReview();
@@ -437,6 +426,11 @@ class EventCalendar {
      */
     updateLiveRegion (message) {
         let _self = this;
+
+        // Protect against misconfiguration
+        if (_self.$ariaLiveRegion === undefined) {
+            return;
+        }
 
         _self.$ariaLiveRegion.text(message);
     }
@@ -505,7 +499,7 @@ class EventCalendar {
                     ariaLabel = 'Unselected';
 
                 // If event was passed in the `events` array, it will be reset back to `.selected` and needs labelling
-                if ($elemParent.attr('class').indexOf('event') >= 0) {
+                if ($elemParent.attr('class').indexOf('event') !== -1) {
                     ariaLabel = 'Selected. Event will repeat on this day';
                 }
 
@@ -535,13 +529,13 @@ class EventCalendar {
     }
 
     /**
-     * Check whether two moment instances are the same date
+     * Check whether two moment instances are not the same date
      * 
      * @param {moment} a Haystack
      * @param {moment} b Needle
      */
-    static matchDates (a, b) {
-        return a._i != b._i;
+    static doesNotMatchDate (a, b) {
+        return a.format(this.dateFormat) != b.format(this.dateFormat);
     }
     
     /**
@@ -560,8 +554,7 @@ class EventCalendar {
 
         // Dates being added (outside of any recurrence pattern)
         if (numDatesToAdd > 0) {
-            datesToAddContainer.html((numDatesToAdd === 1) 
-                ? numDatesToAdd + ' day will be added' : numDatesToAdd + ' days will be added').show();
+            datesToAddContainer.html(numDatesToAdd + ` ${_self.pluralise('day', numDatesToAdd)} will be added`).show();
         }
         else {
             datesToAddContainer.html('').hide();
@@ -569,8 +562,7 @@ class EventCalendar {
 
         // Dates being removed (outside of any recurrence pattern)
         if (numDatesToDel > 0) {
-            datesToDelContainer.html((numDatesToDel === 1) 
-                ? numDatesToDel + ' day will be removed' : numDatesToDel + ' days will be removed').show();
+            datesToDelContainer.html(numDatesToDel + ` ${_self.pluralise('day', numDatesToDel)} will be removed`).show();
         }
         else {
             datesToDelContainer.html('').hide();
@@ -583,6 +575,16 @@ class EventCalendar {
         else {
             resetButton.hide();
         }
+    }
+
+    /**
+     * Pluralises a string given a quantity of 'things'.
+     * 
+     * @param {string} noun The word to pluralise
+     * @param {integer} quantity The quantity to determine whether to pluralise
+     */
+    pluralise (noun, quantity) {
+        return quantity > 1 ? noun + 's' : noun;
     }
 
     /**
