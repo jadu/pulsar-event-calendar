@@ -237,7 +237,7 @@ class EventCalendar {
             // If the button had 'event-add', then a pattern applied over the top
             if ($elem.hasClass('event-add') && $elem.hasClass('event-repeat')) {
                 // Unset it from [3. To Add] by removing it from the datesToAdd collection
-                _self.clndr.options.extras.datesToAdd = datesToAdd.filter(EventCalendar.matchDates.bind(this, date));
+                _self.clndr.options.extras.datesToAdd = datesToAdd.filter(EventCalendar.doesNotMatchDate.bind(this, date));
 
                 // Set it to [4. To Delete] by adding it to the datesToDel collection
                 datesToDel.push(date);
@@ -245,7 +245,7 @@ class EventCalendar {
             // If the button is currently [4. To Delete]
             else if ($elem.hasClass('event-add')) {
                 // Unset it from [3. To Add] by removing it from the datesToAdd collection
-                _self.clndr.options.extras.datesToAdd = datesToAdd.filter(EventCalendar.matchDates.bind(this, date));
+                _self.clndr.options.extras.datesToAdd = datesToAdd.filter(EventCalendar.doesNotMatchDate.bind(this, date));
 
                 // Announce the new status through a live region (instead of the previous status)
                 _self.updateLiveRegion('Unselected. Event will not repeat on ' + date.format(_self.dateFormatLong));
@@ -253,7 +253,7 @@ class EventCalendar {
             else if ($elem.hasClass('event-repeat')) {
                 if ($elem.hasClass('event-del')) {
                     // Remove it from the datesToDel collection
-                    _self.clndr.options.extras.datesToDel = datesToDel.filter(EventCalendar.matchDates.bind(this, date));
+                    _self.clndr.options.extras.datesToDel = datesToDel.filter(EventCalendar.doesNotMatchDate.bind(this, date));
                 } 
                 else {
                     // Set it to [4. To Delete] by adding it to the datesToDel collection
@@ -273,7 +273,7 @@ class EventCalendar {
             // If the button is currently [5. Selected]
             else {
                 // Remove it from the datesToDel collection
-                _self.clndr.options.extras.datesToDel = datesToDel.filter(EventCalendar.matchDates.bind(this, date));
+                _self.clndr.options.extras.datesToDel = datesToDel.filter(EventCalendar.doesNotMatchDate.bind(this, date));
             }
         }
 
@@ -285,7 +285,7 @@ class EventCalendar {
             }
             else if ($elem.hasClass('event-del')) {
                 // Restore initial styling by removing it from the datesToDel collection
-                _self.clndr.options.extras.datesToDel = datesToDel.filter(EventCalendar.matchDates.bind(this, date));
+                _self.clndr.options.extras.datesToDel = datesToDel.filter(EventCalendar.doesNotMatchDate.bind(this, date));
             }
         }
 
@@ -529,12 +529,12 @@ class EventCalendar {
     }
 
     /**
-     * Check whether two moment instances are the same date
+     * Check whether two moment instances are not the same date
      * 
      * @param {moment} a Haystack
      * @param {moment} b Needle
      */
-    static matchDates (a, b) {
+    static doesNotMatchDate (a, b) {
         return a.format(this.dateFormat) != b.format(this.dateFormat);
     }
     
