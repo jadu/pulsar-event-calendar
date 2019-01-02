@@ -120,11 +120,13 @@ describe('EventCalendar', () => {
 
         it('should disable dates in the past to prevent keyboard navigation', () => {
             let date = moment(new Date()).subtract(1, 'day').format('YYYY-MM-DD');
+
             expect($html.find('[data-day="' + date + '"]').attr('disabled')).to.equal('disabled');
         });
 
         it('should not disable dates in the future', () => {
             let date = moment(new Date()).add(1, 'day').format('YYYY-MM-DD');
+
             expect($html.find('[data-day="' + date + '"]').attr('disabled')).to.be.undefined;
         });
 
@@ -263,6 +265,7 @@ describe('EventCalendar', () => {
 
         it('the datesToAdd and datesToDel arrays should be empty', () => {
             let dates = eventCalendar.getDates();
+
             expect(dates.datesToAdd.length).to.equal(0);
             expect(dates.datesToDel.length).to.equal(0);
         });
@@ -271,6 +274,7 @@ describe('EventCalendar', () => {
             $html.find('[data-day="2018-07-04"]').click();
             
             let dates = eventCalendar.getDates();
+
             expect(dates.datesToAdd.length).to.equal(1);
             expect(dates.datesToDel.length).to.equal(0);
         });
@@ -315,6 +319,7 @@ describe('EventCalendar', () => {
         
         it('should add to target dates the array of datesToAdd', () => {
             let dates = eventCalendar.getDates();
+
             expect(dates.datesToAdd.length).to.equal(2);
             expect(dates.datesToDel.length).to.equal(0);
         });
@@ -350,6 +355,7 @@ describe('EventCalendar', () => {
 
         it('the datesToAdd and datesToDel arrays should be empty', () => {
             let dates = eventCalendar.getDates();
+
             expect(dates.datesToAdd.length).to.equal(0);
             expect(dates.datesToDel.length).to.equal(0);
         });
@@ -390,6 +396,7 @@ describe('EventCalendar', () => {
             $html.find('[data-day="2018-07-04"]').click();
             
             let dates = eventCalendar.getDates();
+
             expect(dates.datesToAdd.length).to.equal(0);
             expect(dates.datesToDel.length).to.equal(1);
         });
@@ -435,6 +442,7 @@ describe('EventCalendar', () => {
         
         it('should add to target dates the array of datesToDel', () => {
             let dates = eventCalendar.getDates();
+
             expect(dates.datesToAdd.length).to.equal(0);
             expect(dates.datesToDel.length).to.equal(2);
         });
@@ -470,6 +478,7 @@ describe('EventCalendar', () => {
         
         it('should remove the target date from the array of datesToDel', () => {
             let dates = eventCalendar.getDates();
+
             expect(dates.datesToAdd.length).to.equal(0);
             expect(dates.datesToDel.length).to.equal(0);
         });
@@ -555,6 +564,7 @@ describe('EventCalendar', () => {
             expect(dates.datesToDel.length).to.equal(1);
 
             $html.find('.js-ercal-reset').click();
+
             expect(dates.datesToAdd.length).to.equal(0);
             expect(dates.datesToDel.length).to.equal(0);
         });
@@ -576,6 +586,7 @@ describe('EventCalendar', () => {
         it('should reset the aria label', () => {
             $html.find('[data-day="2018-01-10"]').click();
             $html.find('.js-ercal-reset').click();
+
             expect($html.find('[data-day="2018-01-10"]').attr('aria-label')).to.contain('Selected. Event will repeat on');
         });
     });
@@ -626,6 +637,7 @@ describe('EventCalendar', () => {
 
         it('should also not paint anything for the next month', () => {
             $html.find('.clndr-next-button').click();
+
             $html.find('.day').each(function() {
                 expect($(this).hasClass('event-repeat')).to.be.false;
             });
@@ -667,6 +679,7 @@ describe('EventCalendar', () => {
 
         it('should also repaint the next month', () => {
             $html.find('.clndr-next-button').click();
+
             $html.find('.day:not(.calendar-day-2018-02-28)').each(function() {
                 expect($(this).hasClass('event-repeat')).to.be.true;
             });
@@ -674,6 +687,7 @@ describe('EventCalendar', () => {
 
         it('should not apply the repeat styling to dates after the endDate', () => {
             $html.find('.clndr-next-button').click();
+
             expect($html.find('.calendar-day-2018-02-28').hasClass('event-repeat')).to.be.false;
         });
 
@@ -689,6 +703,7 @@ describe('EventCalendar', () => {
                 $parent = $html.find('.calendar-day-2018-01-04');
 
             $target.click();
+
             expect($parent.hasClass('event-del')).to.be.true;
         });
 
@@ -699,6 +714,7 @@ describe('EventCalendar', () => {
             $target.click();
 
             let dates = eventCalendar.getDates();
+
             expect(dates.datesToDel[0]._i).to.equal('2018-01-04');
         });
     });
@@ -712,6 +728,7 @@ describe('EventCalendar', () => {
 
         it('should select the current weekday in the weekday picker', () => {
             let dow = moment(new Date()).day();
+
             expect($html.find('[value="' + dow + '"]').prop('checked')).to.be.true;
         });
     });
@@ -729,6 +746,7 @@ describe('EventCalendar', () => {
         
         it('should apply the repeat styling', () => {
             let $days = $html.find('.day.event-repeat');
+
             expect($days.length).to.equal(5);
             expect($html.find('.calendar-day-2018-01-02').hasClass('event-repeat')).to.be.true;
             expect($html.find('.calendar-day-2018-01-09').hasClass('event-repeat')).to.be.true;
@@ -750,6 +768,7 @@ describe('EventCalendar', () => {
             $html.find('[value="4"]').prop('checked', true).trigger('change');
             
             let $days = $html.find('.day.event-repeat');
+
             expect($days.length).to.equal(9);
             expect($html.find('.calendar-day-2018-01-02').hasClass('event-repeat')).to.be.true;
             expect($html.find('.calendar-day-2018-01-09').hasClass('event-repeat')).to.be.true;
@@ -773,7 +792,9 @@ describe('EventCalendar', () => {
 
         it('should also repaint the next month', () => {
             $html.find('.clndr-next-button').click();
+
             let $days = $html.find('.day.event-repeat');
+
             expect($days.length).to.equal(4);
             expect($html.find('.calendar-day-2018-02-06').hasClass('event-repeat')).to.be.true;
             expect($html.find('.calendar-day-2018-02-13').hasClass('event-repeat')).to.be.true;
@@ -783,6 +804,7 @@ describe('EventCalendar', () => {
 
         it('should not apply the repeat styling to dates after the endDate', () => {
             $html.find('.clndr-next-button').click();
+
             expect($html.find('.calendar-day-2018-02-28').hasClass('event-repeat')).to.be.false;
         });
 
@@ -798,6 +820,7 @@ describe('EventCalendar', () => {
                 $parent = $html.find('.calendar-day-2018-01-09');
 
             $target.click();
+
             expect($parent.hasClass('event-del')).to.be.true;
         });
 
@@ -807,11 +830,13 @@ describe('EventCalendar', () => {
             $target.click();
 
             let dates = eventCalendar.getDates();
+
             expect(dates.datesToDel[0]._i).to.equal('2018-01-16');
         });
 
         it('should hide the weekday picker if a different repeat option is chosen', () => {
             $html.find('.js-ercal-repeat').val('daily').trigger('change');
+
             expect($html.find('.js-ercal-weekdays').attr('style')).to.equal('display: none;');
         });
     });
@@ -825,6 +850,7 @@ describe('EventCalendar', () => {
         
         it('should apply the repeat styling', () => {
             let $days = $html.find('.day.event-repeat');
+
             expect($days.length).to.equal(3);
             expect($html.find('.calendar-day-2018-01-02').hasClass('event-repeat')).to.be.true;
             expect($html.find('.calendar-day-2018-01-16').hasClass('event-repeat')).to.be.true;
@@ -846,7 +872,9 @@ describe('EventCalendar', () => {
 
         it('should also repaint the next month', () => {
             $html.find('.clndr-next-button').click();
+
             let $days = $html.find('.day.event-repeat');
+
             expect($days.length).to.equal(2);
             expect($html.find('.calendar-day-2018-02-13').hasClass('event-repeat')).to.be.true;
             expect($html.find('.calendar-day-2018-02-27').hasClass('event-repeat')).to.be.true;
@@ -854,6 +882,7 @@ describe('EventCalendar', () => {
 
         it('should not apply the repeat styling to dates after the endDate', () => {
             $html.find('.clndr-next-button').click();
+
             expect($html.find('.calendar-day-2018-02-28').hasClass('event-repeat')).to.be.false;
         });
 
@@ -869,6 +898,7 @@ describe('EventCalendar', () => {
                 $parent = $html.find('.calendar-day-2018-01-16');
 
             $target.click();
+
             expect($parent.hasClass('event-del')).to.be.true;
         });
 
@@ -878,6 +908,7 @@ describe('EventCalendar', () => {
             $target.click();
 
             let dates = eventCalendar.getDates();
+
             expect(dates.datesToDel[0]._i).to.equal('2018-01-16');
         });
     });
@@ -890,6 +921,7 @@ describe('EventCalendar', () => {
         
         it('should apply the repeat styling', () => {
             let $days = $html.find('.day.event-repeat');
+
             expect($days.length).to.equal(1);
             expect($html.find('.calendar-day-2018-01-02').hasClass('event-repeat')).to.be.true;
         });
@@ -909,13 +941,16 @@ describe('EventCalendar', () => {
 
         it('should also repaint the next month', () => {
             $html.find('.clndr-next-button').click();
+
             let $days = $html.find('.day.event-repeat');
+
             expect($days.length).to.equal(1);
             expect($html.find('.calendar-day-2018-02-02').hasClass('event-repeat')).to.be.true;
         });
 
         it('should not apply the repeat styling to dates after the endDate', () => {
             $html.find('.clndr-next-button').click();
+
             expect($html.find('.calendar-day-2018-02-28').hasClass('event-repeat')).to.be.false;
         });
 
@@ -945,6 +980,7 @@ describe('EventCalendar', () => {
             $target.click();
 
             let dates = eventCalendar.getDates();
+
             expect(dates.datesToDel[0]._i).to.equal('2018-02-02');
         });
     });
@@ -958,6 +994,7 @@ describe('EventCalendar', () => {
         
         it('should apply the repeat styling', () => {
             let $days = $html.find('.day.event-repeat');
+
             expect($days.length).to.equal(1);
             expect($html.find('.calendar-day-2018-01-02').hasClass('event-repeat')).to.be.true;
         });
@@ -977,13 +1014,16 @@ describe('EventCalendar', () => {
 
         it('should also repaint the next month', () => {
             $html.find('.clndr-next-button').click();
+
             let $days = $html.find('.day.event-repeat');
+
             expect($days.length).to.equal(1);
             expect($html.find('.calendar-day-2018-02-06').hasClass('event-repeat')).to.be.true;
         });
 
         it('should not apply the repeat styling to dates after the endDate', () => {
             $html.find('.clndr-next-button').click();
+
             expect($html.find('.calendar-day-2018-02-28').hasClass('event-repeat')).to.be.false;
         });
 
@@ -1013,6 +1053,7 @@ describe('EventCalendar', () => {
             $target.click();
 
             let dates = eventCalendar.getDates();
+
             expect(dates.datesToDel[0]._i).to.equal('2018-02-06');
         });
     });
@@ -1026,6 +1067,7 @@ describe('EventCalendar', () => {
         
         it('should apply the repeat styling', () => {
             let $days = $html.find('.day.event-repeat');
+
             expect($days.length).to.equal(1);
             expect($html.find('.calendar-day-2018-01-02').hasClass('event-repeat')).to.be.true;
         });
@@ -1047,13 +1089,16 @@ describe('EventCalendar', () => {
             for (var i = 0; i < 12; i++) {
                 $html.find('.clndr-next-button').click();
             }
+
             let $days = $html.find('.day.event-repeat');
+
             expect($days.length).to.equal(1);
             expect($html.find('.calendar-day-2019-01-02').hasClass('event-repeat')).to.be.true;
         });
 
         it('should not apply the repeat styling to dates after the endDate', () => {
             $html.find('.clndr-next-button').click();
+
             expect($html.find('.calendar-day-2018-02-28').hasClass('event-repeat')).to.be.false;
         });
 
@@ -1087,6 +1132,7 @@ describe('EventCalendar', () => {
             $target.click();
 
             let dates = eventCalendar.getDates();
+
             expect(dates.datesToDel[0]._i).to.equal('2019-01-02');
         });
     });
@@ -1115,11 +1161,13 @@ describe('EventCalendar', () => {
 
         it('should add the dates being removed from the pattern to the datesToDel arrays', () => {
             let dates = eventCalendar.getDates();
+
             expect(dates.datesToDel[0]._i).to.equal('2018-01-09');
         });
 
         it('should add the dates being added to the pattern to the datesToAdd arrays', () => {
             let dates = eventCalendar.getDates();
+
             expect(dates.datesToAdd[0]._i).to.equal('2018-01-10');
         });
 
@@ -1167,11 +1215,13 @@ describe('EventCalendar', () => {
 
         it('should remove the dates previously being removed from the pattern from the datesToDel arrays', () => {
             let dates = eventCalendar.getDates();
+
             expect(dates.datesToDel.length).to.equal(0);
         });
 
         it('should remove the dates previopusly being added to the pattern from the datesToAdd arrays', () => {
             let dates = eventCalendar.getDates();
+
             expect(dates.datesToAdd.length).to.equal(0);
         });
 
@@ -1214,11 +1264,13 @@ describe('EventCalendar', () => {
 
         it('should not remove the dates from the datesToAdd arrays', () => {
             let dates = eventCalendar.getDates();
+
             expect(dates.datesToAdd[0]._i).to.equal('2018-01-04');
         });
 
         it('should not remove the dates from the datesToDel arrays', () => {
             let dates = eventCalendar.getDates();
+
             expect(dates.datesToDel[0]._i).to.equal('2018-01-10');
         });
 
@@ -1285,11 +1337,13 @@ describe('EventCalendar', () => {
 
         it('should not remove the dates from the datesToAdd arrays', () => {
             let dates = eventCalendar.getDates();
+
             expect(dates.datesToAdd[0]._i).to.equal('2018-01-04');
         });
 
         it('should not remove the dates from the datesToDel arrays', () => {
             let dates = eventCalendar.getDates();
+
             expect(dates.datesToDel[0]._i).to.equal('2018-01-10');
         });
 
@@ -1326,6 +1380,7 @@ describe('EventCalendar', () => {
 
         it('should store the target date in the datesToDel array', () => {
             let dates = eventCalendar.getDates();
+
             expect(dates.datesToDel[0]._i).to.equal('2018-01-09');
         });
 
@@ -1355,6 +1410,7 @@ describe('EventCalendar', () => {
 
         it('should remove the target date from the datesToDel array', () => {
             let dates = eventCalendar.getDates();
+            
             expect(dates.datesToDel.length).to.equal(0);
         });
 

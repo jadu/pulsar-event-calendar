@@ -5,10 +5,10 @@
 'use strict';
 
 import $ from 'jquery';
-var moment = require('moment');
-require('moment-recur');
+import moment from 'moment';
+import 'moment-recur';
 window._ = require('underscore');
-require('clndr');
+import 'clndr';
 
 class EventCalendar {
 
@@ -504,7 +504,7 @@ class EventCalendar {
                     ariaLabel = 'Unselected';
 
                 // If event was passed in the `events` array, it will be reset back to `.selected` and needs labelling
-                if ($elemParent.attr('class').indexOf('event') >= 0) {
+                if ($elemParent.attr('class').indexOf('event') !== -1) {
                     ariaLabel = 'Selected. Event will repeat on this day';
                 }
 
@@ -540,7 +540,7 @@ class EventCalendar {
      * @param {moment} b Needle
      */
     static matchDates (a, b) {
-        return a._i != b._i;
+        return a.format(this.dateFormat) != b.format(this.dateFormat);
     }
     
     /**
@@ -559,8 +559,7 @@ class EventCalendar {
 
         // Dates being added (outside of any recurrence pattern)
         if (numDatesToAdd > 0) {
-            datesToAddContainer.html((numDatesToAdd === 1) 
-                ? numDatesToAdd + ' day will be added' : numDatesToAdd + ' days will be added').show();
+            datesToAddContainer.html(numDatesToAdd + ` ${_self.pluralise('day', numDatesToAdd)} will be added`).show();
         }
         else {
             datesToAddContainer.html('').hide();
@@ -568,8 +567,7 @@ class EventCalendar {
 
         // Dates being removed (outside of any recurrence pattern)
         if (numDatesToDel > 0) {
-            datesToDelContainer.html((numDatesToDel === 1) 
-                ? numDatesToDel + ' day will be removed' : numDatesToDel + ' days will be removed').show();
+            datesToDelContainer.html(numDatesToDel + ` ${_self.pluralise('day', numDatesToDel)} will be removed`).show();
         }
         else {
             datesToDelContainer.html('').hide();
@@ -582,6 +580,16 @@ class EventCalendar {
         else {
             resetButton.hide();
         }
+    }
+
+    /**
+     * Pluralises a string given a quantity of 'things'.
+     * 
+     * @param {string} noun The word to pluralise
+     * @param {integer} quantity The quantity to determine whether to pluralise
+     */
+    pluralise (noun, quantity) {
+        return quantity > 1 ? noun + 's' : noun;
     }
 
     /**
