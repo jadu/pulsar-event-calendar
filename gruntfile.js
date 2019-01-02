@@ -36,7 +36,7 @@ module.exports = function(grunt) {
         },
         watch: {
             css: {
-                files: ['src/**/*'],
+                files: ['src/**/*', 'index.js'],
                 tasks: ['sass:dev', 'browserify:dev']
             }
         }

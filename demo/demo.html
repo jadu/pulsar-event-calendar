@@ -9,8 +9,62 @@
 </head>
 <body>
     <h1>Pulsar Event Calendar Demo</h1>
+    
+    <fieldset>
+        <legend>Pattern</legend>
+    
+        <label for="ercal-repeat">Repeat</label>
+        <select id="ercal-repeat" class="js-ercal-repeat">
+            <option value="no-repeat">No repeat</option>
+            <option value="daily">Daily</option>
+            <option value="weekly">Weekly</option>
+            <option value="two-weekly">Every two weeks</option>
+            <option value="monthly-day">Monthly, on this day of the month</option>
+            <option value="monthly-date">Monthly, on this date</option>
+            <option value="annually">Every year</option>
+        </select>
+    </fieldset>
+
+    <fieldset class="js-ercal-weekdays" style="display: none;">
+        <legend>Repeat on</legend>
+        <label>
+            <input value="1" name="ercal-weekdays" type="checkbox">
+            <span aria-label="Monday">MO</span>
+        </label>
+        <label>
+            <input value="2" name="ercal-weekdays" type="checkbox">
+            <span aria-label="Tuesday">TU</span>
+        </label>
+        <label>
+            <input value="3" name="ercal-weekdays" type="checkbox">
+            <span aria-label="Wednesday">WE</span>
+        </label>
+        <label>
+            <input value="4" name="ercal-weekdays" type="checkbox">
+            <span aria-label="Thursday">TH</span>
+        </label>
+        <label>
+            <input value="5" name="ercal-weekdays" type="checkbox">
+            <span aria-label="Friday">FR</span>
+        </label>
+        <label>
+            <input value="6" name="ercal-weekdays" type="checkbox">
+            <span aria-label="Saturday">SA</span>
+        </label>
+        <label>
+            <input value="7" name="ercal-weekdays" type="checkbox">
+            <span aria-label="Sunday">SU</span>
+        </label>
+    </fieldset>
 
     <div class="event-calendar js-event-calendar"></div>
+
+    <fieldset>
+        <legend>DEBUG: Get data from calendar (shown in console)</legend>
+
+        <button class="js-get-example">Dates To Add & Dates To Remove</button>
+        <button class="js-get-pattern">Recurrence Pattern</button>
+    </fieldset>
     
     <script src="../node_modules/jquery/dist/jquery.js"></script>
     <script src="../dist/EventCalendar.js"></script>
