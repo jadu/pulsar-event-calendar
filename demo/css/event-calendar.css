@@ -2553,17 +2553,18 @@
   display: inline-block;
   font-family: "Helvetica Neue", "Helvetica", "Arial", sans-serif;
   font-size: 1em;
-  height: 48px;
+  height: 46px;
   position: relative;
   text-align: center;
   user-select: none;
-  width: 48px;
-  line-height: 48px; }
+  width: 46px;
+  line-height: 46px; }
   .choice-bubble__checkbox:checked + .choice-bubble__label {
     background-color: #2575b0;
     border: 2px solid #1e1e1e;
     box-shadow: inset 0 0 0 3px #fff;
-    color: #fff; }
+    color: #fff;
+    width: 48px; }
 
 .choice-bubble__checkbox,
 .clndr-hide {
