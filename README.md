@@ -71,7 +71,7 @@ $(function () {
 });
 ```
 
-Usually you would want to let the user choose a start date from a date field withn the user interface, you can bind a change event to this field.
+Usually you would want to let the user choose a start date from a date field within the user interface, you can bind a change event to this field.
 
 If no start date is supplied, or the value is `null`, the calendar will default to `today`.
 
