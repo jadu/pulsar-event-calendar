@@ -115,7 +115,8 @@ describe('EventCalendar', () => {
         });
 
         it('should constrain the available dates to the day before the startDate', () => {
-            expect($html.find('.selected').prev().hasClass('inactive')).to.be.true;
+            let yesterday = moment(new Date()).subtract(1, 'day').format('YYYY-MM-DD');
+            expect($html.find('.calendar-day-' + yesterday).hasClass('inactive')).to.be.true;
         });
 
         it('should disable dates in the past to prevent keyboard navigation', () => {
