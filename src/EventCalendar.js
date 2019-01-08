@@ -18,11 +18,12 @@ class EventCalendar {
      * @param {jQuery} clndr The clndr instance that is in use
      */
     constructor ($html) {
-        this.$ariaLiveRegion;
         this.clndr;
+        this.$html = $html;
         this.dateFormat = 'YYYY-MM-DD';
         this.dateFormatLong = 'D MMMM, YYYY';
-        this.$html = $html;
+        this.today = moment(new Date());
+        this.$ariaLiveRegion;
         this.$patternField;
         this.$startDateField;
         this.$endDateField;
@@ -81,8 +82,8 @@ class EventCalendar {
             options.endDate = _self.$endDateField.val().length ? _self.$endDateField.val() : options.endDate;
         }
 
-        let clndrSelected = options.startDate ? moment(options.startDate) : moment(new Date()),
-            clndrStart = options.startDate ? moment(options.startDate) : moment(new Date()),
+        let clndrSelected = options.startDate ? moment(options.startDate) : _self.today,
+            clndrStart = options.startDate ? moment(options.startDate) : _self.today,
             clndrEnd = options.endDate ? moment(options.endDate) : moment(new Date()).add(15, 'years'),
             clndrEvents = options.events ? options.events : [],
             $weekdayPicker = _self.$html.find('.js-ercal-weekdays'),
@@ -663,12 +664,16 @@ class EventCalendar {
         _self.paintMonth(_self.clndr.month);
     }
 
+    /**
+     * Fired when the endDateField changes and re-renders the calendar to stop at the new endDate, removes any
+     * out-of-bounds dates from the datesToAdd / datesToDel arrays and repaints the month.
+     */
     changeEndDate () {
         let _self = this,
             datesToAdd = _self.clndr.options.extras.datesToAdd,
             datesToDel = _self.clndr.options.extras.datesToDel,
             newEndDate = _self.$endDateField.val(),
-            newEndDateMoment = moment(newEndDate);
+            newEndDateMoment = newEndDate.length ? moment(newEndDate) : _self.today;
         
         // Update the endDate constraint before re-rendering
         _self.clndr.options.constraints.endDate = newEndDate;
