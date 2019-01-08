@@ -3,11 +3,19 @@ const EventCalendar = require('./src/EventCalendar');
 
 $(function () {
     const calendar = new EventCalendar($('html'));
+
+    let myEvents = [
+        { date: '2019-01-10' }
+    ];
     
     /**
      * Simple init() method which will default to startDate = today / endDate = today + 15 years
      */
-    calendar.init();
+    calendar.init({
+        startDate: '2015-10-01',
+        startDateField: '.js-ercal-start',
+        events: myEvents
+    });
 
     /**
      * More detailed example with saved events, start date and end date

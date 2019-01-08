@@ -9,6 +9,8 @@ import moment from 'moment';
 import 'moment-recur';
 window._ = require('underscore');
 import 'clndr';
+import { start } from 'repl';
+import { timingSafeEqual } from 'crypto';
 
 class EventCalendar {
 
@@ -18,16 +20,23 @@ class EventCalendar {
      * @param {jQuery} clndr The clndr instance that is in use
      */
     constructor ($html) {
-        this.$html = $html;
-        this.$patternField;
         this.$ariaLiveRegion;
+        this.clndr;
         this.dateFormat = 'YYYY-MM-DD';
         this.dateFormatLong = 'D MMMM, YYYY';
-        this.clndr;
+        this.$html = $html;
+        this.$patternField;
+        this.$startDateField;
     }
 
     /**
      * Initalises the event calendar providing the correct markup is present within the DOM (as per README.md).
+     * 
+     * Example usage: 
+     *  eventCalendar.init({
+     *      startDate: '2019-07-04',
+     *      endDate:   '2020-07-04'
+     * })
      * 
      * @param {string} startDate Specifies the month and year which will be initially focused by the calendar, dates 
      * before this will not be interactive. Will default to the user's current date if not supplied or is null 
@@ -42,22 +51,30 @@ class EventCalendar {
      *    { date: 'YYYY-MM-DD' }
      * ];
      */
-    init (startDate, endDate, events) {
-        if (typeof this.$html === 'undefined' || !this.$html.length) {
+    init(options = {}) {
+        let _self = this;
+
+        if (typeof _self.$html === 'undefined' || !_self.$html.length) {
             throw new Error('$html must be passed to EventCalendar');
         }   
 
-        let $container = this.$html.find('.js-event-calendar');
+        let $container = _self.$html.find('.js-event-calendar');
 
         if (!$container.length) {
             throw new Error('EventCalendar requires a .js-event-calendar element present in the DOM');
         }
 
-        let _self = this,
-            clndrSelected = startDate ? moment(startDate) : moment(new Date()),
-            clndrStart = startDate ? moment(startDate) : moment(new Date()),
-            clndrEnd = endDate ? moment(endDate) : moment(new Date()).add(15, 'years'),
-            clndrEvents = events ? events : [],
+        // If startDateField is defined, use the value as the startDate (otherwise this will be set to startDate, if
+        // supplied, or 'today' if not.
+        if (typeof options.startDateField !== 'undefined' && options.startDateField.length) {
+            _self.$startDateField = _self.$html.find(options.startDateField);
+            options.startDate = _self.$startDateField.val().length ? _self.$startDateField.val() : options.startDate;
+        }
+
+        let clndrSelected = options.startDate ? moment(options.startDate) : moment(new Date()),
+            clndrStart = options.startDate ? moment(options.startDate) : moment(new Date()),
+            clndrEnd = options.endDate ? moment(options.endDate) : moment(new Date()).add(15, 'years'),
+            clndrEvents = options.events ? options.events : [],
             $weekdayPicker = _self.$html.find('.js-ercal-weekdays'),
             clndrTemplate = `
                 <div class='clndr-controls' role='navigation'>
@@ -156,6 +173,11 @@ class EventCalendar {
 
         // Store a reference to the aria alert status element used to update screen readers when things change
         _self.$ariaLiveRegion = _self.$html.find('.js-ercal-status');
+
+        // If a startDate field is defined, bind a change event to fire When a new start date is chosen
+        if (typeof _self.$startDateField !== 'undefined') {
+            _self.$startDateField.on('change', _self.changeStartDate.bind(_self));
+        }
 
         // Recalculate upcoming occurences based on the pattern dropdown
         _self.$patternField.on('change', function() {
@@ -492,50 +514,20 @@ class EventCalendar {
         let _self = this,
             $elems = _self.clndr.element.find('.day-contents');
 
-            $elems.each(function() {
-                let $elem = $(this),
-                    $elemParent = $elem.parent(),
-                    date = moment($elem.data('day')).format(_self.dateFormatLong),
-                    ariaLabel = 'Unselected';
+        $elems.each(function() {
+            let $elem = $(this),
+                $elemParent = $elem.parent(),
+                date = moment($elem.data('day')).format(_self.dateFormatLong),
+                ariaLabel = 'Unselected';
 
-                // If event was passed in the `events` array, it will be reset back to `.selected` and needs labelling
-                if ($elemParent.attr('class').indexOf('event') !== -1) {
-                    ariaLabel = 'Selected. Event will repeat on this day';
-                }
+            // If event was passed in the `events` array, it will be reset back to `.selected` and needs labelling
+            if ($elemParent.attr('class').indexOf('event') !== -1) {
+                ariaLabel = 'Selected. Event will repeat on this day';
+            }
 
-                $elem.attr('aria-label',  date + '. ' + ariaLabel);
-                $elemParent.removeClass('event-add event-del event-repeat');
-            });
-        }
-
-    /**
-     * Check whether `date` is in the same month as `dateToCompareTo`
-     * 
-     * @param {moment} dateToCompareTo Haystack
-     * @param {moment} date Needle
-     */
-    static isInMonth (dateToCompareTo, date) {
-        return date.month() === dateToCompareTo.month();
-    }
-    
-    /**
-     * Check whether `date` is in the same year as `dateToCompareTo`
-     * 
-     * @param {moment} dateToCompareTo Haystack
-     * @param {moment} date Needle
-     */
-    static isInYear (dateToCompareTo, date) {
-        return date.year() === dateToCompareTo.year();
-    }
-
-    /**
-     * Check whether two moment instances are not the same date
-     * 
-     * @param {moment} a Haystack
-     * @param {moment} b Needle
-     */
-    static doesNotMatchDate (a, b) {
-        return a.format(this.dateFormat) != b.format(this.dateFormat);
+            $elem.attr('aria-label',  date + '. ' + ariaLabel);
+            $elemParent.removeClass('event-add event-del event-repeat');
+        });
     }
     
     /**
@@ -578,16 +570,6 @@ class EventCalendar {
     }
 
     /**
-     * Pluralises a string given a quantity of 'things'.
-     * 
-     * @param {string} noun The word to pluralise
-     * @param {integer} quantity The quantity to determine whether to pluralise
-     */
-    pluralise (noun, quantity) {
-        return quantity > 1 ? noun + 's' : noun;
-    }
-
-    /**
      * Reverts all user changes to their initial state (when the calendar was initialised) and return the user to the 
      * initial view the calendar was loaded on (either `today` or the `startDate`).
      */
@@ -612,6 +594,61 @@ class EventCalendar {
     }
 
     /**
+     * Fired when the startDateField changes and re-renders the calendar to start at the new startDate, removes any
+     * out-of-bounds dates from the datesToAdd / datesToDel arrays and repaints the month.
+     * 
+     * Clearing the startDateField will cause the calendar to be reset to 'today'.
+     */
+    changeStartDate () {
+        let _self = this,
+            datesToAdd = _self.clndr.options.extras.datesToAdd,
+            datesToDel = _self.clndr.options.extras.datesToDel,
+            newStartDate = _self.$startDateField.val() ? _self.$startDateField.val() : moment(new Date()).format(_self.dateFormat),
+            newStartDateMoment = moment(newStartDate);
+
+        // Update the startDate constraint before re-rendering
+        _self.clndr.options.constraints.startDate = newStartDate;
+
+        // Navigate to the month/year for the new startDate
+        _self.clndr
+            .setYear(newStartDateMoment.year())
+            .setMonth(newStartDateMoment.month())
+            .render();
+
+        // Switch selected state styling from the old start date to the new one
+        _self.$html.find('.selected').removeClass('selected');
+        _self.$html.find('.calendar-day-' + newStartDate).addClass('selected');
+
+        // Remove now out-of-bounds dates from the datesToAdd array
+        const outOfBoundsDatesToAdd = _self.clndr.options.extras.datesToAdd
+            .filter(EventCalendar.isInYear.bind(this, newStartDateMoment))
+            .filter(EventCalendar.isInMonth.bind(this, newStartDateMoment))
+            .filter(EventCalendar.isBeforeDate.bind(this, newStartDateMoment));
+
+        $.each(outOfBoundsDatesToAdd, function(k, v) {
+            datesToAdd = datesToAdd.filter(EventCalendar.doesNotMatchDate.bind(this, v));
+        });
+
+        // Update stored datesToAdd with outOfBounds date removed
+        _self.clndr.options.extras.datesToAdd = datesToAdd;
+
+        // Remove now out-of-bounds dates from the datesToDel array
+        const outOfBoundsDatesToDel = _self.clndr.options.extras.datesToDel
+            .filter(EventCalendar.isInYear.bind(this, newStartDateMoment))
+            .filter(EventCalendar.isInMonth.bind(this, newStartDateMoment))
+            .filter(EventCalendar.isBeforeDate.bind(this, newStartDateMoment));
+
+        $.each(outOfBoundsDatesToDel, function(k, v) {
+            datesToDel = datesToDel.filter(EventCalendar.doesNotMatchDate.bind(this, v));
+        });
+
+        // Update stored datesToDel with outOfBounds date removed
+        _self.clndr.options.extras.datesToDel = datesToDel;
+
+        _self.paintMonth(_self.clndr.month);
+    }
+
+    /**
      * Retrieve the contents of the `datesToAdd` and `datesToDel` arrays.
      */
     getDates () {
@@ -625,6 +662,56 @@ class EventCalendar {
     getRecurPattern () {
         let _self = this;
         return _self.recurPattern;
+    }
+
+    /**
+     * Pluralises a string given a quantity of 'things'.
+     * 
+     * @param {string} noun The word to pluralise
+     * @param {integer} quantity The quantity to determine whether to pluralise
+     */
+    pluralise (noun, quantity) {
+        return quantity > 1 ? noun + 's' : noun;
+    }
+
+    /**
+     * Check whether `date` is in the same month as `dateToCompareTo`
+     * 
+     * @param {moment} dateToCompareTo Haystack
+     * @param {moment} date Needle
+     */
+    static isBeforeDate (dateToCompareTo, date) {
+        return date.date() < dateToCompareTo.date();
+    }
+
+    /**
+     * Check whether `date` is in the same month as `dateToCompareTo`
+     * 
+     * @param {moment} dateToCompareTo Haystack
+     * @param {moment} date Needle
+     */
+    static isInMonth (dateToCompareTo, date) {
+        return date.month() === dateToCompareTo.month();
+    }
+    
+    /**
+     * Check whether `date` is in the same year as `dateToCompareTo`
+     * 
+     * @param {moment} dateToCompareTo Haystack
+     * @param {moment} date Needle
+     */
+    static isInYear (dateToCompareTo, date) {
+        return date.year() === dateToCompareTo.year();
+    }
+
+    /**
+     * Check whether two moment instances are not the same date
+     * 
+     * @param {moment} a Haystack
+     * @param {moment} b Needle
+     */
+    static doesNotMatchDate (a, b) {
+        return a.format(this.dateFormat) != b.format(this.dateFormat);
     }
 }
 
