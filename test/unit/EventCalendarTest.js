@@ -17,6 +17,7 @@ describe('EventCalendar', () => {
         $html = $('<div></div>');
         $body = $(`<body>
         <input type="date" class="js-ercal-start" />
+        <input type="date" class="js-ercal-end" />
         <select class="js-ercal-repeat">
             <option value="no-repeat">No repeat</option>
             <option value="daily">Daily</option>
@@ -1578,7 +1579,7 @@ describe('EventCalendar', () => {
 
     describe('when the start date field has a value on init', () => {
         beforeEach(() => {
-            let $startDateField = $html.find('.js-ercal-start').val('1981-07-04');
+            $html.find('.js-ercal-start').val('1981-07-04');
 
             eventCalendar.init({ startDateField: '.js-ercal-start' });
         });
@@ -1688,6 +1689,105 @@ describe('EventCalendar', () => {
         });
     });
 
+
+    describe('when the endDateField is provided without a value', () => {
+        beforeEach(() => {
+            eventCalendar.init({
+                endDateField: '.js-ercal-end'
+            });
+        });
+
+        it('should set the end date to today + 15 years', () => {
+            let todayPlus15Years = moment(new Date()).add(15, 'years').format('YYYY-MM-DD');
+
+            expect(eventCalendar.clndr.options.constraints.endDate.format('YYYY-MM-DD')).to.equal(todayPlus15Years);
+        });
+    });
+
+
+    describe('when the startDateField and endDateField are provided with a value', () => {
+        beforeEach(() => {
+            $html.find('.js-ercal-start').val('1981-07-02');
+            $html.find('.js-ercal-end').val('1981-07-04');
+
+            eventCalendar.init({
+                startDateField: '.js-ercal-start',
+                endDateField: '.js-ercal-end' 
+            });
+        });
+
+        it('should set the end date to that value', () => {
+            expect(eventCalendar.clndr.options.constraints.endDate.format('YYYY-MM-DD')).to.equal('1981-07-04');
+        });
+    });
+
+
+    describe('when the startDate and endDate option is defined', () => {
+        beforeEach(() => {
+            eventCalendar.init({
+                startDate: '1981-07-01',
+                endDate: '1981-07-04' 
+            });
+        });
+
+        it('should set the end date to that value', () => {
+            expect(eventCalendar.clndr.options.constraints.endDate.format('YYYY-MM-DD')).to.equal('1981-07-04');
+        });
+    });
+
+
+    describe('when the end date field is changed', () => {
+        beforeEach(() => {
+            eventCalendar.init({ 
+                startDate: '2015-10-01',
+                endDate: '2015-10-30',
+                endDateField: '.js-ercal-end',
+                events: [{ date: '2015-10-19' }, { date: '2015-10-24' }]
+            });
+
+            $html.find('[data-day="2015-10-20"]').click(); // to add
+            $html.find('[data-day="2015-10-22"]').click(); // to add
+            $html.find('[data-day="2015-10-19"]').click(); // to del
+            $html.find('[data-day="2015-10-24"]').click(); // to del
+
+            $html.find('.js-ercal-end').val('2015-10-21').trigger('change');
+        });
+
+        it('should remove any out-of-bounds dates from the datesToAdd arrays', () => {
+            let dates = eventCalendar.getDates();
+
+            expect(dates.datesToAdd.length).to.equal(1);
+            expect(dates.datesToAdd[0]._i).to.equal('2015-10-20');
+        });
+
+        it('should remove any out-of-bounds dates from the datesToDel arrays', () => {
+            let dates = eventCalendar.getDates();
+
+            expect(dates.datesToDel.length).to.equal(1);
+            expect(dates.datesToDel[0]._i).to.equal('2015-10-19');
+        });
+    });
+
+    describe('when the end date field is cleared', () => {
+        beforeEach(() => {
+            $html.find('.js-ercal-start').val('1981-07-02');
+            $html.find('.js-ercal-end').val('1981-07-04');
+
+            eventCalendar.init({
+                startDateField: '.js-ercal-start',
+                endDateField: '.js-ercal-end' 
+            });
+
+            $html.find('.js-ercal-end').val('').trigger('change');
+        });
+
+        it('should set the end date to startDate + 15 years', () => {
+            let startPlus15Years = moment('1981-07-02').add(15, 'years').format('YYYY-MM-DD');
+
+            expect(eventCalendar.clndr.options.constraints.endDate.format('YYYY-MM-DD')).to.equal(startPlus15Years);
+        });
+
+    });
 
 });
 

@@ -79,7 +79,7 @@ class EventCalendar {
 
         if (typeof options.endDateField !== 'undefined' && options.endDateField.length) {
             _self.$endDateField = _self.$html.find(options.endDateField);
-            options.endDate = _self.$endDateField.val().length ? _self.$endDateField.val() : options.endDate;
+            options.endDate = _self.$endDateField.val() ? _self.$endDateField.val() : options.endDate;
         }
 
         let clndrSelected = options.startDate ? moment(options.startDate) : _self.today,
@@ -667,22 +667,18 @@ class EventCalendar {
     /**
      * Fired when the endDateField changes and re-renders the calendar to stop at the new endDate, removes any
      * out-of-bounds dates from the datesToAdd / datesToDel arrays and repaints the month.
+     * 
+     * Clearing the endDate will revert to startDate + 15 years.
      */
     changeEndDate () {
         let _self = this,
             datesToAdd = _self.clndr.options.extras.datesToAdd,
             datesToDel = _self.clndr.options.extras.datesToDel,
-            newEndDate = _self.$endDateField.val(),
-            newEndDateMoment = newEndDate.length ? moment(newEndDate) : _self.today;
-        
+            newEndDate = _self.$endDateField.val().length ? _self.$endDateField.val() : _self.clndr.options.constraints.startDate.add(15, 'years'),
+            newEndDateMoment = newEndDate.length ? moment(newEndDate) : moment(new Date()).add(15, 'years');
+
         // Update the endDate constraint before re-rendering
         _self.clndr.options.constraints.endDate = newEndDate;
-
-        // Navigate to the month/year for the new endDate
-        _self.clndr
-            .setYear(newEndDateMoment.year())
-            .setMonth(newEndDateMoment.month())
-            .render();
 
         // Remove now out-of-bounds dates from the datesToAdd array
         const outOfBoundsDatesToAdd = _self.clndr.options.extras.datesToAdd
@@ -710,6 +706,8 @@ class EventCalendar {
         // Update stored datesToDel with outOfBounds date removed
         _self.clndr.options.extras.datesToDel = datesToDel;
 
+        // Render the changes
+        _self.clndr.render();
         _self.paintMonth(_self.clndr.month);
     }
 
