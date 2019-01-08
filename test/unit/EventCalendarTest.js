@@ -1690,7 +1690,7 @@ describe('EventCalendar', () => {
     });
 
 
-    describe('when the endDateField is provided without a value', () => {
+    describe('when the endDateField is provided without a value, and no startDate is defined', () => {
         beforeEach(() => {
             eventCalendar.init({
                 endDateField: '.js-ercal-end'
@@ -1701,6 +1701,22 @@ describe('EventCalendar', () => {
             let todayPlus15Years = moment(new Date()).add(15, 'years').format('YYYY-MM-DD');
 
             expect(eventCalendar.clndr.options.constraints.endDate.format('YYYY-MM-DD')).to.equal(todayPlus15Years);
+        });
+    });
+
+
+    describe('when the endDateField is provided without a value, and a startDate is defined', () => {
+        beforeEach(() => {
+            eventCalendar.init({
+                endDateField: '.js-ercal-end',
+                startDate: '2000-01-01'
+            });
+        });
+
+        it('should set the end date to startDate + 15 years', () => {
+            let startDatePlus15Years = moment('2000-01-01').add(15, 'years').format('YYYY-MM-DD');
+
+            expect(eventCalendar.clndr.options.constraints.endDate.format('YYYY-MM-DD')).to.equal(startDatePlus15Years);
         });
     });
 
@@ -1814,8 +1830,6 @@ describe('EventCalendar', () => {
                 });
             }).to.throw('End date can not be before the start date');
         });
-
-
     });
 
 });

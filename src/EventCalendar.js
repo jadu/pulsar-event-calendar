@@ -79,7 +79,7 @@ class EventCalendar {
 
         if (typeof options.endDateField !== 'undefined' && options.endDateField.length) {
             _self.$endDateField = _self.$html.find(options.endDateField);
-            options.endDate = _self.$endDateField.val() ? _self.$endDateField.val() : options.endDate;
+            options.endDate = _self.$endDateField.val() ? _self.$endDateField.val() : moment(options.startDate).add(15, 'years');
         }
 
         // Make sure the endDate isn't before the startDate or anything silly like that
