@@ -12,9 +12,9 @@ $(function () {
      * Simple init() method which will default to startDate = today / endDate = today + 15 years
      */
     calendar.init({
-        startDate: '2015-10-01',
         startDateField: '.js-ercal-start',
-        events: myEvents
+        endDateField: '.js-ercal-end',
+        events: [{ date: '2015-10-19' }, { date: '2015-10-24' }]
     });
 
     /**

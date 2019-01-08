@@ -1522,6 +1522,26 @@ describe('EventCalendar', () => {
     });
 
 
+    describe('when the startDateField is provided without a value', () => {
+        beforeEach(() => {
+            eventCalendar.init({
+                startDateField: '.js-ercal-start' 
+            });
+        });
+
+        it('should select the current date (today)', () => {
+            let today = moment(new Date()).format('YYYY-MM-DD'),
+                selectedDate = $html.find('.selected > .day-contents').data('day');
+
+            expect(selectedDate).to.equal(today);
+        });
+
+        it('should set the current date to .today', () => {
+            expect($html.find('.selected').hasClass('today')).to.be.true;
+        });
+    });
+
+
     describe('when the startDate and a startDateField are provided with a value', () => {
         beforeEach(() => {
             let $startDateField = $html.find('.js-ercal-start').val('1981-07-04');
@@ -1606,7 +1626,7 @@ describe('EventCalendar', () => {
             eventCalendar.init({ 
                 startDate: '2015-10-01',
                 startDateField: '.js-ercal-start',
-                events: [{ date: '2015-10-19', date: '2015-10-24' }]
+                events: [{ date: '2015-10-19' }, { date: '2015-10-24' }]
             });
 
             $html.find('[data-day="2015-10-20"]').click(); // to add

@@ -9,8 +9,6 @@ import moment from 'moment';
 import 'moment-recur';
 window._ = require('underscore');
 import 'clndr';
-import { start } from 'repl';
-import { timingSafeEqual } from 'crypto';
 
 class EventCalendar {
 
@@ -27,6 +25,7 @@ class EventCalendar {
         this.$html = $html;
         this.$patternField;
         this.$startDateField;
+        this.$endDateField;
     }
 
     /**
@@ -64,11 +63,22 @@ class EventCalendar {
             throw new Error('EventCalendar requires a .js-event-calendar element present in the DOM');
         }
 
-        // If startDateField is defined, use the value as the startDate (otherwise this will be set to startDate, if
-        // supplied, or 'today' if not.
+        /**
+         * It's possible to provide conflicting start dates via startDate and startDateField.val, 
+         * they will be used in this priority order:
+         * 
+         *  1. startDateField.val (visible to the user in the UI so takes priority)
+         *  2. startDate
+         *  3. today
+         */
         if (typeof options.startDateField !== 'undefined' && options.startDateField.length) {
             _self.$startDateField = _self.$html.find(options.startDateField);
             options.startDate = _self.$startDateField.val().length ? _self.$startDateField.val() : options.startDate;
+        }
+
+        if (typeof options.endDateField !== 'undefined' && options.endDateField.length) {
+            _self.$endDateField = _self.$html.find(options.endDateField);
+            options.endDate = _self.$endDateField.val().length ? _self.$endDateField.val() : options.endDate;
         }
 
         let clndrSelected = options.startDate ? moment(options.startDate) : moment(new Date()),
@@ -177,6 +187,11 @@ class EventCalendar {
         // If a startDate field is defined, bind a change event to fire When a new start date is chosen
         if (typeof _self.$startDateField !== 'undefined') {
             _self.$startDateField.on('change', _self.changeStartDate.bind(_self));
+        }
+
+        // If an endDate field is defined, bind a change event to fire When a new end date is chosen
+        if (typeof _self.$endDateField !== 'undefined') {
+            _self.$endDateField.on('change', _self.changeEndDate.bind(_self));
         }
 
         // Recalculate upcoming occurences based on the pattern dropdown
@@ -603,7 +618,7 @@ class EventCalendar {
         let _self = this,
             datesToAdd = _self.clndr.options.extras.datesToAdd,
             datesToDel = _self.clndr.options.extras.datesToDel,
-            newStartDate = _self.$startDateField.val() ? _self.$startDateField.val() : moment(new Date()).format(_self.dateFormat),
+            newStartDate = _self.$startDateField.val(),
             newStartDateMoment = moment(newStartDate);
 
         // Update the startDate constraint before re-rendering
@@ -648,6 +663,51 @@ class EventCalendar {
         _self.paintMonth(_self.clndr.month);
     }
 
+    changeEndDate () {
+        let _self = this,
+            datesToAdd = _self.clndr.options.extras.datesToAdd,
+            datesToDel = _self.clndr.options.extras.datesToDel,
+            newEndDate = _self.$endDateField.val(),
+            newEndDateMoment = moment(newEndDate);
+        
+        // Update the endDate constraint before re-rendering
+        _self.clndr.options.constraints.endDate = newEndDate;
+
+        // Navigate to the month/year for the new endDate
+        _self.clndr
+            .setYear(newEndDateMoment.year())
+            .setMonth(newEndDateMoment.month())
+            .render();
+
+        // Remove now out-of-bounds dates from the datesToAdd array
+        const outOfBoundsDatesToAdd = _self.clndr.options.extras.datesToAdd
+            .filter(EventCalendar.isInYear.bind(this, newEndDateMoment))
+            .filter(EventCalendar.isInMonth.bind(this, newEndDateMoment))
+            .filter(EventCalendar.isAfterDate.bind(this, newEndDateMoment));
+
+        $.each(outOfBoundsDatesToAdd, function(k, v) {
+            datesToAdd = datesToAdd.filter(EventCalendar.doesNotMatchDate.bind(this, v));
+        });
+
+        // Update stored datesToAdd with outOfBounds date removed
+        _self.clndr.options.extras.datesToAdd = datesToAdd;
+
+        // Remove now out-of-bounds dates from the datesToDel array
+        const outOfBoundsDatesToDel = _self.clndr.options.extras.datesToDel
+            .filter(EventCalendar.isInYear.bind(this, newEndDateMoment))
+            .filter(EventCalendar.isInMonth.bind(this, newEndDateMoment))
+            .filter(EventCalendar.isAfterDate.bind(this, newEndDateMoment));
+
+        $.each(outOfBoundsDatesToDel, function(k, v) {
+            datesToDel = datesToDel.filter(EventCalendar.doesNotMatchDate.bind(this, v));
+        });
+
+        // Update stored datesToDel with outOfBounds date removed
+        _self.clndr.options.extras.datesToDel = datesToDel;
+
+        _self.paintMonth(_self.clndr.month);
+    }
+
     /**
      * Retrieve the contents of the `datesToAdd` and `datesToDel` arrays.
      */
@@ -675,13 +735,23 @@ class EventCalendar {
     }
 
     /**
-     * Check whether `date` is in the same month as `dateToCompareTo`
+     * Check whether the date of the month for `date` is before `dateToCompareTo`
      * 
      * @param {moment} dateToCompareTo Haystack
      * @param {moment} date Needle
      */
     static isBeforeDate (dateToCompareTo, date) {
         return date.date() < dateToCompareTo.date();
+    }
+
+    /**
+     * Check whether the date of the month for `date` is after `dateToCompareTo`
+     * 
+     * @param {moment} dateToCompareTo Haystack
+     * @param {moment} date Needle
+     */
+    static isAfterDate (dateToCompareTo, date) {
+        return date.date() > dateToCompareTo.date();
     }
 
     /**
