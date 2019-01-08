@@ -82,6 +82,11 @@ class EventCalendar {
             options.endDate = _self.$endDateField.val() ? _self.$endDateField.val() : options.endDate;
         }
 
+        // Make sure the endDate isn't before the startDate or anything silly like that
+        if (moment(options.endDate).isBefore(options.startDate)) {
+            throw new Error('End date can not be before the start date');
+        }
+
         let clndrSelected = options.startDate ? moment(options.startDate) : _self.today,
             clndrStart = options.startDate ? moment(options.startDate) : _self.today,
             clndrEnd = options.endDate ? moment(options.endDate) : moment(new Date()).add(15, 'years'),
@@ -667,14 +672,12 @@ class EventCalendar {
     /**
      * Fired when the endDateField changes and re-renders the calendar to stop at the new endDate, removes any
      * out-of-bounds dates from the datesToAdd / datesToDel arrays and repaints the month.
-     * 
-     * Clearing the endDate will revert to startDate + 15 years.
      */
     changeEndDate () {
         let _self = this,
             datesToAdd = _self.clndr.options.extras.datesToAdd,
             datesToDel = _self.clndr.options.extras.datesToDel,
-            newEndDate = _self.$endDateField.val().length ? _self.$endDateField.val() : _self.clndr.options.constraints.startDate.add(15, 'years'),
+            newEndDate = _self.$endDateField.val().length ? _self.$endDateField.val() : moment(new Date()).add(15, 'years'),
             newEndDateMoment = newEndDate.length ? moment(newEndDate) : moment(new Date()).add(15, 'years');
 
         // Update the endDate constraint before re-rendering

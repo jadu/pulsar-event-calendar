@@ -1781,11 +1781,40 @@ describe('EventCalendar', () => {
             $html.find('.js-ercal-end').val('').trigger('change');
         });
 
-        it('should set the end date to startDate + 15 years', () => {
-            let startPlus15Years = moment('1981-07-02').add(15, 'years').format('YYYY-MM-DD');
-
-            expect(eventCalendar.clndr.options.constraints.endDate.format('YYYY-MM-DD')).to.equal(startPlus15Years);
+        it('should maintain the start date', () => {
+            expect(eventCalendar.clndr.options.constraints.startDate._i).to.equal('1981-07-02');
         });
+
+        it('should set the end date to startDate + 15 years', () => {
+            let todayPlus15Years = moment(new Date()).add(15, 'years').format('YYYY-MM-DD');
+
+            expect(eventCalendar.clndr.options.constraints.endDate.format('YYYY-MM-DD')).to.equal(todayPlus15Years);
+        });
+
+    });
+
+    describe('Attempting to set an end date that is before the start date', () => {
+        it('should throw an error when the values are passed as init options', () => {
+            expect(() => {
+                eventCalendar.init({
+                    startDate: '1981-07-02',
+                    endDate: '1981-07-01' 
+                });
+            }).to.throw('End date can not be before the start date');
+        });
+
+        it('should throw an error when the values are passed as date fields', () => {
+			expect(() => {
+                $html.find('.js-ercal-start').val('1981-07-02');
+                $html.find('.js-ercal-end').val('1981-07-01');
+
+                eventCalendar.init({
+                    startDateField: '.js-ercal-start',
+                    endDateField: '.js-ercal-end' 
+                });
+            }).to.throw('End date can not be before the start date');
+        });
+
 
     });
 
