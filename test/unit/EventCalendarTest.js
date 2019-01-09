@@ -580,8 +580,12 @@ describe('EventCalendar', () => {
 
     describe('clicking the reset button', () => {
         beforeEach(() => {
+            $html.find('.js-ercal-start').val('2018-01-01');
+            $html.find('.js-ercal-end').val('2018-01-20');
+
             eventCalendar.init({
-                startDate: '2018-01-01', 
+                startDateField: '.js-ercal-start',
+                endDateField: '.js-ercal-end',
                 events: [{ date: '2018-01-10' }]
             });
         });
@@ -619,6 +623,29 @@ describe('EventCalendar', () => {
             $html.find('.js-ercal-reset').click();
 
             expect($html.find('[data-day="2018-01-10"]').attr('aria-label')).to.contain('Selected. Event will repeat on');
+        });
+
+        it('should reset the selected date', () => {
+            $html.find('.js-ercal-start').val('2018-01-05').trigger('change');
+            $html.find('.js-ercal-reset').click();
+
+            let selectedDate = $html.find('.selected > .day-contents').data('day');
+
+            expect(selectedDate).to.equal('2018-01-01');
+        });
+
+        it('should reset the start date', () => {
+            $html.find('.js-ercal-start').val('2018-01-05').trigger('change');
+            $html.find('.js-ercal-reset').click();
+
+            expect($html.find('.js-ercal-start').val()).to.equal('2018-01-01');
+        });
+
+        it('should reset the end date', () => {
+            $html.find('.js-ercal-end').val('2018-01-05').trigger('change');
+            $html.find('.js-ercal-reset').click();
+
+            expect($html.find('.js-ercal-end').val()).to.equal('2018-01-20');
         });
     });
 

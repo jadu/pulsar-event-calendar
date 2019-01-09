@@ -25,8 +25,12 @@ class EventCalendar {
         this.today = moment(new Date());
         this.$ariaLiveRegion;
         this.$patternField;
+        this.originalStartDate;
+        this.originalEndDate;
         this.$startDateField;
         this.$endDateField;
+        this.$endDateFieldContainer;
+        this.$weekdayPicker;
     }
 
     /**
@@ -88,6 +92,9 @@ class EventCalendar {
         if (typeof options.endDateField !== 'undefined' && options.endDateField.length) {
             _self.$endDateField = _self.$html.find(options.endDateField);
             options.endDate = _self.$endDateField.val() ? _self.$endDateField.val() : moment(options.startDate).add(15, 'years').format(_self.dateFormat);
+
+            // Store reference to the end date field container, as it will be shown/hidden when choosing patterns
+            _self.$endDateFieldContainer = _self.$endDateField.closest('.form__group');
         }
 
         // Make sure the endDate isn't before the startDate or anything silly like that
@@ -102,7 +109,6 @@ class EventCalendar {
             clndrStart = options.startDate ? moment(options.startDate) : _self.today,
             clndrEnd = options.endDate ? moment(options.endDate) : moment(new Date()).add(15, 'years'),
             clndrEvents = options.events ? options.events : [],
-            $weekdayPicker = _self.$html.find('.js-ercal-weekdays'),
             clndrTemplate = `
                 <div class='clndr-controls' role='navigation'>
                     <div class='clndr-control-button'>
@@ -161,6 +167,10 @@ class EventCalendar {
 
         let precompiledTemplate = _.template(clndrTemplate);
 
+        // Store original values for start and end dates, used when resetCalendar is triggered
+        _self.originalStartDate = clndrStart;
+        _self.originalEndDate = clndrEnd;
+
         _self.clndr = $container.clndr({
             clickEvents: {
                 click: _self.toggleDay.bind(_self),
@@ -201,6 +211,8 @@ class EventCalendar {
         // Store a reference to the aria alert status element used to update screen readers when things change
         _self.$ariaLiveRegion = _self.$html.find('.js-ercal-status');
 
+        _self.$weekdayPicker = _self.$html.find('.js-ercal-weekdays');
+
         // If a startDate field is defined, bind a change event to fire When a new start date is chosen
         if (typeof _self.$startDateField !== 'undefined') {
             _self.$startDateField.on('change', _self.changeStartDate.bind(_self));
@@ -213,37 +225,52 @@ class EventCalendar {
         }
 
         // Recalculate upcoming occurences based on the pattern dropdown
-        _self.$patternField.on('change', function() {
-            let $elem = $(this),
-                pattern = $elem.val();
-
-            // Show the weekday picker if the pattern is `weekly`
-            if (pattern === 'weekly') {
-                _self.$html.find('[name="ercal-weekdays"][value="' + clndrStart.day() + '"]').prop('checked', true);
-                $weekdayPicker.show();
-            }
-            else {
-                _self.$html.find('[name="ercal-weekdays"]').prop('checked', false); 
-                $weekdayPicker.hide();
-            }
-
-            // Unpaint the currently stored pattern
-            _self.paintMonth(_self.clndr.month, 'clear');
-
-            /*
-                Set the new recurrence pattern
-
-                Any dates in the datesToAdd / datesToDel collections will maintain their state
-                and override the pattern
-            */
-            _self.setPattern(pattern);
-            _self.paintMonth(_self.clndr.month, 'repeat-on');
-        });
+        _self.$patternField.on('change', _self.applyPattern.bind(_self));
 
         // Watch for changes to the weekday picker (only visible when the pattern is `weekly`)
         _self.$html.find('[name="ercal-weekdays"]').on('change', function() {
             _self.toggleWeekday();
         });
+    }
+
+    /**
+     * Takes the value stored in the repeat pattern field and shows the weekday picker if required.
+     */
+    applyPattern () {
+        let _self = this,
+            pattern = _self.$patternField.val()
+
+        // Toggle visibility of endDate field by showing/hiding it's container (based on Pulsar markup) 
+        if (typeof _self.$endDateFieldContainer !== 'undefined') {
+            if (pattern === 'no-repeat') {
+                _self.$endDateField.closest('.form__group').hide();
+            }
+            else {
+                _self.$endDateField.closest('.form__group').show();
+            }
+        }
+
+        // Show the weekday picker if the pattern is `weekly`
+        if (pattern === 'weekly') {
+            _self.$html.find('[name="ercal-weekdays"][value="' + _self.clndr.options.constraints.startDate.day() + '"]').prop('checked', true);
+            _self.$weekdayPicker.show();
+        }
+        else {
+            _self.$html.find('[name="ercal-weekdays"]').prop('checked', false); 
+            _self.$weekdayPicker.hide();
+        }
+
+        // Unpaint the currently stored pattern
+        _self.paintMonth(_self.clndr.month, 'clear');
+
+        /*
+            Set the new recurrence pattern
+
+            Any dates in the datesToAdd / datesToDel collections will maintain their state
+            and override the pattern
+        */
+        _self.setPattern(pattern);
+        _self.paintMonth(_self.clndr.month, 'repeat-on');
     }
 
     /**
@@ -612,15 +639,29 @@ class EventCalendar {
         // Empty the lists of changes to add/del
         _self.clndr.options.extras.datesToAdd = [];
         _self.clndr.options.extras.datesToDel = [];
+        
+        // Set the `selectedDate` to match the new start date
+        _self.clndr.options.selectedDate = _self.originalStartDate;
+
+        // Reset start/end to original values
+        _self.clndr.options.constraints.startDate = _self.originalStartDate;
+        _self.$startDateField.val(_self.originalStartDate.format(_self.dateFormat));
+
+        _self.clndr.options.constraints.endDate = _self.originalEndDate;
+        _self.$endDateField.val(_self.originalEndDate.format(_self.dateFormat));
 
         // Empty the stored recur pattern
         _self.setPattern(null);
 
         // Reset the recur pattern field
         _self.$patternField.val('no-repeat');
+        _self.applyPattern();
 
         // Remove the review changes information
         _self.updateReview();
+
+        // Reset the endDateField `min` value to reflect the startDate value
+        _self.setEndDateMinimum();
 
         // Return to the initial view
         _self.clndr.setMonth(_self.clndr.options.startWithMonth.month());
@@ -640,7 +681,7 @@ class EventCalendar {
             newStartDateMoment = moment(newStartDate);
 
         // Set the `selectedDate` to match the new start date
-        _self.clndr.options.selectedDate = newStartDate;
+        _self.clndr.options.selectedDate = newStartDateMoment;
 
         // Make dates before the new start date inactive
         _self.clndr.options.constraints.startDate = newStartDate;
