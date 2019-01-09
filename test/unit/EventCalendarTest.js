@@ -1690,6 +1690,26 @@ describe('EventCalendar', () => {
     });
 
 
+    describe('when the start date field is changed, then the end date field is changed', () => {
+        beforeEach(() => {
+            eventCalendar.init({ 
+                startDate: '2015-10-01',
+                startDateField: '.js-ercal-start',
+                endDateField: '.js-ercal-end'
+            });
+
+            $html.find('.js-ercal-start').val('2015-10-10').trigger('change');
+            $html.find('.js-ercal-end').val('2015-10-20').trigger('change');
+        });
+
+        it('should maintain the selected start date', () => {
+            let selectedDate = $html.find('.selected > .day-contents').data('day');
+
+            expect(selectedDate).to.equal('2015-10-10');
+        });
+    });
+
+
     describe('when the endDateField is provided without a value, and no startDate is defined', () => {
         beforeEach(() => {
             eventCalendar.init({
@@ -1768,6 +1788,13 @@ describe('EventCalendar', () => {
 
             $html.find('.js-ercal-end').val('2015-10-21').trigger('change');
         });
+
+        it('should keep the startDate selected', () => {
+            let selectedDate = $html.find('.selected > .day-contents').data('day');
+
+            expect(selectedDate).to.equal('2015-10-01');
+        });
+
 
         it('should remove any out-of-bounds dates from the datesToAdd arrays', () => {
             let dates = eventCalendar.getDates();

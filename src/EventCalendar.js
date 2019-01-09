@@ -197,6 +197,7 @@ class EventCalendar {
 
         // If an endDate field is defined, bind a change event to fire When a new end date is chosen
         if (typeof _self.$endDateField !== 'undefined') {
+            _self.setEndDateMinimum();
             _self.$endDateField.on('change', _self.changeEndDate.bind(_self));
         }
 
@@ -627,10 +628,13 @@ class EventCalendar {
             newStartDate = _self.$startDateField.val(),
             newStartDateMoment = moment(newStartDate);
 
-        // Update the startDate constraint before re-rendering
-        _self.clndr.options.constraints.startDate = newStartDate;
+        // Set the `selectedDate` to match the new start date
+        _self.clndr.options.selectedDate = newStartDate;
 
-        // Navigate to the month/year for the new startDate
+        // Make dates before the new start date inactive
+        _self.clndr.options.constraints.startDate = newStartDate;
+        
+        // Navigate to the month/year for the new start date
         _self.clndr
             .setYear(newStartDateMoment.year())
             .setMonth(newStartDateMoment.month())
@@ -665,6 +669,9 @@ class EventCalendar {
 
         // Update stored datesToDel with outOfBounds date removed
         _self.clndr.options.extras.datesToDel = datesToDel;
+
+        // Reset the endDateField `min` value to reflect the startDate value
+        _self.setEndDateMinimum();
 
         _self.paintMonth(_self.clndr.month);
     }
@@ -713,6 +720,21 @@ class EventCalendar {
         _self.clndr.render();
         _self.paintMonth(_self.clndr.month);
     }
+
+    /**
+     * Updates the `min` value for the `endDateField` so that dates before the startDate cannot be chosen
+     */
+    setEndDateMinimum () {
+        let _self = this;
+
+        // Check for presence of `endDateField`
+        if (typeof _self.$endDateField === 'undefined') {
+            return;
+        }
+
+        _self.$endDateField.attr('min', _self.clndr.options.constraints.startDate);
+    }
+
 
     /**
      * Retrieve the contents of the `datesToAdd` and `datesToDel` arrays.
