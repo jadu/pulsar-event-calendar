@@ -91,7 +91,10 @@ class EventCalendar {
         }
 
         // Make sure the endDate isn't before the startDate or anything silly like that
-        if (moment(options.endDate).isBefore(options.startDate)) {
+        if (
+            (typeof options.endDate !== 'undefined' && typeof options.startDate !== 'undefined') &&
+            (moment(options.endDate).isBefore(options.startDate))
+        ) {
             throw new Error('End date can not be before the start date');
         }
 
