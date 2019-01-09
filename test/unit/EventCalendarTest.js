@@ -74,7 +74,7 @@ describe('EventCalendar', () => {
         });
     
 		it('should throw an error if $html isn’t passed to the component', () => {
-			eventCalendarWithoutHTML = new EventCalendar(undefined);
+			eventCalendarWithoutHTML = new EventCalendar();
 
 			expect(() => {
                 eventCalendarWithoutHTML.init();

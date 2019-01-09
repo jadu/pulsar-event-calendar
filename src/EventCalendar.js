@@ -51,7 +51,7 @@ class EventCalendar {
      *    { date: 'YYYY-MM-DD' }
      * ];
      */
-    init(options = {}) {
+    init (options = {}) {
         let _self = this;
 
         if (typeof _self.$html === 'undefined' || !_self.$html.length) {
@@ -65,7 +65,7 @@ class EventCalendar {
         }
 
         /**
-         * It's possible to provide conflicting start dates via startDate and startDateField.val, 
+         * It's possible to provide conflicting start dates via startDate init option and startDateField.val, 
          * they will be used in this priority order:
          * 
          *  1. startDateField.val (visible to the user in the UI so takes priority)
@@ -77,6 +77,14 @@ class EventCalendar {
             options.startDate = _self.$startDateField.val().length ? _self.$startDateField.val() : options.startDate;
         }
 
+        /**
+         * It's possible to provide conflicting end dates via endDate init option and endDateField.val, 
+         * they will be used in this priority order:
+         * 
+         *  1. endDateField.val (visible to the user in the UI so takes priority)
+         *  2. endDate
+         *  3. startDate + 15 years
+         */
         if (typeof options.endDateField !== 'undefined' && options.endDateField.length) {
             _self.$endDateField = _self.$html.find(options.endDateField);
             options.endDate = _self.$endDateField.val() ? _self.$endDateField.val() : moment(options.startDate).add(15, 'years').format(_self.dateFormat);
