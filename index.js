@@ -4,9 +4,9 @@ const EventCalendar = require('./src/EventCalendar');
 $(function () {
     const calendar = new EventCalendar($('html'));
 
-    let myEvents = [
-        { date: '2019-01-10' }
-    ];
+    // let myEvents = [
+    //     { date: '2019-01-10' }
+    // ];
     
     /**
      * Simple init() method which will default to startDate = today / endDate = today + 15 years
