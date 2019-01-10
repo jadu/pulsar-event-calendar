@@ -259,6 +259,8 @@ class EventCalendar {
 
         // Show the weekday picker if the pattern is `weekly`
         if (pattern === 'weekly') {
+            _self.$html.find('[name="ercal-weekdays"]').prop('checked', false);
+
             _self.$html.find('[name="ercal-weekdays"][value="' + moment(_self.clndr.options.constraints.startDate).day() + '"]').prop('checked', true);
             _self.$weekdayPicker.show();
         }
@@ -739,6 +741,9 @@ class EventCalendar {
 
         // Update stored datesToDel with outOfBounds date removed
         _self.clndr.options.extras.datesToDel = datesToDel;
+
+        // If pattern is weekly, make sure the weekDay picker checks the correct weekday for the new start date
+        _self.applyPattern();
 
         // Reset the endDateField `min` value to reflect the startDate value
         _self.setEndDateMinimum();
