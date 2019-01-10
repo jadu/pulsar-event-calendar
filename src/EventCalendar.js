@@ -259,9 +259,12 @@ class EventCalendar {
 
         // Show the weekday picker if the pattern is `weekly`
         if (pattern === 'weekly') {
+            // Uncheck all weekday selections
             _self.$html.find('[name="ercal-weekdays"]').prop('checked', false);
 
+            // Choose the weekday based on the startDate
             _self.$html.find('[name="ercal-weekdays"][value="' + moment(_self.clndr.options.constraints.startDate).day() + '"]').prop('checked', true);
+
             _self.$weekdayPicker.show();
         }
         else {
