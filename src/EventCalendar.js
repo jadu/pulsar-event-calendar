@@ -392,7 +392,7 @@ class EventCalendar {
     setPattern (pattern, weekdays) {
         let _self = this,
             newPattern;
-   
+   console.log(_self.clndr.options.selectedDate);
         switch (pattern) {
             case 'daily':
                 newPattern = _self.clndr.options.selectedDate.recur().every(1).days();
@@ -651,7 +651,7 @@ class EventCalendar {
         _self.clndr.options.extras.datesToDel = [];
         
         // Set the `selectedDate` to match the new start date
-        _self.clndr.options.selectedDate = _self.originalStartDate;
+        _self.clndr.options.selectedDate = moment(_self.originalStartDate);
 
         // Reset start date to original value
         _self.clndr.options.constraints.startDate = _self.originalStartDate;
