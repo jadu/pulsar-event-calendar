@@ -1714,6 +1714,14 @@ describe('EventCalendar', () => {
             expect(dates.datesToDel.length).to.equal(1);
             expect(dates.datesToDel[0]._i).to.equal('2015-10-24');
         });
+
+        it('should revert to the start date when the calendar is reset', () => {
+            $html.find('.js-ercal-reset').click();
+            
+            let selectedDate = $html.find('.selected > .day-contents').data('day');
+
+            expect(selectedDate).to.equal('2015-10-01');
+        });
     });
 
 
@@ -1747,7 +1755,7 @@ describe('EventCalendar', () => {
         it('should set the end date to today + 15 years', () => {
             let todayPlus15Years = moment(new Date()).add(15, 'years').format('YYYY-MM-DD');
 
-            expect(eventCalendar.clndr.options.constraints.endDate.format('YYYY-MM-DD')).to.equal(todayPlus15Years);
+            expect(eventCalendar.clndr.options.constraints.endDate).to.equal(todayPlus15Years);
         });
     });
 
@@ -1763,7 +1771,7 @@ describe('EventCalendar', () => {
         it('should set the end date to startDate + 15 years', () => {
             let startDatePlus15Years = moment('2000-01-01').add(15, 'years').format('YYYY-MM-DD');
 
-            expect(eventCalendar.clndr.options.constraints.endDate.format('YYYY-MM-DD')).to.equal(startDatePlus15Years);
+            expect(eventCalendar.clndr.options.constraints.endDate).to.equal(startDatePlus15Years);
         });
     });
 
@@ -1780,7 +1788,7 @@ describe('EventCalendar', () => {
         });
 
         it('should set the end date to that value', () => {
-            expect(eventCalendar.clndr.options.constraints.endDate.format('YYYY-MM-DD')).to.equal('1981-07-04');
+            expect(eventCalendar.clndr.options.constraints.endDate).to.equal('1981-07-04');
         });
     });
 
@@ -1794,7 +1802,7 @@ describe('EventCalendar', () => {
         });
 
         it('should set the end date to that value', () => {
-            expect(eventCalendar.clndr.options.constraints.endDate.format('YYYY-MM-DD')).to.equal('1981-07-04');
+            expect(eventCalendar.clndr.options.constraints.endDate).to.equal('1981-07-04');
         });
     });
 
@@ -1852,13 +1860,13 @@ describe('EventCalendar', () => {
         });
 
         it('should maintain the start date', () => {
-            expect(eventCalendar.clndr.options.constraints.startDate._i).to.equal('1981-07-02');
+            expect(eventCalendar.clndr.options.constraints.startDate).to.equal('1981-07-02');
         });
 
         it('should set the end date to startDate + 15 years', () => {
             let todayPlus15Years = moment(new Date()).add(15, 'years').format('YYYY-MM-DD');
 
-            expect(eventCalendar.clndr.options.constraints.endDate.format('YYYY-MM-DD')).to.equal(todayPlus15Years);
+            expect(eventCalendar.clndr.options.constraints.endDate).to.equal(todayPlus15Years);
         });
 
     });

@@ -32,13 +32,6 @@
         </select>
     </fieldset>
 
-    <div class="form__group" style="display: none;">
-        <label for="ercal-end" class="control__label">End repeat after</label>
-        <div class="controls">
-            <input type="date" id="ercal-end" class="js-ercal-end" />
-        </div>
-    </div>
-
     <fieldset class="js-ercal-weekdays" style="display: none;">
         <legend>Repeat on</legend>
         <label>
@@ -70,6 +63,13 @@
             <span aria-label="Sunday">SU</span>
         </label>
     </fieldset>
+
+    <div class="form__group" style="display: none;">
+        <label for="ercal-end" class="control__label">End repeat after</label>
+        <div class="controls">
+            <input type="date" id="ercal-end" class="js-ercal-end" disabled />
+        </div>
+    </div>
 
     <div class="event-calendar js-event-calendar"></div>
 
