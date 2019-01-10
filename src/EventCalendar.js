@@ -392,7 +392,7 @@ class EventCalendar {
     setPattern (pattern, weekdays) {
         let _self = this,
             newPattern;
-   console.log(_self.clndr.options.selectedDate);
+
         switch (pattern) {
             case 'daily':
                 newPattern = _self.clndr.options.selectedDate.recur().every(1).days();
