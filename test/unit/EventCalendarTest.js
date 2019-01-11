@@ -878,6 +878,7 @@ describe('EventCalendar', () => {
         beforeEach(() => {
             eventCalendar.init({
                 startDate: '2018-01-02',
+                startDateField: '.js-ercal-start',
                 endDate: '2018-02-27',
                 events: [{ date: '2018-01-10' }]
             });
@@ -983,6 +984,12 @@ describe('EventCalendar', () => {
             $html.find('.js-ercal-repeat').val('daily').trigger('change');
 
             expect($html.find('.js-ercal-weekdays').attr('style')).to.equal('display: none;');
+        });
+
+        it('should change the selected weekday in the weekday picker if the start date is changed', () => {
+            $html.find('.js-ercal-start').val('2018-01-03').trigger('change');
+
+            expect($html.find('[value="3"]').prop('checked')).to.be.true;
         });
     });
 
