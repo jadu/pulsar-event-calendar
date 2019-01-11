@@ -112,7 +112,7 @@ class EventCalendar {
             clndrStart = options.startDate ? options.startDate : _self.today.format(_self.dateFormat),
             clndrEnd = options.endDate ? options.endDate : moment(new Date()).add(15, 'years').format(_self.dateFormat),
             clndrEvents = options.events ? options.events : [],
-            clndrTemplate = `
+            clndrTemplate = options.template ? options.template : `
                 <div class='clndr-controls' role='navigation'>
                     <div class='clndr-control-button'>
                         <button class='clndr-previous-button' aria-controls='event-calendar' aria-label='Go to the previous month'>&lsaquo;</button>
@@ -525,7 +525,7 @@ class EventCalendar {
         let _self = this;
 
         // Protect against misconfiguration
-        if (_self.$ariaLiveRegion === undefined) {
+        if (!_self.$ariaLiveRegion.length) {
             return;
         }
 

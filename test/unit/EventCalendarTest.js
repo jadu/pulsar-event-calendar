@@ -649,6 +649,60 @@ describe('EventCalendar', () => {
         });
     });
 
+    describe('clicking the reset button with no start/end date fields', () => {
+        beforeEach(() => {
+            eventCalendar.init({
+                startDate: '2018-01-01',
+                endDate: '2018-01-20',
+                events: [{ date: '2018-01-10' }]
+            });
+        });
+        
+        it('should empty the datesToAdd and datesToDel arrays', () => {
+            $html.find('[data-day="2018-01-02"]').click();
+            $html.find('[data-day="2018-01-10"]').click();
+            let dates = eventCalendar.getDates();
+
+            expect(dates.datesToAdd.length).to.equal(1);
+            expect(dates.datesToDel.length).to.equal(1);
+
+            $html.find('.js-ercal-reset').click();
+
+            expect(dates.datesToAdd.length).to.equal(0);
+            expect(dates.datesToDel.length).to.equal(0);
+        });
+
+        it('should clear the stored pattern', () => {
+            $html.find('.js-ercal-repeat').val('daily').trigger('change');
+            $html.find('.js-ercal-reset').click();
+
+            expect(eventCalendar.getRecurPattern()).to.be.null;
+        });
+
+        it('should reset the pattern field', () => {
+            $html.find('.js-ercal-repeat').val('daily').trigger('change');
+            $html.find('.js-ercal-reset').click();
+
+            expect($html.find('.js-ercal-repeat').val()).to.equal('no-repeat');
+        });
+
+        it('should reset the aria label', () => {
+            $html.find('[data-day="2018-01-10"]').click();
+            $html.find('.js-ercal-reset').click();
+
+            expect($html.find('[data-day="2018-01-10"]').attr('aria-label')).to.contain('Selected. Event will repeat on');
+        });
+
+        it('should reset the selected date', () => {
+            $html.find('.js-ercal-start').val('2018-01-05').trigger('change');
+            $html.find('.js-ercal-reset').click();
+
+            let selectedDate = $html.find('.selected > .day-contents').data('day');
+
+            expect(selectedDate).to.equal('2018-01-01');
+        });
+    });
+
 
     describe('choosing a pattern that doesn’t exist', () => {
         beforeEach(() => {
@@ -1893,6 +1947,84 @@ describe('EventCalendar', () => {
             }).to.throw('End date can not be before the start date');
         });
     });
+
+    describe('Selecting a date if the aria live region does not exist in the template', () => {
+        beforeEach(() => {
+            let templateWithoutAriaStatusContainer = `
+            <div class='clndr-controls' role='navigation'>
+                <div class='clndr-control-button'>
+                    <button class='clndr-previous-button' aria-controls='event-calendar' aria-label='Go to the previous month'>&lsaquo;</button>
+                </div>
+                <div class='month' id='aria-clndr-title' aria-live='polite'><%= month %> <%= year %></div>
+                <div class='clndr-control-button rightalign'>
+                    <button class='clndr-next-button' aria-controls='event-calendar' aria-label='Go to the next month'>&rsaquo;</button>
+                </div>
+            </div>
+            <table id='event-calendar' class='clndr-table' border='0' cellspacing='0' cellpadding='0'>
+                <thead>
+                    <tr class='header-days'>
+                    <% for (var i = 0; i < daysOfTheWeek.length; i++) { %>
+                        <td class='header-day'><%= daysOfTheWeek[i] %></td>
+                    <% } %>
+                    </tr>
+                </thead>
+                <tbody aria-live="polite">
+                <% for (var i = 0; i < numberOfRows; i++) { %>
+                    <tr>
+                    <% for (var j = 0; j < 7; j++){ %>
+                    <% var d = j + i * 7; %>
+                        <% var daysLeadingZero = days[d].day < 10 ? '0' + days[d].day : days[d].day; %>
+                        <td class='<%= days[d].classes %>'>
+                        <% if (days[d].day.length != 0) { %>
+                            <button 
+                                class='day-contents' 
+                                data-day="<%= year %>-<%= monthNumerical %>-<%= daysLeadingZero %>" 
+                                aria-label="<% if (days[d].classes.indexOf('selected') !== -1) { %><%= ariaStartDate %><% } else if (days[d].classes.indexOf('event') !== -1) { %><%= ariaSelected %><% } %> <%= days[d].day %> <%= month %>, <%= year %>.<% if (days[d].classes.indexOf('selected') === -1 && days[d].classes.indexOf('event') === -1) { %> <%= ariaUnselected %><% } %>"
+                                <% 
+                                    if (days[d].classes.indexOf('inactive') !== -1 && 
+                                    days[d].classes.indexOf('selected') === -1) { 
+                                %> disabled<% } %>
+                            >
+                                <%= days[d].day %>
+                            </button>
+                        <% } %>
+                        </td>
+                    <% } %>
+                    </tr>
+                <% } %>
+                </tbody>
+            </table>
+            <div class="event-calendar-review">
+                <ul class="event-calendar-summary">
+                    <li><i class="fa fa-repeat icon--success"></i> Repeat pattern</li>
+                    <li><i class="fa fa-plus-circle icon--success"></i> Additional repeat
+                        <span class="js-dates-to-add label label--success" style="display: none;"></span></li>
+                    <li><i class="fa fa-ban icon--danger"></i> Event will <u>not</u> repeat
+                        <span class="js-dates-to-del label label--danger" style="display: none;"></span></li>
+                </ul>
+                <button class="js-ercal-reset">Reset Calendar</button>
+            </div>`;
+
+            eventCalendar.init({ 
+                startDate: '2015-10-01',
+                template: templateWithoutAriaStatusContainer
+            });
+
+            $html.find('[data-day="2015-10-02"]').click();
+        });
+       
+        // the code to update the live region lives in the styleToAdd method, if we have successfully got past that and
+        // updated the review panel, then the updateLiveRegion method should've correctly returned without an error
+        it('should show the toAdd information in the review panel', () => {
+            expect($html.find('.js-dates-to-add').attr('style')).to.equal('display: inline;');
+        });
+
+        it('should update the toAdd information with the current number', () => {
+            expect($html.find('.js-dates-to-add').html()).to.equal('1 day will be added');
+        });
+
+    });
+    
 
 });
 
