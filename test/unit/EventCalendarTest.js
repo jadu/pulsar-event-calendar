@@ -2082,7 +2082,5 @@ describe('EventCalendar', () => {
         });
 
     });
-    
 
 });
-
