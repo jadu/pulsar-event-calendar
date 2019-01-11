@@ -194,6 +194,10 @@ describe('EventCalendar', () => {
             console.log($html.find('tbody td:first-of-type').attr('class'));
             expect($html.find('tbody > tr:first-of-type > td:first-of-type').hasClass('calendar-day-2018-01-01')).to.be.true;
         });
+
+        it('should not have a max value on the start date field', () => {
+            expect(typeof $html.find('.js-ercal-start').attr('max')).to.equal('undefined');
+        });
     });
 
 
@@ -647,6 +651,15 @@ describe('EventCalendar', () => {
 
             expect($html.find('.js-ercal-end').val()).to.equal('2018-01-20');
         });
+
+        it('should reset the min value for the start date field', () => {
+            expect(typeof $html.find('.js-ercal-start').attr('min')).to.equal('undefined');
+        });
+
+        it('should reset the min value for the end date field', () => {
+            expect($html.find('.js-ercal-end').attr('min')).to.equal('2018-01-01');
+        });
+        
     });
 
     describe('clicking the reset button with no start/end date fields', () => {
@@ -1621,6 +1634,12 @@ describe('EventCalendar', () => {
         it('should set the current date to .today', () => {
             expect($html.find('.selected').hasClass('today')).to.be.true;
         });
+
+        it('should constrain the max value on the start date field to today + 15 years', () => {
+            let startDatePlus15Years = moment(new Date()).add(15, 'years').format('YYYY-MM-DD');
+
+            expect($html.find('.js-ercal-start').attr('max')).to.equal(startDatePlus15Years);
+        });
     });
 
 
@@ -1708,6 +1727,7 @@ describe('EventCalendar', () => {
             eventCalendar.init({ 
                 startDate: '2015-10-01',
                 startDateField: '.js-ercal-start',
+                endDateField: '.js-ercal-end',
                 events: [{ date: '2015-10-19' }, { date: '2015-10-24' }]
             });
 
@@ -1776,6 +1796,10 @@ describe('EventCalendar', () => {
 
             expect(selectedDate).to.equal('2015-10-01');
         });
+
+        it('should constrain the min value for the end date field', () => {
+            expect($html.find('.js-ercal-end').attr('min')).to.equal('2015-10-21');
+        });
     });
 
 
@@ -1795,6 +1819,14 @@ describe('EventCalendar', () => {
             let selectedDate = $html.find('.selected > .day-contents').data('day');
 
             expect(selectedDate).to.equal('2015-10-10');
+        });
+
+        it('should constrain the max value for the start date field', () => {
+            expect($html.find('.js-ercal-start').attr('max')).to.equal('2015-10-20');
+        });
+
+        it('should constrain the min value for the end date field', () => {
+            expect($html.find('.js-ercal-end').attr('min')).to.equal('2015-10-10');
         });
     });
 
@@ -1843,6 +1875,14 @@ describe('EventCalendar', () => {
 
         it('should set the end date to that value', () => {
             expect(eventCalendar.clndr.options.constraints.endDate).to.equal('1981-07-04');
+        });
+
+        it('should constrain the min value for the end date field to reflect the start date', () => {
+            expect($html.find('.js-ercal-end').attr('min')).to.equal('1981-07-02');
+        });
+
+        it('should constrain the max value for the start date field to reflect the emd date', () => {
+            expect($html.find('.js-ercal-start').attr('max')).to.equal('1981-07-04');
         });
     });
 
@@ -1923,6 +1963,17 @@ describe('EventCalendar', () => {
             expect(eventCalendar.clndr.options.constraints.endDate).to.equal(todayPlus15Years);
         });
 
+        it('should reset the max value for the start date field', () => {
+            let todayPlus15Years = moment(new Date()).add(15, 'years').format('YYYY-MM-DD');
+
+            expect($html.find('.js-ercal-start').attr('max')).to.equal(todayPlus15Years);
+        });
+
+        it('should reset the min value for the end date field', () => {
+            let todayPlus15Years = moment(new Date()).add(15, 'years').format('YYYY-MM-DD');
+
+            expect($html.find('.js-ercal-start').attr('max')).to.equal(todayPlus15Years);
+        });
     });
 
     describe('Attempting to set an end date that is before the start date', () => {

@@ -220,6 +220,7 @@ class EventCalendar {
 
         // If a startDate field is defined, bind a change event to fire When a new start date is chosen
         if (typeof _self.$startDateField !== 'undefined') {
+            _self.setStartDateMaximum();
             _self.$startDateField.on('change', _self.changeStartDate.bind(_self));
         }
 
@@ -682,7 +683,8 @@ class EventCalendar {
         // Remove the review changes information
         _self.updateReview();
 
-        // Reset the endDateField `min` value to reflect the startDate value
+        // Reset the min/max values on the start/end date fields
+        _self.setStartDateMaximum();
         _self.setEndDateMinimum();
 
         // Return to the initial view
