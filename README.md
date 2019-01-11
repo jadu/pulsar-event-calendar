@@ -1,5 +1,7 @@
 # Event Calendar
 
+[![codecov](https://codecov.io/gh/jadu/pulsar-event-calendar/branch/master/graph/badge.svg)](https://codecov.io/gh/jadu/pulsar-event-calendar)
+
 ## Dependencies
 
 [jQuery](http://jquery.com/download/), [CLNDR](https://github.com/kylestetz/CLNDR) and [Moment.js](http://momentjs.com/) are required, the default calendar template provided by the component uses [Underscore.js](http://underscorejs.org/) but other templating options are available (see CLNDR documentation).
