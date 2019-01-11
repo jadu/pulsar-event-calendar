@@ -151,7 +151,7 @@ $(function () {
 });
 ```
 
-### End repeat on date field
+### End date field
 
 You can allow the user to choose and change the end date by providing a date field within the user interface. Change events will be bound to this field.
 
