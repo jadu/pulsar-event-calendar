@@ -326,8 +326,20 @@ class EventCalendar {
             return;
         }
     
+        // If a date is selected
+        if ($elem.hasClass('event')) {
+            if ($elem.hasClass('event-del')) {
+                // Restore initial styling by removing it from the datesToDel collection
+                _self.clndr.options.extras.datesToDel = datesToDel.filter(EventCalendar.doesNotMatchDate.bind(this, date));
+            } 
+            else {
+                // Set it to [4. To Delete] by adding it to the datesToDel collection
+                datesToDel.push(date);
+            }
+        }
+
         // If a date is not already selected
-        if (!$elem.hasClass('event')) {
+        else {
             // If the button had 'event-add', then a pattern applied over the top
             if ($elem.hasClass('event-add') && $elem.hasClass('event-repeat')) {
                 // Unset it from [3. To Add] by removing it from the datesToAdd collection
@@ -367,18 +379,6 @@ class EventCalendar {
             // If the button is currently [5. Selected]
             else {
                 // Remove it from the datesToDel collection
-                _self.clndr.options.extras.datesToDel = datesToDel.filter(EventCalendar.doesNotMatchDate.bind(this, date));
-            }
-        }
-
-        // If a date is selected
-        else if ($elem.hasClass('event')) {
-            if (!$elem.hasClass('event-del')) {
-                // Set it to [4. To Delete] by adding it to the datesToDel collection
-                datesToDel.push(date);
-            }
-            else if ($elem.hasClass('event-del')) {
-                // Restore initial styling by removing it from the datesToDel collection
                 _self.clndr.options.extras.datesToDel = datesToDel.filter(EventCalendar.doesNotMatchDate.bind(this, date));
             }
         }
