@@ -110,7 +110,8 @@ class EventCalendar {
             throw new Error('End date can not be before the start date');
         }
 
-        // Default to UK locale if none supplied, other accepted values are `en_US` or `en_AU`
+        // Default to UK locale if none supplied, other accepted values are `en_US` or `en_AU` due to these locale files
+        // being `required` into the component
         if (typeof options.locale === 'undefined' || options.locale === '') {
             options.locale = 'en_GB';
         }
