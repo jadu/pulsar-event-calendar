@@ -413,7 +413,9 @@ class EventCalendar {
                 newPattern = _self.clndr.options.selectedDate.recur().every(2).weeks();
                 break;
             case 'monthly-day':
-                newPattern = _self.clndr.options.selectedDate.recur().every(_self.clndr.options.selectedDate.day()).daysOfWeek().every(0).weeksOfMonthByDay();
+                newPattern = _self.clndr.options.selectedDate.recur()
+                                .every(_self.clndr.options.selectedDate.day()).daysOfWeek()
+                                .every(EventCalendar.weekOfMonth(_self.clndr.options.selectedDate)).weeksOfMonthByDay();
                 break;
             case 'monthly-date':
                 newPattern = _self.clndr.options.selectedDate.recur().every(1).months();
@@ -926,6 +928,15 @@ class EventCalendar {
      */
     static doesNotMatchDate (a, b) {
         return a.format(this.dateFormat) != b.format(this.dateFormat);
+    }
+
+    /**
+     * Return the week number for the given month that the date occurs in
+     * 
+     * @param {moment} date The date to check
+     */
+    static weekOfMonth (date) {
+        return date.week() - moment(date).startOf('month').week();
     }
 }
 
