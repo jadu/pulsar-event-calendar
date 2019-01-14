@@ -716,6 +716,46 @@ describe('EventCalendar', () => {
         });
     });
 
+    
+    describe('clicking the reset button with no start/end values', () => {
+        beforeEach(() => {
+            eventCalendar.init({
+                startDateField: '.js-ercal-start',
+                endDateField: '.js-ercal-end',
+                events: [{ date: '2018-01-10' }]
+            });
+        });
+
+        it('should reset the start date back to undefined', () => {
+            let today = moment(new Date()).format('YYYY-MM-DD');
+            $html.find('.js-ercal-start').val(today).trigger('change');
+            $html.find('.js-ercal-reset').click();
+
+            expect($html.find('.js-ercal-start').val()).to.equal(today);
+        });
+
+        it('should reset the end date', () => {
+            let todayPlus1Day = moment(new Date()).add(1, 'day').format('YYYY-MM-DD');
+            $html.find('.js-ercal-end').val(todayPlus1Day).trigger('change');
+            $html.find('.js-ercal-reset').click();
+
+            expect($html.find('.js-ercal-end').val()).to.equal('');
+        });
+
+        it('should reset the min value for the start date field', () => {
+            let today = moment(new Date()).format('YYYY-MM-DD');
+
+            expect(typeof $html.find('.js-ercal-start').attr('min')).to.equal('undefined');
+        });
+
+        it('should reset the min value for the end date field', () => {
+            let today = moment(new Date()).format('YYYY-MM-DD');
+
+            expect($html.find('.js-ercal-end').attr('min')).to.equal(today);
+        });
+        
+    });
+
 
     describe('choosing a pattern that doesn’t exist', () => {
         beforeEach(() => {

@@ -665,12 +665,18 @@ class EventCalendar {
         if (typeof _self.$startDateField !== 'undefined') {
             _self.$startDateField.val(_self.originalStartDate);
         }
-
+        
         // Reset end date to original value
         _self.clndr.options.constraints.endDate = _self.originalEndDate;
-
+        
+        // Reset end date field to starting value, unless that's 'today + 15 years'
         if (typeof _self.$endDateField !== 'undefined') {
-            _self.$endDateField.val(_self.originalEndDate);
+            if (_self.originalEndDate != moment(new Date()).add(15, 'years').format(_self.dateFormat)) {
+                _self.$endDateField.val(_self.originalEndDate);
+            }
+            else {
+                _self.$endDateField.val('');
+            }
         }
 
         // Empty the stored recur pattern
