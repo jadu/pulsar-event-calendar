@@ -9,7 +9,6 @@ describe('EventCalendar', () => {
     const clickEvent = $.Event('click');
     let $html,
         $body,
-        clndr,
         eventCalendar,
         eventCalendarWithoutHTML;
 
@@ -90,6 +89,32 @@ describe('EventCalendar', () => {
             }).to.throw('EventCalendar requires a .js-event-calendar element present in the DOM');
         });
 
+        it('should start the week on a Monday', () => {
+            expect($html.find('.header-day:first-of-type').text()).to.equal('M');
+        });
+    });
+
+
+    describe('Providing the en_US locale', () => {
+        beforeEach(() => {
+            eventCalendar.init({
+                locale: 'en_US'
+            });
+        });
+    
+        it('should start the week on a Sunday', () => {
+            expect($html.find('.header-day:first-of-type').text()).to.equal('S');
+        });
+    });
+
+
+    describe('Providing the en_AU locale', () => {
+        beforeEach(() => {
+            eventCalendar.init({
+                locale: 'en_AU'
+            });
+        });
+    
         it('should start the week on a Monday', () => {
             expect($html.find('.header-day:first-of-type').text()).to.equal('M');
         });

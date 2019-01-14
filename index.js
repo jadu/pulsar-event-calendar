@@ -15,7 +15,7 @@ $(function () {
      */
     calendar.init({
         startDateField: '.js-ercal-start',
-        endDateField: '.js-ercal-end',
+        endDateField: '.js-ercal-end'
         // events: myEvents
     });
 

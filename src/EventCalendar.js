@@ -6,6 +6,8 @@
 
 import $ from 'jquery';
 import moment from 'moment';
+import 'moment/locale/en-gb';
+import 'moment/locale/en-au';
 import 'moment-recur';
 window._ = require('underscore');
 import 'clndr';
@@ -108,6 +110,14 @@ class EventCalendar {
             throw new Error('End date can not be before the start date');
         }
 
+        // Default to UK locale if none supplied, other accepted values are `en_US` or `en_AU`
+        if (typeof options.locale === 'undefined' || options.locale === '') {
+            options.locale = 'en_GB';
+        }
+
+        // Set the locale
+        moment.locale(options.locale);
+
         let clndrSelected = options.startDate ? options.startDate : _self.today.format(_self.dateFormat),
             clndrStart = options.startDate ? options.startDate : _self.today.format(_self.dateFormat),
             clndrEnd = options.endDate ? options.endDate : moment(new Date()).add(15, 'years').format(_self.dateFormat),
@@ -200,8 +210,7 @@ class EventCalendar {
                 data.ariaUnselected = 'Unselected.';
                 return precompiledTemplate(data);
             },
-            startWithMonth: moment(clndrStart),
-            weekOffset: 1
+            startWithMonth: moment(clndrStart)
         });
 
         // Reset all selected dates
