@@ -397,31 +397,32 @@ class EventCalendar {
      */
     setPattern (pattern, weekdays) {
         let _self = this,
+            selectedDate = _self.clndr.options.selectedDate,
             newPattern;
 
         switch (pattern) {
             case 'daily':
-                newPattern = _self.clndr.options.selectedDate.recur().every(1).days();
+                newPattern = selectedDate.recur().every(1).days();
                 break;
             case 'weekly':
-                newPattern = _self.clndr.options.selectedDate.recur().every(1).weeks();
+                newPattern = selectedDate.recur().every(1).weeks();
                 break;
             case 'weekdays':
-                newPattern = _self.clndr.options.selectedDate.recur().every(weekdays).daysOfWeek();
+                newPattern = selectedDate.recur().every(weekdays).daysOfWeek();
                 break
             case 'two-weekly':
-                newPattern = _self.clndr.options.selectedDate.recur().every(2).weeks();
+                newPattern = selectedDate.recur().every(2).weeks();
                 break;
             case 'monthly-day':
-                newPattern = _self.clndr.options.selectedDate.recur()
-                                .every(_self.clndr.options.selectedDate.day()).daysOfWeek()
-                                .every(EventCalendar.weekOfMonth(_self.clndr.options.selectedDate)).weeksOfMonthByDay();
+                newPattern = selectedDate.recur()
+                                .every(selectedDate.day()).daysOfWeek()
+                                .every(selectedDate.monthWeekByDay()).weeksOfMonthByDay();
                 break;
             case 'monthly-date':
-                newPattern = _self.clndr.options.selectedDate.recur().every(1).months();
+                newPattern = selectedDate.recur().every(1).months();
                 break;
             case 'annually':
-                newPattern = _self.clndr.options.selectedDate.recur().every(1).year();
+                newPattern = selectedDate.recur().every(1).year();
                 break;
             default:
                 newPattern = null;
@@ -930,14 +931,6 @@ class EventCalendar {
         return a.format(this.dateFormat) != b.format(this.dateFormat);
     }
 
-    /**
-     * Return the week number for the given month that the date occurs in
-     * 
-     * @param {moment} date The date to check
-     */
-    static weekOfMonth (date) {
-        return date.week() - moment(date).startOf('month').week();
-    }
 }
 
 module.exports = EventCalendar;
