@@ -176,7 +176,7 @@ class EventCalendar {
                         <li><i class="icon-ban icon--danger"></i> Event will <u>not</u> repeat
                             <span class="js-dates-to-del label label--danger" style="display: none;"></span></li>
                     </ul>
-                    <button class="js-ercal-reset">Reset Calendar</button>
+                    <button class="btn js-ercal-reset">Reset Calendar</button>
                 </div>`;
 
         let precompiledTemplate = _.template(clndrTemplate);
