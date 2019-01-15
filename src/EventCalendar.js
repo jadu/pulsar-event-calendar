@@ -170,10 +170,10 @@ class EventCalendar {
                 </table>
                 <div class="event-calendar-review">
                     <ul class="event-calendar-summary">
-                        <li><i class="fa fa-repeat icon--success"></i> Repeat pattern</li>
-                        <li><i class="fa fa-plus-circle icon--success"></i> Additional repeat
+                        <li><i class="icon-repeat icon--success"></i> Repeat pattern</li>
+                        <li><i class="icon-plus-circle icon--success"></i> Additional repeat
                             <span class="js-dates-to-add label label--success" style="display: none;"></span></li>
-                        <li><i class="fa fa-ban icon--danger"></i> Event will <u>not</u> repeat
+                        <li><i class="icon-ban icon--danger"></i> Event will <u>not</u> repeat
                             <span class="js-dates-to-del label label--danger" style="display: none;"></span></li>
                     </ul>
                     <button class="js-ercal-reset">Reset Calendar</button>
