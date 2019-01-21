@@ -973,7 +973,6 @@ class EventCalendar {
 
         // Return `today` if no date is provided
         if (typeof date === 'undefined' || !date.length) {
-            console.log("AAAAH");
             return moment(_self.today, _self.dateFormatInternal).format(_self.localeFormat);
         }
         
