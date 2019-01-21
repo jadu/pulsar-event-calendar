@@ -109,11 +109,6 @@ describe('EventCalendar', () => {
         it('should start the week on a Sunday in the weekday picker', () => {
             expect($html.find('[name="ercal-weekdays"]:first + span').text()).to.equal('SU');
         });
-
-        it('should have the appropriate aria-label in the weekday picker', () => {
-            console.log($html.find('[name="ercal-weekdays"]:first + span'));
-            expect($html.find('[name="ercal-weekdays"]:first + span').attr('aria-label')).to.equal('Sunday');
-        });
     });
 
 
