@@ -6,8 +6,8 @@
 
 import $ from 'jquery';
 import moment from 'moment';
-import 'moment/locale/en-gb';
 import 'moment/locale/en-au';
+import 'moment/locale/en-gb';
 import 'moment-recur';
 window._ = require('underscore');
 import 'clndr';
@@ -21,9 +21,11 @@ class EventCalendar {
     constructor ($html) {
         this.clndr;
         this.$html = $html;
-        this.dateFormat = 'YYYY-MM-DD';
+        this.dateFormatInternal = 'YYYY-MM-DD';
         this.dateFormatLong = 'D MMMM, YYYY';
-        this.today = moment(new Date());
+        this.dateFormatUS = 'MM/DD/YYYY';
+        this.localeFormat = 'DD/MM/YYYY';
+        this.today = moment(new Date(), this.localeFormat);
         this.$ariaLiveRegion;
         this.$patternField;
         this.currentCalendarMonth;
@@ -70,6 +72,9 @@ class EventCalendar {
             throw new Error('EventCalendar requires a .js-event-calendar element present in the DOM');
         }
 
+         // Set the locale
+         _self.setLocale(options.locale);
+
         /**
          * It's possible to provide conflicting start dates via startDate init option and startDateField.val, 
          * they will be used in this priority order:
@@ -80,8 +85,8 @@ class EventCalendar {
          */
         if (typeof options.startDateField !== 'undefined' && options.startDateField.length) {
             _self.$startDateField = _self.$html.find(options.startDateField);
-            options.startDate = _self.$startDateField.val().length ? _self.$startDateField.val() : options.startDate;
-
+            options.startDate = _self.$startDateField.val().length ? _self.internalDate(_self.$startDateField.val()) : _self.internalDate(options.startDate);
+   
             // Set the startDateField value in case it has been passed as an init option
             _self.$startDateField.val(options.startDate);
         }
@@ -96,7 +101,11 @@ class EventCalendar {
          */
         if (typeof options.endDateField !== 'undefined' && options.endDateField.length) {
             _self.$endDateField = _self.$html.find(options.endDateField);
-            options.endDate = _self.$endDateField.val() ? _self.$endDateField.val() : moment(options.startDate).add(15, 'years').format(_self.dateFormat);
+            
+            // If startDate is undefined, use 'today' for the following endDate calculation
+            let startDate = (typeof options.startDate !== 'undefined') ? options.startDate : _self.today.format(_self.localeFormat);
+
+            options.endDate = _self.$endDateField.val().length ? _self.internalDate(_self.$endDateField.val()) : moment(startDate, _self.localeFormat).add(15, 'years').format(_self.dateFormatInternal);
 
             // Store reference to the end date field container, as it will be shown/hidden when choosing patterns
             _self.$endDateFieldContainer = _self.$endDateField.closest('.form__group');
@@ -105,23 +114,14 @@ class EventCalendar {
         // Make sure the endDate isn't before the startDate or anything silly like that
         if (
             (typeof options.endDate !== 'undefined' && typeof options.startDate !== 'undefined') &&
-            moment(options.endDate).isBefore(options.startDate)
+            moment(options.endDate, _self.dateFormatInternal).isBefore(moment(options.startDate, _self.dateFormatInternal).format(_self.dateFormatInternal))
         ) {
             throw new Error('End date can not be before the start date');
         }
 
-        // Default to UK locale if none supplied, other accepted values are `en_US` or `en_AU` due to these locale files
-        // being `required` into the component
-        if (typeof options.locale === 'undefined' || options.locale === '') {
-            options.locale = 'en_GB';
-        }
-
-        // Set the locale
-        moment.locale(options.locale);
-
-        let clndrSelected = options.startDate ? options.startDate : _self.today.format(_self.dateFormat),
-            clndrStart = options.startDate ? options.startDate : _self.today.format(_self.dateFormat),
-            clndrEnd = options.endDate ? options.endDate : moment(new Date()).add(15, 'years').format(_self.dateFormat),
+        let clndrSelected = options.startDate ? _self.internalDate(options.startDate) : _self.today.format(_self.dateFormatInternal),
+            clndrStart = options.startDate ? _self.internalDate(options.startDate) : _self.today.format(_self.dateFormatInternal),
+            clndrEnd = options.endDate ? _self.internalDate(options.endDate) : moment(new Date(), _self.dateFormatInternal).add(15, 'years').format(_self.dateFormatInternal),
             clndrEvents = options.events ? options.events : [],
             clndrTemplate = options.template ? options.template : `
                 <div class='clndr-controls' role='navigation'>
@@ -201,7 +201,7 @@ class EventCalendar {
                 datesToDel: []
             },
             moment: moment,
-            selectedDate: moment(clndrSelected),
+            selectedDate: moment(clndrSelected, _self.dateFormatInternal),
             showAdjacentMonths: false,
             render: function (data) {
                 // monthNumerical is used to create the data-day attribute on day buttons
@@ -211,7 +211,7 @@ class EventCalendar {
                 data.ariaUnselected = 'Unselected.';
                 return precompiledTemplate(data);
             },
-            startWithMonth: moment(clndrStart)
+            startWithMonth: moment(clndrStart, _self.dateFormatInternal)
         });
 
         // Reset all selected dates
@@ -274,7 +274,7 @@ class EventCalendar {
             _self.$html.find('[name="ercal-weekdays"]').prop('checked', false);
 
             // Choose the weekday based on the startDate
-            _self.$html.find('[name="ercal-weekdays"][value="' + moment(_self.clndr.options.constraints.startDate).day() + '"]').prop('checked', true);
+            _self.$html.find('[name="ercal-weekdays"][value="' + moment(_self.clndr.options.constraints.startDate, _self.dateFormatInternal).day() + '"]').prop('checked', true);
 
             _self.$weekdayPicker.show();
         }
@@ -519,7 +519,7 @@ class EventCalendar {
      */
     styleToAdd (target) {
         let _self = this,
-            $elem = _self.clndr.element.find('[data-day="' + target.format(_self.dateFormat) + '"]'),
+            $elem = _self.clndr.element.find('[data-day="' + target.format(_self.dateFormatInternal) + '"]'),
             ariaLabel = 'Selected. Event will repeat on ' + target.format(_self.dateFormatLong);
 
         $elem.attr('aria-label', ariaLabel)
@@ -553,7 +553,7 @@ class EventCalendar {
      */
     styleToDel (target) {
         let _self = this,
-            $elem = _self.clndr.element.find('[data-day="' + target.format(_self.dateFormat) + '"]'),
+            $elem = _self.clndr.element.find('[data-day="' + target.format(_self.dateFormatInternal) + '"]'),
             ariaLabel = 'Removed. Event will no longer repeat on ' + target.format(_self.dateFormatLong);
 
         $elem.attr('aria-label', ariaLabel)
@@ -572,7 +572,7 @@ class EventCalendar {
      */
     styleRepeatOn (target) {
         let _self = this,
-            $elem = _self.clndr.element.find('[data-day="' + target.format(_self.dateFormat) + '"]');
+            $elem = _self.clndr.element.find('[data-day="' + target.format(_self.dateFormatInternal) + '"]');
 
         $elem.attr('aria-label', 'Event will repeat on ' + target.format(_self.dateFormatLong) + ' based on the chosen repeat pattern')
              .parent()
@@ -586,7 +586,7 @@ class EventCalendar {
      */
     styleClear (target) {
         let _self = this,
-            $elem = _self.clndr.element.find('[data-day="' + target.format(_self.dateFormat) + '"]');
+            $elem = _self.clndr.element.find('[data-day="' + target.format(_self.dateFormatInternal) + '"]');
 
         $elem.attr('aria-label', target.format(_self.dateFormatLong) + '.')
              .parent()
@@ -606,7 +606,7 @@ class EventCalendar {
         $elems.each(function() {
             let $elem = $(this),
                 $elemParent = $elem.parent(),
-                date = moment($elem.data('day')).format(_self.dateFormatLong),
+                date = moment($elem.data('day'), _self.dateFormatInternal).format(_self.dateFormatLong),
                 ariaLabel = 'Unselected';
 
             // If event was passed in the `events` array, it will be reset back to `.selected` and needs labelling
@@ -670,13 +670,13 @@ class EventCalendar {
         _self.clndr.options.extras.datesToDel = [];
         
         // Set the `selectedDate` to match the new start date
-        _self.clndr.options.selectedDate = moment(_self.originalStartDate);
+        _self.clndr.options.selectedDate = moment(_self.originalStartDate, _self.dateFormatInternal);
 
         // Reset start date to original value
         _self.clndr.options.constraints.startDate = _self.originalStartDate;
 
         if (typeof _self.$startDateField !== 'undefined') {
-            _self.$startDateField.val(_self.originalStartDate);
+            _self.$startDateField.val(moment(_self.originalStartDate, _self.dateFormatInternal).format(_self.localeFormat));
         }
         
         // Reset end date to original value
@@ -684,8 +684,9 @@ class EventCalendar {
         
         // Reset end date field to starting value, unless that's 'today + 15 years'
         if (typeof _self.$endDateField !== 'undefined') {
-            if (_self.originalEndDate != moment(new Date()).add(15, 'years').format(_self.dateFormat)) {
-                _self.$endDateField.val(_self.originalEndDate);
+
+            if (_self.originalEndDate != moment(new Date(), _self.dateFormatInternal).add(15, 'years').format(_self.dateFormatInternal)) {
+                _self.$endDateField.val(moment(_self.originalEndDate, _self.dateFormatInternal).format(_self.localeFormat));
             }
             else {
                 _self.$endDateField.val('');
@@ -720,15 +721,14 @@ class EventCalendar {
         let _self = this,
             datesToAdd = _self.clndr.options.extras.datesToAdd,
             datesToDel = _self.clndr.options.extras.datesToDel,
-            newStartDate = _self.$startDateField.val().length ? _self.$startDateField.val() : _self.originalStartDate;
-
-        let newStartDateMoment = moment(newStartDate);
+            newStartDate = _self.$startDateField.val().length ? _self.$startDateField.val() : _self.originalStartDate,
+            newStartDateMoment = moment(newStartDate, _self.localeFormat);
 
         // Set the `selectedDate` to match the new start date
         _self.clndr.options.selectedDate = newStartDateMoment;
 
         // Make dates before the new start date inactive
-        _self.clndr.options.constraints.startDate = newStartDate;
+        _self.clndr.options.constraints.startDate = moment(newStartDate, _self.localeFormat).format(_self.dateFormatInternal);
         
         // Navigate to the month/year for the new start date
         _self.clndr
@@ -738,7 +738,7 @@ class EventCalendar {
 
         // Switch selected state styling from the old start date to the new one
         _self.$html.find('.selected').removeClass('selected');
-        _self.$html.find('.calendar-day-' + newStartDate).addClass('selected');
+        _self.$html.find('.calendar-day-' + _self.internalDate(newStartDate)).addClass('selected');
 
         // Remove now out-of-bounds dates from the datesToAdd array
         const outOfBoundsDatesToAdd = _self.clndr.options.extras.datesToAdd
@@ -786,11 +786,11 @@ class EventCalendar {
         let _self = this,
             datesToAdd = _self.clndr.options.extras.datesToAdd,
             datesToDel = _self.clndr.options.extras.datesToDel,
-            newEndDate = _self.$endDateField.val().length ? _self.$endDateField.val() : moment(new Date()).add(15, 'years').format(_self.dateFormat),
-            newEndDateMoment = newEndDate.length ? moment(newEndDate) : moment(new Date()).add(15, 'years');
+            newEndDate = _self.$endDateField.val().length ? _self.$endDateField.val() : moment(new Date(), _self.dateFormatInternal).add(15, 'years').format(_self.localeFormat),
+            newEndDateMoment = newEndDate.length ? moment(newEndDate, _self.localeFormat) : moment(new Date(), _self.dateFormatInternal).add(15, 'years');
 
         // Update the endDate constraint before re-rendering
-        _self.clndr.options.constraints.endDate = newEndDate;
+        _self.clndr.options.constraints.endDate = moment(newEndDate, _self.localeFormat).format(_self.dateFormatInternal);
 
         // Remove now out-of-bounds dates from the datesToAdd array
         const outOfBoundsDatesToAdd = _self.clndr.options.extras.datesToAdd
@@ -939,6 +939,46 @@ class EventCalendar {
      */
     static doesNotMatchDate (a, b) {
         return a.format(this.dateFormat) != b.format(this.dateFormat);
+    }
+
+    setLocale (locale) {
+        let _self = this;
+
+        // Default to UK locale if none supplied, other accepted values are `en_US` or `en_AU` due to these locale files
+        // being `required` into the component
+        if (typeof locale === 'undefined' || locale === '') {
+            locale = moment.locale();
+        } else {
+            // Set the locale
+            moment.locale(locale);
+        }
+
+        // If we're using UK/Australia localisation, convert dates exposed to the UI to the expected DD/MM/YYYY format
+        if (locale === 'en'  || locale === 'en-us') {
+            _self.localeFormat = _self.dateFormatUS;
+        }
+    }
+
+    internalDate (date) {
+        let _self = this;
+
+        if (date === 'Invalid date') {
+            return;
+        }
+
+        // If already internal format, just return the same value
+        if (moment(date, _self.dateFormatInternal, true).isValid()) {
+            return date;
+        }
+
+        // Return `today` if no date is provided
+        if (typeof date === 'undefined' || !date.length) {
+            console.log("AAAAH");
+            return moment(_self.today, _self.dateFormatInternal).format(_self.localeFormat);
+        }
+        
+        // Otherwise, reformat the date
+        return moment(date, _self.localeFormat).format(_self.dateFormatInternal);
     }
 
 }
