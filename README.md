@@ -109,7 +109,7 @@ You can allow the user to choose and change the start date by providing a date f
 <div class="form__group">
     <label for="ercal-start" class="control__label">Event date</label>
     <div class="controls">
-        <input type="date" id="ercal-start" class="js-ercal-start" />
+        <input type="text" id="ercal-start" class="js-ercal-start" />
     </div>
 </div>
 ```
@@ -179,7 +179,7 @@ This field should be hidden on page load, and will be shown if the user chooses 
 <div class="form__group" style="display: none;">
     <label for="ercal-end" class="control__label">End repeat on</label>
     <div class="controls">
-        <input type="date" id="ercal-end" class="js-ercal-end" disabled />
+        <input type="text" id="ercal-end" class="js-ercal-end" disabled />
     </div>
 </div>
 ```
