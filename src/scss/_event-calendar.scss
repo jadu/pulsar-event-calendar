@@ -69,7 +69,7 @@ $font-family-monospace: 'Courier New', 'Andale Mono', 'Consolas', monospace !def
         font-size: 2em;
         line-height: 39px;
         height: $line-height-base * 2;
-        width: percentage(1/7);
+        width: 50px;
 
         &:hover {
             color: $colour-primary;
