@@ -227,6 +227,7 @@ class EventCalendar {
 
         // Store a reference to the weekday picker, which is shown if the pattern is 'weekly'
         _self.$weekdayPicker = _self.$html.find('.js-ercal-weekdays');
+        _self.localiseWeekday();
 
         // If a startDate field is defined, bind a change event to fire When a new start date is chosen
         if (typeof _self.$startDateField !== 'undefined') {
@@ -294,6 +295,19 @@ class EventCalendar {
         */
         _self.setPattern(pattern);
         _self.paintMonth(_self.clndr.month, 'repeat-on');
+    }
+
+    localiseWeekday () {
+        let _self = this,
+            locale = moment.locale();
+
+        if (locale === 'en'  || locale === 'en-us') {
+            let lastDay = _self.$weekdayPicker.find('label').last();
+
+            if (lastDay.find('span').text() === 'SU') {
+                _self.$weekdayPicker.find('label').first().before(lastDay);
+            }
+        }
     }
 
     /**
@@ -864,7 +878,6 @@ class EventCalendar {
         _self.$startDateField.attr('max', endDate);
     }
 
-
     /**
      * Retrieve the contents of the `datesToAdd` and `datesToDel` arrays.
      */
@@ -879,6 +892,57 @@ class EventCalendar {
     getRecurPattern () {
         let _self = this;
         return _self.recurPattern;
+    }
+
+    /**
+     * Sets the global moment locale, and the locale date format based on the option.locale setting.
+     * Sets to en-gb if none supplied.
+     * 
+     * @param {string} locale The locale to set (en, en-gb, en-us, en-au)
+     */
+    setLocale (locale) {
+        let _self = this;
+
+        // Default to UK locale if none supplied, other accepted values are `en-us` or `en-au` due to these locale files
+        // being `required` into the component.
+        if (typeof locale === 'undefined' || locale === '') {
+            locale = moment.locale();
+        } else {
+            // Set the locale.
+            moment.locale(locale);
+        }
+
+        // If we're using US localisation, dates will be formatted as MM/DD/YYYY in the UI.
+        if (locale === 'en'  || locale === 'en-us') {
+            _self.localeFormat = _self.dateFormatUS;
+        }
+    }
+
+    /**
+     * Checks the current format of `date` and reformats it as _self.localeFormat (probably YYYY-MM-DD) for internal
+     * use within the CLNDR.
+     * 
+     * @param {string} date The date to convert
+     */
+    internalDate (date) {
+        let _self = this;
+
+        if (date === 'Invalid date') {
+            return;
+        }
+
+        // If already internal format, just return the same value
+        if (moment(date, _self.dateFormatInternal, true).isValid()) {
+            return date;
+        }
+
+        // Return `today` if no date is provided
+        if (typeof date === 'undefined' || !date.length) {
+            return moment(_self.today, _self.dateFormatInternal).format(_self.localeFormat);
+        }
+        
+        // Otherwise, reformat the date
+        return moment(date, _self.localeFormat).format(_self.dateFormatInternal);
     }
 
     /**
@@ -940,46 +1004,6 @@ class EventCalendar {
     static doesNotMatchDate (a, b) {
         return a.format(this.dateFormat) != b.format(this.dateFormat);
     }
-
-    setLocale (locale) {
-        let _self = this;
-
-        // Default to UK locale if none supplied, other accepted values are `en_US` or `en_AU` due to these locale files
-        // being `required` into the component
-        if (typeof locale === 'undefined' || locale === '') {
-            locale = moment.locale();
-        } else {
-            // Set the locale
-            moment.locale(locale);
-        }
-
-        // If we're using UK/Australia localisation, convert dates exposed to the UI to the expected DD/MM/YYYY format
-        if (locale === 'en'  || locale === 'en-us') {
-            _self.localeFormat = _self.dateFormatUS;
-        }
-    }
-
-    internalDate (date) {
-        let _self = this;
-
-        if (date === 'Invalid date') {
-            return;
-        }
-
-        // If already internal format, just return the same value
-        if (moment(date, _self.dateFormatInternal, true).isValid()) {
-            return date;
-        }
-
-        // Return `today` if no date is provided
-        if (typeof date === 'undefined' || !date.length) {
-            return moment(_self.today, _self.dateFormatInternal).format(_self.localeFormat);
-        }
-        
-        // Otherwise, reformat the date
-        return moment(date, _self.localeFormat).format(_self.dateFormatInternal);
-    }
-
 }
 
 module.exports = EventCalendar;

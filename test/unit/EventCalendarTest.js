@@ -95,20 +95,29 @@ describe('EventCalendar', () => {
     });
 
 
-    describe('Providing the en_US locale', () => {
+    describe('Providing the en-us locale', () => {
         beforeEach(() => {
             eventCalendar.init({
                 locale: 'en-us'
             });
         });
     
-        it('should start the week on a Sunday', () => {
+        it('should start the week on a Sunday in the calendar', () => {
             expect($html.find('.header-day:first-of-type').text()).to.equal('S');
+        });
+
+        it('should start the week on a Sunday in the weekday picker', () => {
+            expect($html.find('[name="ercal-weekdays"]:first + span').text()).to.equal('SU');
+        });
+
+        it('should have the appropriate aria-label in the weekday picker', () => {
+            console.log($html.find('[name="ercal-weekdays"]:first + span'));
+            expect($html.find('[name="ercal-weekdays"]:first + span').attr('aria-label')).to.equal('Sunday');
         });
     });
 
 
-    describe('Providing the en_AU locale', () => {
+    describe('Providing the en-au locale', () => {
         beforeEach(() => {
             eventCalendar.init({
                 locale: 'en-au'
