@@ -151,6 +151,7 @@ class EventCalendar {
                             <td class='<%= days[d].classes %>'>
                             <% if (days[d].day.length != 0) { %>
                                 <button 
+                                    type='button' 
                                     class='day-contents' 
                                     data-day="<%= year %>-<%= monthNumerical %>-<%= daysLeadingZero %>" 
                                     aria-label="<% if (days[d].classes.indexOf('selected') !== -1) { %><%= ariaStartDate %><% } else if (days[d].classes.indexOf('event') !== -1) { %><%= ariaSelected %><% } %> <%= days[d].day %> <%= month %>, <%= year %>.<% if (days[d].classes.indexOf('selected') === -1 && days[d].classes.indexOf('event') === -1) { %> <%= ariaUnselected %><% } %>"
