@@ -152,6 +152,31 @@ $(function () {
 });
 ```
 
+## Adding exceptions
+
+You can pass in an array of exceptions to define which dates should be included in, or excluded from your recurrence pattern.
+
+```javascript
+$(function () {
+    let inclusions = [
+        '2019-07-25',
+        '2019-07-26',
+        '2019-08-01'
+    ];
+
+    let exclusions = [
+        '2019-12-25'
+    ];
+
+    const clndr = new EventCalendar($('html'));
+
+    clndr.init({
+        datesToAdd: inclusions,
+        datesToDel: exclusions
+    });
+});
+```
+
 ## End Date as an init() option (optional)
 
 The Event Calendar can be constrained to not allow the user to navigate past a certain date. This defaults to `today + 15 years`.

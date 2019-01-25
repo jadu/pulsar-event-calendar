@@ -26,6 +26,8 @@ class EventCalendar {
         this.dateFormatUS = 'MM/DD/YYYY';
         this.localeFormat = 'DD/MM/YYYY';
         this.today = moment(new Date(), this.localeFormat);
+        this.datesToAdd = [];
+        this.datesToDel = [];
         this.$ariaLiveRegion;
         this.$patternField;
         this.currentCalendarMonth;
@@ -109,6 +111,20 @@ class EventCalendar {
 
             // Store reference to the end date field container, as it will be shown/hidden when choosing patterns
             _self.$endDateFieldContainer = _self.$endDateField.closest('.form__group');
+        }
+
+        // Process any datesToAdd passed as init() options, converting them to moments and adding to the array
+        if (typeof options.datesToAdd !== 'undefined' && options.datesToAdd.length) {
+            $.each(options.datesToAdd, function() {
+                _self.datesToAdd.push(moment(this, _self.dateFormatInternal));
+            });
+        }
+        
+        // Process any datesToDel passed as init() options, converting them to moments and adding to the array
+        if (typeof options.datesToDel !== 'undefined' && options.datesToDel.length) {
+            $.each(options.datesToDel, function() {
+                _self.datesToDel.push(moment(this, _self.dateFormatInternal));
+            });
         }
 
         // Make sure the endDate isn't before the startDate or anything silly like that
@@ -198,8 +214,8 @@ class EventCalendar {
             },
             events: clndrEvents,
             extras: {
-                datesToAdd: [],
-                datesToDel: []
+                datesToAdd: _self.datesToAdd,
+                datesToDel: _self.datesToDel
             },
             moment: moment,
             selectedDate: moment(clndrSelected, _self.dateFormatInternal),
@@ -240,6 +256,11 @@ class EventCalendar {
         if (typeof _self.$endDateField !== 'undefined') {
             _self.setEndDateMinimum();
             _self.$endDateField.on('change', _self.changeEndDate.bind(_self));
+        }
+        
+        // If datesToAdd or datesToDel have been passed as an init() option, trigger a paint to style them
+        if (_self.clndr.options.extras.datesToAdd.length || _self.clndr.options.extras.datesToDel.length) {
+            _self.paintMonth(moment(clndrSelected, _self.dateFormatInternal));
         }
 
         // Recalculate upcoming occurences based on the pattern dropdown
@@ -508,11 +529,15 @@ class EventCalendar {
 
         // Exceptions to paint as to-add
         if (_self.clndr.options.extras.datesToAdd.length) {
+            console.log(_self.clndr.options.extras.datesToAdd);
+            console.log(this);
+            console.log(month);
             const datesToAdd = _self.clndr.options.extras.datesToAdd
                                 .filter(EventCalendar.isInYear.bind(this, month))
                                 .filter(EventCalendar.isInMonth.bind(this, month));
 
             datesToAdd.forEach(_self.styleToAdd.bind(_self));
+            console.log('end');
         }
 
         // Exceptions to paint as to-delete
