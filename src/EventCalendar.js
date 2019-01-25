@@ -529,15 +529,11 @@ class EventCalendar {
 
         // Exceptions to paint as to-add
         if (_self.clndr.options.extras.datesToAdd.length) {
-            console.log(_self.clndr.options.extras.datesToAdd);
-            console.log(this);
-            console.log(month);
             const datesToAdd = _self.clndr.options.extras.datesToAdd
                                 .filter(EventCalendar.isInYear.bind(this, month))
                                 .filter(EventCalendar.isInMonth.bind(this, month));
 
             datesToAdd.forEach(_self.styleToAdd.bind(_self));
-            console.log('end');
         }
 
         // Exceptions to paint as to-delete
