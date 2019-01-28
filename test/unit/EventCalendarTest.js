@@ -2153,4 +2153,51 @@ describe('EventCalendar', () => {
 
     });
 
+    describe('passing datesToAdd to the init() method', () => {
+        beforeEach(() => {
+            eventCalendar.init({
+                startDate: '2018-07-03',
+                datesToAdd: [ '2018-07-02', '2018-07-04', '2018-07-05' ]
+            });
+        });
+        
+        it('should add the appropriate styling to the dates', () => {
+            expect($html.find('[data-day="2018-07-04"]').parent().hasClass('event-add')).to.be.true;
+            expect($html.find('[data-day="2018-07-05"]').parent().hasClass('event-add')).to.be.true;
+        });
+
+        it('should not style out of bounds dates', () => {
+            expect($html.find('[data-day="2018-07-02"]').parent().hasClass('event-add')).to.be.false;
+        });
+
+        it('should add the appropriate aria-label to the dates', () => {
+            expect($html.find('[data-day="2018-07-04"]').attr('aria-label')).to.contain('Selected');
+            expect($html.find('[data-day="2018-07-05"]').attr('aria-label')).to.contain('Selected');
+        });
+    });
+
+    describe('passing datesToDel to the init() method', () => {
+        beforeEach(() => {
+            eventCalendar.init({
+                startDate: '2018-07-01',
+                endDate: '2018-07-06',
+                datesToDel: [ '2018-07-04', '2018-07-05', '2019-07-07' ]
+            });
+        });
+        
+        it('should add the appropriate styling to the dates', () => {
+            expect($html.find('[data-day="2018-07-04"]').parent().hasClass('event-del')).to.be.true;
+            expect($html.find('[data-day="2018-07-05"]').parent().hasClass('event-del')).to.be.true;
+        });
+
+        it('should not style out of bounds dates', () => {
+            expect($html.find('[data-day="2018-07-07"]').parent().hasClass('event-del')).to.be.false;
+        });
+
+        it('should add the appropriate aria-label to the dates', () => {
+            expect($html.find('[data-day="2018-07-04"]').attr('aria-label')).to.contain('Removed');
+            expect($html.find('[data-day="2018-07-05"]').attr('aria-label')).to.contain('Removed');
+        });
+    });
+
 });

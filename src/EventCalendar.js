@@ -113,20 +113,6 @@ class EventCalendar {
             _self.$endDateFieldContainer = _self.$endDateField.closest('.form__group');
         }
 
-        // Process any datesToAdd passed as init() options, converting them to moments and adding to the array
-        if (typeof options.datesToAdd !== 'undefined' && options.datesToAdd.length) {
-            $.each(options.datesToAdd, function() {
-                _self.datesToAdd.push(moment(this, _self.dateFormatInternal));
-            });
-        }
-        
-        // Process any datesToDel passed as init() options, converting them to moments and adding to the array
-        if (typeof options.datesToDel !== 'undefined' && options.datesToDel.length) {
-            $.each(options.datesToDel, function() {
-                _self.datesToDel.push(moment(this, _self.dateFormatInternal));
-            });
-        }
-
         // Make sure the endDate isn't before the startDate or anything silly like that
         if (
             (typeof options.endDate !== 'undefined' && typeof options.startDate !== 'undefined') &&
@@ -135,9 +121,39 @@ class EventCalendar {
             throw new Error('End date can not be before the start date');
         }
 
+        // If endDate isn't supplied, set it to `today + 15 years`
+        if (typeof options.endDate !== 'undefined' && options.endDate.length) {
+            options.endDate = _self.internalDate(options.endDate);
+        }
+        else {
+            options.endDate = moment(new Date(), _self.dateFormatInternal).add(15, 'years').format(_self.dateFormatInternal);
+        }
+
+        // Process any datesToAdd passed as init() options, converting them to moments and adding to the array
+        if (typeof options.datesToAdd !== 'undefined' && options.datesToAdd.length) {
+            $.each(options.datesToAdd, function() {
+                let dateToAdd = moment(this, _self.dateFormatInternal);
+
+                if (dateToAdd.isAfter(moment(options.startDate, _self.dateFormatInternal))) {
+                    _self.datesToAdd.push(dateToAdd);
+                }
+            });
+        }
+
+        // Process any datesToDel passed as init() options, converting them to moments and adding to the array
+        if (typeof options.datesToDel !== 'undefined' && options.datesToDel.length) {
+            $.each(options.datesToDel, function() {
+                let dateToDel = moment(this, _self.dateFormatInternal);
+
+                if (dateToDel.isBefore(moment(options.endDate, _self.dateFormatInternal))) {
+                    _self.datesToDel.push(dateToDel);
+                }
+            });
+        }
+
         let clndrSelected = options.startDate ? _self.internalDate(options.startDate) : _self.today.format(_self.dateFormatInternal),
             clndrStart = options.startDate ? _self.internalDate(options.startDate) : _self.today.format(_self.dateFormatInternal),
-            clndrEnd = options.endDate ? _self.internalDate(options.endDate) : moment(new Date(), _self.dateFormatInternal).add(15, 'years').format(_self.dateFormatInternal),
+            clndrEnd = options.endDate,
             clndrEvents = options.events ? options.events : [],
             clndrTemplate = options.template ? options.template : `
                 <div class='clndr-controls' role='navigation'>

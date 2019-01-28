@@ -10,21 +10,24 @@ $(function () {
     ];
 
     let toAdd = [
-        '2019-01-27',
-        '2019-01-29'
+        '2019-02-05',
+        // '2019-02-06',
+        // '2019-02-07'
     ];
 
     let toDel = [
-        '2019-01-28',
-        '2019-01-30'
+        // '2019-02-07',
+        // '2019-02-08',
+        '2019-02-09'
     ];
 
     /**
      * Simple init() method which will default to startDate = today / endDate = today + 15 years
      */
     calendar.init({
-        startDateField: '.js-ercal-start',
-        endDateField: '.js-ercal-end',
+        // startDateField: '.js-ercal-start',
+        // endDateField: '.js-ercal-end',
+        startDate: '2019-02-06',
         datesToAdd: toAdd,
         datesToDel: toDel
         // events: myEvents,
