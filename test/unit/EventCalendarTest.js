@@ -2001,6 +2001,15 @@ describe('EventCalendar', () => {
             expect(dates.datesToDel.length).to.equal(1);
             expect(dates.datesToDel[0]._i).to.equal('2015-10-19');
         });
+
+        it('should refocus the calendar if the end date is before the currently focused month', () => {
+            $html.find('.js-ercal-end').val('01/12/2015').trigger('change');
+            $html.find('.clndr-next-button').click();
+            expect($html.find('.month').text()).to.equal('November 2015');
+
+            $html.find('.js-ercal-end').val('21/10/2015').trigger('change');
+            expect($html.find('.month').text()).to.equal('October 2015');
+        });
     });
 
     describe('when the end date field is cleared', () => {
