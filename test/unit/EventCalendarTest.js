@@ -21,7 +21,7 @@ describe('EventCalendar', () => {
             <option value="no-repeat">No repeat</option>
             <option value="daily">Daily</option>
             <option value="weekly">Weekly</option>
-            <option value="two-weekly">Every two weeks</option>
+            <option value="fortnight">Every two weeks</option>
             <option value="monthly-day">Monthly, on this day of the month</option>
             <option value="monthly-date">Monthly, on this date</option>
             <option value="annually">Every year</option>
@@ -868,7 +868,7 @@ describe('EventCalendar', () => {
         });
         
         it('should apply the repeat styling to all dates', () => {
-            $html.find('.day:not(.calendar-day-2018-01-01)').each(function() {
+            $html.find('.day:not(.calendar-day-2018-01-01):not(.calendar-day-2018-01-02)').each(function() {
                 expect($(this).hasClass('event-repeat')).to.be.true;
             });
         });
@@ -962,8 +962,8 @@ describe('EventCalendar', () => {
         it('should apply the repeat styling', () => {
             let $days = $html.find('.day.event-repeat');
 
-            expect($days.length).to.equal(5);
-            expect($html.find('.calendar-day-2018-01-02').hasClass('event-repeat')).to.be.true;
+            expect($days.length).to.equal(4);
+            expect($html.find('.calendar-day-2018-01-02').hasClass('event-repeat')).to.be.false;
             expect($html.find('.calendar-day-2018-01-09').hasClass('event-repeat')).to.be.true;
             expect($html.find('.calendar-day-2018-01-16').hasClass('event-repeat')).to.be.true;
             expect($html.find('.calendar-day-2018-01-23').hasClass('event-repeat')).to.be.true;
@@ -984,8 +984,8 @@ describe('EventCalendar', () => {
             
             let $days = $html.find('.day.event-repeat');
 
-            expect($days.length).to.equal(9);
-            expect($html.find('.calendar-day-2018-01-02').hasClass('event-repeat')).to.be.true;
+            expect($days.length).to.equal(8);
+            expect($html.find('.calendar-day-2018-01-02').hasClass('event-repeat')).to.be.false;
             expect($html.find('.calendar-day-2018-01-09').hasClass('event-repeat')).to.be.true;
             expect($html.find('.calendar-day-2018-01-16').hasClass('event-repeat')).to.be.true;
             expect($html.find('.calendar-day-2018-01-23').hasClass('event-repeat')).to.be.true;
@@ -1063,7 +1063,7 @@ describe('EventCalendar', () => {
     });
 
 
-    describe('choosing the ’two-weekly’ pattern', () => {
+    describe('choosing the ’fortnight’ pattern', () => {
         beforeEach(() => {
             eventCalendar.init({
                 startDate: '2018-01-02',
@@ -1071,14 +1071,14 @@ describe('EventCalendar', () => {
                 events: [{ date: '2018-01-10' }]
             });
 
-            $html.find('.js-ercal-repeat').val('two-weekly').trigger('change');
+            $html.find('.js-ercal-repeat').val('fortnight').trigger('change');
         });
         
         it('should apply the repeat styling', () => {
             let $days = $html.find('.day.event-repeat');
 
-            expect($days.length).to.equal(3);
-            expect($html.find('.calendar-day-2018-01-02').hasClass('event-repeat')).to.be.true;
+            expect($days.length).to.equal(2);
+            expect($html.find('.calendar-day-2018-01-02').hasClass('event-repeat')).to.be.false;
             expect($html.find('.calendar-day-2018-01-16').hasClass('event-repeat')).to.be.true;
             expect($html.find('.calendar-day-2018-01-30').hasClass('event-repeat')).to.be.true;
         });
@@ -1148,13 +1148,6 @@ describe('EventCalendar', () => {
             });
             
             $html.find('.js-ercal-repeat').val('monthly-date').trigger('change');
-        });
-        
-        it('should apply the repeat styling', () => {
-            let $days = $html.find('.day.event-repeat');
-
-            expect($days.length).to.equal(1);
-            expect($html.find('.calendar-day-2018-01-02').hasClass('event-repeat')).to.be.true;
         });
 
         it('should store the recur pattern in the clndr instance', () => {
@@ -1305,13 +1298,6 @@ describe('EventCalendar', () => {
             });
 
             $html.find('.js-ercal-repeat').val('annually').trigger('change');
-        });
-        
-        it('should apply the repeat styling', () => {
-            let $days = $html.find('.day.event-repeat');
-
-            expect($days.length).to.equal(1);
-            expect($html.find('.calendar-day-2018-01-02').hasClass('event-repeat')).to.be.true;
         });
 
         it('should store the recur pattern in the clndr instance', () => {
@@ -1636,26 +1622,26 @@ describe('EventCalendar', () => {
 
             $html.find('.js-ercal-repeat').val('weekly').trigger('change');
             $html.find('[data-day="2018-01-09"]').click(); // to del
-            $html.find('.js-ercal-repeat').val('two-weekly').trigger('change');
+            $html.find('.js-ercal-repeat').val('fortnight').trigger('change');
+        });
+        
+        it('should store the target date in the datesToDel array', () => {
+            let dates = eventCalendar.getDates();
+            
+            expect(dates.datesToDel[0]._i).to.equal('2018-01-09');
+        });
+        
+        it('should show the toDel information in the review panel', () => {
+            expect($html.find('.js-dates-to-del').attr('style')).to.equal('display: inline;');
+        });
+        
+        it('should update the toDel information with the current number', () => {
+            expect($html.find('.js-dates-to-del').html()).to.equal('1 day will be removed');
         });
 
         it('should maintain the toDel styling on the target date', () => {
             expect($html.find('.calendar-day-2018-01-09').hasClass('event-repeat')).to.be.false;
             expect($html.find('.calendar-day-2018-01-09').hasClass('event-del')).to.be.true;
-        });
-
-        it('should store the target date in the datesToDel array', () => {
-            let dates = eventCalendar.getDates();
-
-            expect(dates.datesToDel[0]._i).to.equal('2018-01-09');
-        });
-
-        it('should show the toDel information in the review panel', () => {
-            expect($html.find('.js-dates-to-del').attr('style')).to.equal('display: inline;');
-        });
-
-        it('should update the toDel information with the current number', () => {
-            expect($html.find('.js-dates-to-del').html()).to.equal('1 day will be removed');
         });
     });
 
@@ -1668,7 +1654,7 @@ describe('EventCalendar', () => {
 
             $html.find('.js-ercal-repeat').val('weekly').trigger('change');
             $html.find('[data-day="2018-01-09"]').click(); // to del
-            $html.find('.js-ercal-repeat').val('two-weekly').trigger('change');
+            $html.find('.js-ercal-repeat').val('fortnight').trigger('change');
             $html.find('[data-day="2018-01-09"]').click(); // to del
         });
 

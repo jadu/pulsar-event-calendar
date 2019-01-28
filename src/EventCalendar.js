@@ -21,6 +21,7 @@ class EventCalendar {
     constructor ($html) {
         this.clndr;
         this.$html = $html;
+        this.ariaStartDate = 'This is the event start date. Clicking this button will have no effect.'
         this.dateFormatInternal = 'YYYY-MM-DD';
         this.dateFormatLong = 'D MMMM, YYYY';
         this.dateFormatUS = 'MM/DD/YYYY';
@@ -239,7 +240,7 @@ class EventCalendar {
             render: function (data) {
                 // monthNumerical is used to create the data-day attribute on day buttons
                 data.monthNumerical = moment().month(data.month).format('MM');
-                data.ariaStartDate = 'This is the event start date. Clicking this button will have no effect.';
+                data.ariaStartDate = _self.ariaStartDate;
                 data.ariaSelected = 'Selected. Event will repeat on';
                 data.ariaUnselected = 'Unselected.';
                 return precompiledTemplate(data);
@@ -252,15 +253,15 @@ class EventCalendar {
             _self.resetCalendar();
         });
 
-        // Store a reference to the pattern field as it’s also used in the resetCalendar() method
-        _self.$patternField = _self.$html.find('.js-ercal-repeat');
-
         // Store a reference to the aria alert status element used to update screen readers when things change
         _self.$ariaLiveRegion = _self.$html.find('.js-ercal-status');
 
         // Store a reference to the weekday picker, which is shown if the pattern is 'weekly'
         _self.$weekdayPicker = _self.$html.find('.js-ercal-weekdays');
         _self.localiseWeekday();
+
+        // Store a reference to the pattern field as it’s also used in the resetCalendar() method
+        _self.$patternField = _self.$html.find('.js-ercal-repeat');
 
         // If a startDate field is defined, bind a change event to fire When a new start date is chosen
         if (typeof _self.$startDateField !== 'undefined') {
@@ -281,6 +282,7 @@ class EventCalendar {
 
         // Recalculate upcoming occurences based on the pattern dropdown
         _self.$patternField.on('change', _self.applyPattern.bind(_self));
+        _self.applyPattern();
 
         // Watch for changes to the weekday picker (only visible when the pattern is `weekly`)
         _self.$html.find('[name="ercal-weekdays"]').on('change', function() {
@@ -472,7 +474,7 @@ class EventCalendar {
             case 'weekdays':
                 newPattern = selectedDate.recur().every(weekdays).daysOfWeek();
                 break
-            case 'two-weekly':
+            case 'fortnight':
                 newPattern = selectedDate.recur().every(2).weeks();
                 break;
             case 'monthly-day':
@@ -503,10 +505,14 @@ class EventCalendar {
     paintRepeatPattern (method) {    
         let _self = this,
             paintMethod = method ? method : 'repeat-on',
+            repeatEnd = (moment(_self.clndr.options.constraints.endDate, _self.dateFormatInternal).isBefore(_self.clndr.intervalEnd)) ? _self.clndr.options.constraints.endDate : _self.clndr.intervalEnd,
             recurDatesThisMonth = _self.recurPattern
                                     .startDate(_self.clndr.options.selectedDate)
-                                    .endDate(_self.clndr.options.constraints.endDate)
+                                    .endDate(repeatEnd)
                                     .all();
+
+        // Drop `today` from this array so that it's not styled as a recurrence                                       
+        recurDatesThisMonth.shift();
 
         $.each(recurDatesThisMonth, function() {
             switch (paintMethod) {
@@ -530,7 +536,8 @@ class EventCalendar {
      * @param {string} method `repeat-on` will paint the dates, `clear` will unpaint them
      */
     paintMonth (month, method) {
-        let _self = this;
+        let _self = this,
+            $today = _self.clndr.element.find('[data-day="' + _self.clndr.options.constraints.startDate + '"]');
         
         // Store currently viewed month, used when changing endDate to check if we need to refocus the calendar
         _self.currentCalendarMonth = month;
@@ -559,6 +566,11 @@ class EventCalendar {
                                 .filter(EventCalendar.isInMonth.bind(this, month));
 
             datesToDel.forEach(_self.styleToDel.bind(_self));
+        }
+
+        // Reset aria-label for 'today'
+        if ($today.length) {
+            $today.attr('aria-label', _self.ariaStartDate);
         }
 
         _self.updateReview();
