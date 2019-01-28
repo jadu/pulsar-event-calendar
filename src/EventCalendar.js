@@ -337,6 +337,9 @@ class EventCalendar {
         _self.paintMonth(_self.clndr.month, 'repeat-on');
     }
 
+    /**
+     * Change the order of the weekday picker to start with Sunday if using `en` or `en-us` locale
+     */
     localiseWeekday () {
         let _self = this,
             locale = moment.locale();
