@@ -299,7 +299,7 @@ class EventCalendar {
 
         // Toggle visibility of endDate field by showing/hiding it's container (based on Pulsar markup) 
         if (typeof _self.$endDateFieldContainer !== 'undefined') {
-            if (pattern === 'no-repeat') {
+            if (pattern === '1day') {
                 _self.$endDateFieldContainer.hide();
                 _self.$endDateField.attr('disabled', true);
             }
@@ -468,7 +468,7 @@ class EventCalendar {
             newPattern;
 
         switch (pattern) {
-            case 'daily':
+            case 'day':
                 newPattern = selectedDate.recur().every(1).days();
                 break;
             case 'weekly':
@@ -480,12 +480,12 @@ class EventCalendar {
             case 'fortnight':
                 newPattern = selectedDate.recur().every(2).weeks();
                 break;
-            case 'monthly-day':
+            case 'monthByDay':
                 newPattern = selectedDate.recur()
                                 .every(selectedDate.day()).daysOfWeek()
                                 .every(selectedDate.monthWeekByDay()).weeksOfMonthByDay();
                 break;
-            case 'monthly-date':
+            case 'monthByDate':
                 newPattern = selectedDate.recur().every(1).months();
                 break;
             default:
@@ -761,7 +761,7 @@ class EventCalendar {
         _self.setPattern(null);
 
         // Reset the recur pattern field
-        _self.$patternField.val('no-repeat');
+        _self.$patternField.val('1day');
         _self.applyPattern();
 
         // Remove the review changes information

@@ -18,12 +18,12 @@ describe('EventCalendar', () => {
         <input type="date" class="js-ercal-start" />
         <input type="date" class="js-ercal-end" />
         <select class="js-ercal-repeat">
-            <option value="no-repeat">No repeat</option>
-            <option value="daily">Daily</option>
+            <option value="1day">No repeat</option>
+            <option value="day">Daily</option>
             <option value="weekly">Weekly</option>
             <option value="fortnight">Every two weeks</option>
-            <option value="monthly-day">Monthly, on this day of the month</option>
-            <option value="monthly-date">Monthly, on this date</option>
+            <option value="monthByDay">Monthly, on this day of the month</option>
+            <option value="monthByDate">Monthly, on this date</option>
             <option value="foo">This option should not exist</option>
         </select>
         <fieldset class="js-ercal-weekdays" style="display: none;">
@@ -639,17 +639,17 @@ describe('EventCalendar', () => {
         });
 
         it('should clear the stored pattern', () => {
-            $html.find('.js-ercal-repeat').val('daily').trigger('change');
+            $html.find('.js-ercal-repeat').val('day').trigger('change');
             $html.find('.js-ercal-reset').click();
 
             expect(eventCalendar.getRecurPattern()).to.be.null;
         });
 
         it('should reset the pattern field', () => {
-            $html.find('.js-ercal-repeat').val('daily').trigger('change');
+            $html.find('.js-ercal-repeat').val('day').trigger('change');
             $html.find('.js-ercal-reset').click();
 
-            expect($html.find('.js-ercal-repeat').val()).to.equal('no-repeat');
+            expect($html.find('.js-ercal-repeat').val()).to.equal('1day');
         });
 
         it('should reset the aria label', () => {
@@ -716,17 +716,17 @@ describe('EventCalendar', () => {
         });
 
         it('should clear the stored pattern', () => {
-            $html.find('.js-ercal-repeat').val('daily').trigger('change');
+            $html.find('.js-ercal-repeat').val('day').trigger('change');
             $html.find('.js-ercal-reset').click();
 
             expect(eventCalendar.getRecurPattern()).to.be.null;
         });
 
         it('should reset the pattern field', () => {
-            $html.find('.js-ercal-repeat').val('daily').trigger('change');
+            $html.find('.js-ercal-repeat').val('day').trigger('change');
             $html.find('.js-ercal-reset').click();
 
-            expect($html.find('.js-ercal-repeat').val()).to.equal('no-repeat');
+            expect($html.find('.js-ercal-repeat').val()).to.equal('1day');
         });
 
         it('should reset the aria label', () => {
@@ -809,7 +809,7 @@ describe('EventCalendar', () => {
     });
 
 
-    describe('choosing the no-repeat’ pattern', () => {
+    describe('choosing the 1day’ pattern', () => {
         beforeEach(() => {
             eventCalendar.init({
                 startDate: '2018-01-02',
@@ -817,7 +817,7 @@ describe('EventCalendar', () => {
                 events: [{ date: '2018-01-10' }]
             });
 
-            $html.find('.js-ercal-repeat').val('no-repeat').trigger('change');
+            $html.find('.js-ercal-repeat').val('1day').trigger('change');
         });
         
         it('should not apply the repeat styling to any dates', () => {
@@ -855,7 +855,7 @@ describe('EventCalendar', () => {
     });
 
 
-    describe('choosing the ’daily’ pattern', () => {
+    describe('choosing the ’day’ pattern', () => {
         beforeEach(() => {
             eventCalendar.init({
                 startDate: '2018-01-02',
@@ -863,7 +863,7 @@ describe('EventCalendar', () => {
                 events: [{ date: '2018-01-10' }]
             });
 
-            $html.find('.js-ercal-repeat').val('daily').trigger('change');
+            $html.find('.js-ercal-repeat').val('day').trigger('change');
         });
         
         it('should apply the repeat styling to all dates', () => {
@@ -1049,7 +1049,7 @@ describe('EventCalendar', () => {
         });
 
         it('should hide the weekday picker if a different repeat option is chosen', () => {
-            $html.find('.js-ercal-repeat').val('daily').trigger('change');
+            $html.find('.js-ercal-repeat').val('day').trigger('change');
 
             expect($html.find('.js-ercal-weekdays').attr('style')).to.equal('display: none;');
         });
@@ -1146,7 +1146,7 @@ describe('EventCalendar', () => {
                 events: [{ date: '2018-01-10' }]
             });
             
-            $html.find('.js-ercal-repeat').val('monthly-date').trigger('change');
+            $html.find('.js-ercal-repeat').val('monthByDate').trigger('change');
         });
 
         it('should store the recur pattern in the clndr instance', () => {
@@ -1217,7 +1217,7 @@ describe('EventCalendar', () => {
                 events: [{ date: '2018-01-14' }]
             });
 
-            $html.find('.js-ercal-repeat').val('monthly-day').trigger('change');
+            $html.find('.js-ercal-repeat').val('monthByDay').trigger('change');
         });
         
         it('should apply the repeat styling to the next occurrence', () => {
@@ -1411,7 +1411,7 @@ describe('EventCalendar', () => {
 
             $html.find('[data-day="2018-01-04"]').click(); // to add
             $html.find('[data-day="2018-01-10"]').click(); // to del
-            $html.find('.js-ercal-repeat').val('daily').trigger('change');
+            $html.find('.js-ercal-repeat').val('day').trigger('change');
         });
 
         it('should replace the toAdd styling with the repeat styling', () => {
@@ -1465,7 +1465,7 @@ describe('EventCalendar', () => {
 
             $html.find('[data-day="2018-01-04"]').click(); // to add
             $html.find('[data-day="2018-01-10"]').click(); // to del
-            $html.find('.js-ercal-repeat').val('daily').trigger('change');
+            $html.find('.js-ercal-repeat').val('day').trigger('change');
             $html.find('[data-day="2018-01-04"]').click();
             $html.find('[data-day="2018-01-10"]').click();
         });
@@ -1494,8 +1494,8 @@ describe('EventCalendar', () => {
 
             $html.find('[data-day="2018-01-04"]').click(); // to add
             $html.find('[data-day="2018-01-10"]').click(); // to del
-            $html.find('.js-ercal-repeat').val('daily').trigger('change');
-            $html.find('.js-ercal-repeat').val('no-repeat').trigger('change');
+            $html.find('.js-ercal-repeat').val('day').trigger('change');
+            $html.find('.js-ercal-repeat').val('1day').trigger('change');
         });
 
         it('should maintain the toAdd styling on dates to add rather than the repeat styling', () => {
