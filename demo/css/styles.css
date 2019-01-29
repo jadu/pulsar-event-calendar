@@ -2484,6 +2484,8 @@
       content: ""; }
     .clndr .event-repeat > .day-contents:focus {
       box-shadow: 0 0 0 3px #ffbf47, inset 0 0 0 3px #fff; }
+  .clndr .selected.event-repeat > .day-contents::after {
+    display: none; }
   .clndr .event-del > .day-contents,
   .clndr .event.event-del > .day-contents {
     background-color: #fff;

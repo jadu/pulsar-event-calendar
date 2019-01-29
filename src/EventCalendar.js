@@ -493,8 +493,7 @@ class EventCalendar {
                 newPattern = null;
                 break;
         }
-console.log(selectedDate);
-console.log(newPattern);
+
         _self.recurPattern = newPattern;
     }
 
@@ -512,9 +511,6 @@ console.log(newPattern);
                                     .startDate(_self.clndr.options.selectedDate)
                                     .endDate(repeatEnd)
                                     .all();
-
-        // Drop `today` from this array so that it's not styled as a recurrence                                       
-        // recurDatesThisMonth.shift();
 
         $.each(recurDatesThisMonth, function() {
             switch (paintMethod) {

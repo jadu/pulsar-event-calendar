@@ -241,6 +241,10 @@ $font-family-monospace: 'Courier New', 'Andale Mono', 'Consolas', monospace !def
         }
     }
 
+    .selected.event-repeat > .day-contents::after {
+        display: none;
+    }
+
     .event-del > .day-contents,
     .event.event-del > .day-contents {
         background-color: $colour-white;

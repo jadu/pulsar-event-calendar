@@ -961,8 +961,8 @@ describe('EventCalendar', () => {
         it('should apply the repeat styling', () => {
             let $days = $html.find('.day.event-repeat');
 
-            expect($days.length).to.equal(4);
-            expect($html.find('.calendar-day-2018-01-02').hasClass('event-repeat')).to.be.false;
+            expect($days.length).to.equal(5);
+            expect($html.find('.calendar-day-2018-01-02').hasClass('event-repeat')).to.be.true;
             expect($html.find('.calendar-day-2018-01-09').hasClass('event-repeat')).to.be.true;
             expect($html.find('.calendar-day-2018-01-16').hasClass('event-repeat')).to.be.true;
             expect($html.find('.calendar-day-2018-01-23').hasClass('event-repeat')).to.be.true;
@@ -975,7 +975,6 @@ describe('EventCalendar', () => {
 
         it('should store the recur pattern in the clndr instance', () => {
             expect(eventCalendar.getRecurPattern().rules[0].measure).to.equal('daysOfWeek');
-            expect(eventCalendar.getRecurPattern().rules[0].units['1']).to.be.true;
         });
 
         it('should apply the repeat styling to other specified weekdays', () => {
@@ -983,8 +982,8 @@ describe('EventCalendar', () => {
             
             let $days = $html.find('.day.event-repeat');
 
-            expect($days.length).to.equal(8);
-            expect($html.find('.calendar-day-2018-01-02').hasClass('event-repeat')).to.be.false;
+            expect($days.length).to.equal(9);
+            expect($html.find('.calendar-day-2018-01-02').hasClass('event-repeat')).to.be.true;
             expect($html.find('.calendar-day-2018-01-09').hasClass('event-repeat')).to.be.true;
             expect($html.find('.calendar-day-2018-01-16').hasClass('event-repeat')).to.be.true;
             expect($html.find('.calendar-day-2018-01-23').hasClass('event-repeat')).to.be.true;
@@ -1076,8 +1075,8 @@ describe('EventCalendar', () => {
         it('should apply the repeat styling', () => {
             let $days = $html.find('.day.event-repeat');
 
-            expect($days.length).to.equal(2);
-            expect($html.find('.calendar-day-2018-01-02').hasClass('event-repeat')).to.be.false;
+            expect($days.length).to.equal(3);
+            expect($html.find('.calendar-day-2018-01-02').hasClass('event-repeat')).to.be.true;
             expect($html.find('.calendar-day-2018-01-16').hasClass('event-repeat')).to.be.true;
             expect($html.find('.calendar-day-2018-01-30').hasClass('event-repeat')).to.be.true;
         });
