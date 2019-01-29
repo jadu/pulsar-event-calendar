@@ -1061,6 +1061,30 @@ describe('EventCalendar', () => {
     });
 
 
+    describe('choosing the ’weekly’ pattern with pre-selected weekdays', () => {
+        beforeEach(() => {
+            $html.find('.js-ercal-repeat').val('weekly');
+            $html.find('[value="2"]').prop('checked', true);
+            eventCalendar.init({
+                startDate: '2019-02-01',
+            });
+        });
+
+        it('should select the current weekday in the weekday picker', () => {
+            let dow = moment(new Date()).day();
+
+            expect($html.find('[value="' + dow + '"]').prop('checked')).to.be.true;
+        });
+
+        it('should select the pre-selected weekdays', () => {
+            expect($html.find('.calendar-day-2019-02-05').hasClass('event-repeat')).to.be.true;
+            expect($html.find('.calendar-day-2019-02-12').hasClass('event-repeat')).to.be.true;
+            expect($html.find('.calendar-day-2019-02-19').hasClass('event-repeat')).to.be.true;
+            expect($html.find('.calendar-day-2019-02-26').hasClass('event-repeat')).to.be.true;
+        });
+    });
+
+
     describe('choosing the ’fortnight’ pattern', () => {
         beforeEach(() => {
             eventCalendar.init({

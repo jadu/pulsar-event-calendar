@@ -472,9 +472,6 @@ class EventCalendar {
             case 'day':
                 newPattern = selectedDate.recur().every(1).days();
                 break;
-            case 'weekly':
-                newPattern = selectedDate.recur().every(1).weeks();
-                break;
             case 'weekdays':
                 newPattern = selectedDate.recur().every(weekdays).daysOfWeek();
                 break
