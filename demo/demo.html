@@ -13,7 +13,7 @@
     <div class="form__group">
         <label for="ercal-start" class="control__label">Event date</label>
         <div class="controls">
-            <input type="text" id="ercal-start" class="js-ercal-start">
+            <input type="text" id="ercal-start" class="js-ercal-start" value="01/02/2019">
         </div>
     </div>
     
@@ -24,7 +24,7 @@
         <select id="ercal-repeat" class="js-ercal-repeat">
             <option value="1day">No repeat</option>
             <option value="daily">Daily</option>
-            <option value="weekly">Weekly</option>
+            <option value="weekly" selected>Weekly</option>
             <option value="fortnight">Every two weeks</option>
             <option value="monthly-day">Monthly, on this day of the month</option>
             <option value="monthly-date">Monthly, on this date</option>
@@ -39,7 +39,7 @@
             <span aria-label="Monday">MO</span>
         </label>
         <label>
-            <input value="2" name="ercal-weekdays" type="checkbox">
+            <input value="2" name="ercal-weekdays" type="checkbox" checked>
             <span aria-label="Tuesday">TU</span>
         </label>
         <label>
@@ -47,7 +47,7 @@
             <span aria-label="Wednesday">WE</span>
         </label>
         <label>
-            <input value="4" name="ercal-weekdays" type="checkbox">
+            <input value="4" name="ercal-weekdays" type="checkbox" checked>
             <span aria-label="Thursday">TH</span>
         </label>
         <label>
@@ -55,7 +55,7 @@
             <span aria-label="Friday">FR</span>
         </label>
         <label>
-            <input value="6" name="ercal-weekdays" type="checkbox">
+            <input value="6" name="ercal-weekdays" type="checkbox" checked>
             <span aria-label="Saturday">SA</span>
         </label>
         <label>

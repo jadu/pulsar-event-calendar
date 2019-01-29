@@ -974,7 +974,7 @@ describe('EventCalendar', () => {
         });
 
         it('should store the recur pattern in the clndr instance', () => {
-            expect(eventCalendar.getRecurPattern().rules[0].measure).to.equal('weeks');
+            expect(eventCalendar.getRecurPattern().rules[0].measure).to.equal('daysOfWeek');
             expect(eventCalendar.getRecurPattern().rules[0].units['1']).to.be.true;
         });
 

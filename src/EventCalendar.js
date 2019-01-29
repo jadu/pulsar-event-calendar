@@ -282,12 +282,13 @@ class EventCalendar {
 
         // Recalculate upcoming occurences based on the pattern dropdown
         _self.$patternField.on('change', _self.applyPattern.bind(_self));
-        _self.applyPattern();
 
         // Watch for changes to the weekday picker (only visible when the pattern is `weekly`)
         _self.$html.find('[name="ercal-weekdays"]').on('change', function() {
             _self.toggleWeekday();
         });
+
+        _self.applyPattern();
     }
 
     /**
@@ -311,30 +312,30 @@ class EventCalendar {
 
         // Show the weekday picker if the pattern is `weekly`
         if (pattern === 'weekly') {
-            // Uncheck all weekday selections
-            _self.$html.find('[name="ercal-weekdays"]').prop('checked', false);
-
             // Choose the weekday based on the startDate
             _self.$html.find('[name="ercal-weekdays"][value="' + moment(_self.clndr.options.constraints.startDate, _self.dateFormatInternal).day() + '"]').prop('checked', true);
-
             _self.$weekdayPicker.show();
+            _self.toggleWeekday();
         }
         else {
             _self.$html.find('[name="ercal-weekdays"]').prop('checked', false); 
             _self.$weekdayPicker.hide();
         }
 
-        // Unpaint the currently stored pattern
-        _self.paintMonth(_self.clndr.month, 'clear');
+        // If we're using the weekly pattern, this will have been painted appropriately before this point
+        if (pattern !== 'weekly') {
+            // Unpaint the currently stored pattern
+            _self.paintMonth(_self.clndr.month, 'clear');
 
-        /*
-            Set the new recurrence pattern
+            /*
+                Set the new recurrence pattern
 
-            Any dates in the datesToAdd / datesToDel collections will maintain their state
-            and override the pattern
-        */
-        _self.setPattern(pattern);
-        _self.paintMonth(_self.clndr.month, 'repeat-on');
+                Any dates in the datesToAdd / datesToDel collections will maintain their state
+                and override the pattern
+            */
+            _self.setPattern(pattern);
+            _self.paintMonth(_self.clndr.month, 'repeat-on');
+        }
     }
 
     /**
@@ -502,7 +503,7 @@ class EventCalendar {
      * 
      * @param {string} method `repeat-on` will paint the dates, `clear` will unpaint them
      */
-    paintRepeatPattern (method) {    
+    paintRepeatPattern (method) {
         let _self = this,
             paintMethod = method ? method : 'repeat-on',
             repeatEnd = (moment(_self.clndr.options.constraints.endDate, _self.dateFormatInternal).isBefore(_self.clndr.intervalEnd)) ? _self.clndr.options.constraints.endDate : _self.clndr.intervalEnd,
