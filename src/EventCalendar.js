@@ -488,9 +488,6 @@ class EventCalendar {
             case 'monthly-date':
                 newPattern = selectedDate.recur().every(1).months();
                 break;
-            case 'annually':
-                newPattern = selectedDate.recur().every(1).year();
-                break;
             default:
                 newPattern = null;
                 break;

@@ -24,7 +24,6 @@ describe('EventCalendar', () => {
             <option value="fortnight">Every two weeks</option>
             <option value="monthly-day">Monthly, on this day of the month</option>
             <option value="monthly-date">Monthly, on this date</option>
-            <option value="annually">Every year</option>
             <option value="foo">This option should not exist</option>
         </select>
         <fieldset class="js-ercal-weekdays" style="display: none;">
@@ -1285,83 +1284,6 @@ describe('EventCalendar', () => {
             let dates = eventCalendar.getDates();
 
             expect(dates.datesToDel[0]._i).to.equal('2018-02-09');
-        });
-    });
-
-
-    describe('choosing the ’annually’ pattern', () => {
-        beforeEach(() => {
-            eventCalendar.init({
-                startDate: '2018-01-02',
-                endDate: '2019-02-27',
-                events: [{ date: '2018-01-10' }]
-            });
-
-            $html.find('.js-ercal-repeat').val('annually').trigger('change');
-        });
-
-        it('should store the recur pattern in the clndr instance', () => {
-            expect(eventCalendar.getRecurPattern().rules[0].measure).to.equal('years');
-            expect(eventCalendar.getRecurPattern().rules[0].units['1']).to.be.true;
-        });
-
-        it('should not apply the repeat styling to dates before the startDate', () => {
-            expect($html.find('.calendar-day-2018-01-01').hasClass('event-repeat')).to.be.false;
-        });
-
-        it('should not remove the event class from preexisting events', () => {
-            expect($html.find('.calendar-day-2018-01-10').hasClass('event')).to.be.true;
-        });
-
-        it('should also repaint the next year', () => {
-            for (var i = 0; i < 12; i++) {
-                $html.find('.clndr-next-button').click();
-            }
-
-            let $days = $html.find('.day.event-repeat');
-
-            expect($days.length).to.equal(1);
-            expect($html.find('.calendar-day-2019-01-02').hasClass('event-repeat')).to.be.true;
-        });
-
-        it('should not apply the repeat styling to dates after the endDate', () => {
-            $html.find('.clndr-next-button').click();
-
-            expect($html.find('.calendar-day-2018-02-28').hasClass('event-repeat')).to.be.false;
-        });
-
-        it('should not add any dates to the datesToAdd and datesToDel arrays', () => {
-            let dates = eventCalendar.getDates();
-
-            expect(dates.datesToAdd.length).to.equal(0);
-            expect(dates.datesToDel.length).to.equal(0);
-        });
-
-        it('should add toDelete styling to an item when clicked', () => {
-            for (var i = 0; i < 12; i++) {
-                $html.find('.clndr-next-button').click();
-            }
-
-            let $target = $html.find('[data-day="2019-01-02"]'),
-                $parent = $html.find('.calendar-day-2019-01-02');
-
-            $target.click();
-
-            expect($parent.hasClass('event-del')).to.be.true;
-        });
-
-        it('should add clicked dates to the list of dates to delete', () => {
-            for (var i = 0; i < 12; i++) {
-                $html.find('.clndr-next-button').click();
-            }
-
-            let $target = $html.find('[data-day="2019-01-02"]');
-
-            $target.click();
-
-            let dates = eventCalendar.getDates();
-
-            expect(dates.datesToDel[0]._i).to.equal('2019-01-02');
         });
     });
 
