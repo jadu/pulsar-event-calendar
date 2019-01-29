@@ -493,7 +493,8 @@ class EventCalendar {
                 newPattern = null;
                 break;
         }
-
+console.log(selectedDate);
+console.log(newPattern);
         _self.recurPattern = newPattern;
     }
 
@@ -513,7 +514,7 @@ class EventCalendar {
                                     .all();
 
         // Drop `today` from this array so that it's not styled as a recurrence                                       
-        recurDatesThisMonth.shift();
+        // recurDatesThisMonth.shift();
 
         $.each(recurDatesThisMonth, function() {
             switch (paintMethod) {
