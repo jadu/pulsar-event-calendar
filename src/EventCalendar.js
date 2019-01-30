@@ -120,7 +120,7 @@ class EventCalendar {
 
         // Make sure the endDate isn't before the startDate or anything silly like that
         if (
-            (options.endDate !== 'undefined' && options.startDate !== 'undefined') &&
+            (typeof options.endDate !== 'undefined' && typeof options.startDate !== 'undefined') &&
             moment(options.endDate, _self.dateFormatInternal).isBefore(moment(options.startDate, _self.dateFormatInternal).format(_self.dateFormatInternal))
         ) {
             throw new Error('End date can not be before the start date');
@@ -133,8 +133,6 @@ class EventCalendar {
         else {
             options.endDate = moment(new Date(), _self.dateFormatInternal).add(15, 'years').format(_self.dateFormatInternal);
         }
-
-        
 
         // Process any datesToAdd passed as init() options, converting them to moments and adding to the array
         if (typeof options.datesToAdd !== 'undefined' && options.datesToAdd.length) {
