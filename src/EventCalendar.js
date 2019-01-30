@@ -127,7 +127,7 @@ class EventCalendar {
         }
 
         // If endDate isn't supplied, set it to `today + 15 years`
-        if (typeof options.endDate !== 'undefined') {
+        if (options.endDate !== 'Invalid date') {
             options.endDate = _self.internalDate(options.endDate);
         }
         else {
@@ -151,12 +151,11 @@ class EventCalendar {
         if (typeof options.datesToDel !== 'undefined' && options.datesToDel.length) {
             $.each(options.datesToDel, function() {
                 let dateToDel = moment(this, _self.dateFormatInternal);
-                
+       
                 if (dateToDel.isBefore(moment(options.endDate, _self.dateFormatInternal))) {
                     _self.datesToDel.push(dateToDel);
                 }
             });
-            
             _self.originalDatesToDel = _self.datesToDel;
         }
 
