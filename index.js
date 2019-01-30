@@ -11,13 +11,12 @@ $(function () {
 
     let toAdd = [
         '2019-02-05',
-        // '2019-02-06',
-        // '2019-02-07'
+        '2019-02-06',
+        '2019-02-07'
     ];
 
     let toDel = [
-        // '2019-02-07',
-        // '2019-02-08',
+        '2019-02-08',
         '2019-02-09'
     ];
 
@@ -26,11 +25,11 @@ $(function () {
      */
     calendar.init({
         startDateField: '.js-ercal-start',
-        endDateField: '.js-ercal-end'
+        endDateField: '.js-ercal-end',
         // startDate: '2019-02-06',
         // endDate: '2019-02-07'
-        // datesToAdd: toAdd,
-        // datesToDel: toDel
+        datesToAdd: toAdd,
+        datesToDel: toDel
         // events: myEvents,
     });
 

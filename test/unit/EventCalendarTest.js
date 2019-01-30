@@ -221,7 +221,6 @@ describe('EventCalendar', () => {
         });
 
         it('should have the correct week offset', () => {
-            console.log($html.find('tbody td:first-of-type').attr('class'));
             expect($html.find('tbody > tr:first-of-type > td:first-of-type').hasClass('calendar-day-2018-01-01')).to.be.true;
         });
 
@@ -1071,9 +1070,7 @@ describe('EventCalendar', () => {
         });
 
         it('should select the current weekday in the weekday picker', () => {
-            let dow = moment(new Date()).day();
-
-            expect($html.find('[value="' + dow + '"]').prop('checked')).to.be.true;
+            expect($html.find('[value="5"]').prop('checked')).to.be.true;
         });
 
         it('should select the pre-selected weekdays', () => {
@@ -1645,7 +1642,6 @@ describe('EventCalendar', () => {
 
         it('should constrain the max value on the start date field to today + 15 years', () => {
             let startDatePlus15Years = moment(new Date()).add(15, 'years').format('YYYY-MM-DD');
-
             expect($html.find('.js-ercal-start').attr('max')).to.equal(startDatePlus15Years);
         });
     });
