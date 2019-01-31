@@ -6,6 +6,8 @@
 
 import $ from 'jquery';
 import moment from 'moment';
+import 'moment/locale/en-gb';
+import 'moment/locale/en-au';
 import 'moment-recur';
 window._ = require('underscore');
 import 'clndr';
@@ -15,19 +17,32 @@ class EventCalendar {
     /**
      * @constructor
      * @param {jQuery} $html jQuery wrapper of the html node
-     * @param {jQuery} clndr The clndr instance that is in use
      */
     constructor ($html) {
+        this.clndr;
         this.$html = $html;
-        this.$patternField;
-        this.$ariaLiveRegion;
         this.dateFormat = 'YYYY-MM-DD';
         this.dateFormatLong = 'D MMMM, YYYY';
-        this.clndr;
+        this.today = moment(new Date());
+        this.$ariaLiveRegion;
+        this.$patternField;
+        this.currentCalendarMonth;
+        this.originalStartDate;
+        this.originalEndDate;
+        this.$startDateField;
+        this.$endDateField;
+        this.$endDateFieldContainer;
+        this.$weekdayPicker;
     }
 
     /**
      * Initalises the event calendar providing the correct markup is present within the DOM (as per README.md).
+     * 
+     * Example usage: 
+     *  eventCalendar.init({
+     *      startDate: '2019-07-04',
+     *      endDate:   '2020-07-04'
+     * })
      * 
      * @param {string} startDate Specifies the month and year which will be initially focused by the calendar, dates 
      * before this will not be interactive. Will default to the user's current date if not supplied or is null 
@@ -42,24 +57,73 @@ class EventCalendar {
      *    { date: 'YYYY-MM-DD' }
      * ];
      */
-    init (startDate, endDate, events) {
-        if (typeof this.$html === 'undefined' || !this.$html.length) {
+    init (options = {}) {
+        let _self = this;
+
+        if (typeof _self.$html === 'undefined' || !_self.$html.length) {
             throw new Error('$html must be passed to EventCalendar');
         }   
 
-        let $container = this.$html.find('.js-event-calendar');
+        let $container = _self.$html.find('.js-event-calendar');
 
         if (!$container.length) {
             throw new Error('EventCalendar requires a .js-event-calendar element present in the DOM');
         }
 
-        let _self = this,
-            clndrSelected = startDate ? moment(startDate) : moment(new Date()),
-            clndrStart = startDate ? moment(startDate) : moment(new Date()),
-            clndrEnd = endDate ? moment(endDate) : moment(new Date()).add(15, 'years'),
-            clndrEvents = events ? events : [],
-            $weekdayPicker = _self.$html.find('.js-ercal-weekdays'),
-            clndrTemplate = `
+        /**
+         * It's possible to provide conflicting start dates via startDate init option and startDateField.val, 
+         * they will be used in this priority order:
+         * 
+         *  1. startDateField.val (visible to the user in the UI so takes priority)
+         *  2. startDate
+         *  3. today
+         */
+        if (typeof options.startDateField !== 'undefined' && options.startDateField.length) {
+            _self.$startDateField = _self.$html.find(options.startDateField);
+            options.startDate = _self.$startDateField.val().length ? _self.$startDateField.val() : options.startDate;
+
+            // Set the startDateField value in case it has been passed as an init option
+            _self.$startDateField.val(options.startDate);
+        }
+
+        /**
+         * It's possible to provide conflicting end dates via endDate init option and endDateField.val, 
+         * they will be used in this priority order:
+         * 
+         *  1. endDateField.val (visible to the user in the UI so takes priority)
+         *  2. endDate
+         *  3. startDate + 15 years
+         */
+        if (typeof options.endDateField !== 'undefined' && options.endDateField.length) {
+            _self.$endDateField = _self.$html.find(options.endDateField);
+            options.endDate = _self.$endDateField.val() ? _self.$endDateField.val() : moment(options.startDate).add(15, 'years').format(_self.dateFormat);
+
+            // Store reference to the end date field container, as it will be shown/hidden when choosing patterns
+            _self.$endDateFieldContainer = _self.$endDateField.closest('.form__group');
+        }
+
+        // Make sure the endDate isn't before the startDate or anything silly like that
+        if (
+            (typeof options.endDate !== 'undefined' && typeof options.startDate !== 'undefined') &&
+            moment(options.endDate).isBefore(options.startDate)
+        ) {
+            throw new Error('End date can not be before the start date');
+        }
+
+        // Default to UK locale if none supplied, other accepted values are `en_US` or `en_AU` due to these locale files
+        // being `required` into the component
+        if (typeof options.locale === 'undefined' || options.locale === '') {
+            options.locale = 'en_GB';
+        }
+
+        // Set the locale
+        moment.locale(options.locale);
+
+        let clndrSelected = options.startDate ? options.startDate : _self.today.format(_self.dateFormat),
+            clndrStart = options.startDate ? options.startDate : _self.today.format(_self.dateFormat),
+            clndrEnd = options.endDate ? options.endDate : moment(new Date()).add(15, 'years').format(_self.dateFormat),
+            clndrEvents = options.events ? options.events : [],
+            clndrTemplate = options.template ? options.template : `
                 <div class='clndr-controls' role='navigation'>
                     <div class='clndr-control-button'>
                         <button class='clndr-previous-button' aria-controls='event-calendar' aria-label='Go to the previous month'>&lsaquo;</button>
@@ -106,17 +170,22 @@ class EventCalendar {
                 </table>
                 <div class="event-calendar-review">
                     <ul class="event-calendar-summary">
-                        <li><i class="fa fa-repeat icon--success"></i> Repeat pattern</li>
-                        <li><i class="fa fa-plus-circle icon--success"></i> Additional repeat
+                        <li><i class="icon-repeat icon--success"></i> Repeat pattern</li>
+                        <li><i class="icon-plus-circle icon--success"></i> Additional repeat
                             <span class="js-dates-to-add label label--success" style="display: none;"></span></li>
-                        <li><i class="fa fa-ban icon--danger"></i> Event will <u>not</u> repeat
+                        <li><i class="icon-ban icon--danger"></i> Event will <u>not</u> repeat
                             <span class="js-dates-to-del label label--danger" style="display: none;"></span></li>
                     </ul>
-                    <button class="js-ercal-reset">Reset Calendar</button>
+                    <button class="btn js-ercal-reset">Reset Calendar</button>
                 </div>`;
 
         let precompiledTemplate = _.template(clndrTemplate);
 
+        // Store original values for start and end dates, used when resetCalendar is triggered
+        _self.originalStartDate = clndrStart;
+        _self.originalEndDate = clndrEnd;
+
+        // Construct the calendar
         _self.clndr = $container.clndr({
             clickEvents: {
                 click: _self.toggleDay.bind(_self),
@@ -132,7 +201,7 @@ class EventCalendar {
                 datesToDel: []
             },
             moment: moment,
-            selectedDate: clndrSelected,
+            selectedDate: moment(clndrSelected),
             showAdjacentMonths: false,
             render: function (data) {
                 // monthNumerical is used to create the data-day attribute on day buttons
@@ -142,8 +211,7 @@ class EventCalendar {
                 data.ariaUnselected = 'Unselected.';
                 return precompiledTemplate(data);
             },
-            startWithMonth: clndrStart,
-            weekOffset: 1
+            startWithMonth: moment(clndrStart)
         });
 
         // Reset all selected dates
@@ -157,38 +225,75 @@ class EventCalendar {
         // Store a reference to the aria alert status element used to update screen readers when things change
         _self.$ariaLiveRegion = _self.$html.find('.js-ercal-status');
 
+        // Store a reference to the weekday picker, which is shown if the pattern is 'weekly'
+        _self.$weekdayPicker = _self.$html.find('.js-ercal-weekdays');
+
+        // If a startDate field is defined, bind a change event to fire When a new start date is chosen
+        if (typeof _self.$startDateField !== 'undefined') {
+            _self.setStartDateMaximum();
+            _self.$startDateField.on('change', _self.changeStartDate.bind(_self));
+        }
+
+        // If an endDate field is defined, bind a change event to fire When a new end date is chosen
+        if (typeof _self.$endDateField !== 'undefined') {
+            _self.setEndDateMinimum();
+            _self.$endDateField.on('change', _self.changeEndDate.bind(_self));
+        }
+
         // Recalculate upcoming occurences based on the pattern dropdown
-        _self.$patternField.on('change', function() {
-            let $elem = $(this),
-                pattern = $elem.val();
-
-            // Show the weekday picker if the pattern is `weekly`
-            if (pattern === 'weekly') {
-                _self.$html.find('[name="ercal-weekdays"][value="' + clndrStart.day() + '"]').prop('checked', true);
-                $weekdayPicker.show();
-            }
-            else {
-                _self.$html.find('[name="ercal-weekdays"]').prop('checked', false); 
-                $weekdayPicker.hide();
-            }
-
-            // Unpaint the currently stored pattern
-            _self.paintMonth(_self.clndr.month, 'clear');
-
-            /*
-                Set the new recurrence pattern
-
-                Any dates in the datesToAdd / datesToDel collections will maintain their state
-                and override the pattern
-            */
-            _self.setPattern(pattern);
-            _self.paintMonth(_self.clndr.month, 'repeat-on');
-        });
+        _self.$patternField.on('change', _self.applyPattern.bind(_self));
 
         // Watch for changes to the weekday picker (only visible when the pattern is `weekly`)
         _self.$html.find('[name="ercal-weekdays"]').on('change', function() {
             _self.toggleWeekday();
         });
+    }
+
+    /**
+     * Takes the value stored in the repeat pattern field and shows the weekday picker if required.
+     */
+    applyPattern () {
+        let _self = this,
+            pattern = _self.$patternField.val()
+
+        // Toggle visibility of endDate field by showing/hiding it's container (based on Pulsar markup) 
+        if (typeof _self.$endDateFieldContainer !== 'undefined') {
+            if (pattern === 'no-repeat') {
+                _self.$endDateFieldContainer.hide();
+                _self.$endDateField.attr('disabled', true);
+            }
+            else {
+                _self.$endDateFieldContainer.show();
+                _self.$endDateField.attr('disabled', false);
+            }
+        }
+
+        // Show the weekday picker if the pattern is `weekly`
+        if (pattern === 'weekly') {
+            // Uncheck all weekday selections
+            _self.$html.find('[name="ercal-weekdays"]').prop('checked', false);
+
+            // Choose the weekday based on the startDate
+            _self.$html.find('[name="ercal-weekdays"][value="' + moment(_self.clndr.options.constraints.startDate).day() + '"]').prop('checked', true);
+
+            _self.$weekdayPicker.show();
+        }
+        else {
+            _self.$html.find('[name="ercal-weekdays"]').prop('checked', false); 
+            _self.$weekdayPicker.hide();
+        }
+
+        // Unpaint the currently stored pattern
+        _self.paintMonth(_self.clndr.month, 'clear');
+
+        /*
+            Set the new recurrence pattern
+
+            Any dates in the datesToAdd / datesToDel collections will maintain their state
+            and override the pattern
+        */
+        _self.setPattern(pattern);
+        _self.paintMonth(_self.clndr.month, 'repeat-on');
     }
 
     /**
@@ -232,8 +337,20 @@ class EventCalendar {
             return;
         }
     
+        // If a date is selected
+        if ($elem.hasClass('event')) {
+            if ($elem.hasClass('event-del')) {
+                // Restore initial styling by removing it from the datesToDel collection
+                _self.clndr.options.extras.datesToDel = datesToDel.filter(EventCalendar.doesNotMatchDate.bind(this, date));
+            } 
+            else {
+                // Set it to [4. To Delete] by adding it to the datesToDel collection
+                datesToDel.push(date);
+            }
+        }
+
         // If a date is not already selected
-        if (!$elem.hasClass('event')) {
+        else {
             // If the button had 'event-add', then a pattern applied over the top
             if ($elem.hasClass('event-add') && $elem.hasClass('event-repeat')) {
                 // Unset it from [3. To Add] by removing it from the datesToAdd collection
@@ -277,18 +394,6 @@ class EventCalendar {
             }
         }
 
-        // If a date is selected
-        else if ($elem.hasClass('event')) {
-            if (!$elem.hasClass('event-del')) {
-                // Set it to [4. To Delete] by adding it to the datesToDel collection
-                datesToDel.push(date);
-            }
-            else if ($elem.hasClass('event-del')) {
-                // Restore initial styling by removing it from the datesToDel collection
-                _self.clndr.options.extras.datesToDel = datesToDel.filter(EventCalendar.doesNotMatchDate.bind(this, date));
-            }
-        }
-
         _self.paintMonth(_self.clndr.month);
         _self.updateReview();
     }
@@ -302,29 +407,32 @@ class EventCalendar {
      */
     setPattern (pattern, weekdays) {
         let _self = this,
+            selectedDate = _self.clndr.options.selectedDate,
             newPattern;
-   
+
         switch (pattern) {
             case 'daily':
-                newPattern = _self.clndr.options.selectedDate.recur().every(1).days();
+                newPattern = selectedDate.recur().every(1).days();
                 break;
             case 'weekly':
-                newPattern = _self.clndr.options.selectedDate.recur().every(1).weeks();
+                newPattern = selectedDate.recur().every(1).weeks();
                 break;
             case 'weekdays':
-                newPattern = _self.clndr.options.selectedDate.recur().every(weekdays).daysOfWeek();
+                newPattern = selectedDate.recur().every(weekdays).daysOfWeek();
                 break
             case 'two-weekly':
-                newPattern = _self.clndr.options.selectedDate.recur().every(2).weeks();
+                newPattern = selectedDate.recur().every(2).weeks();
                 break;
             case 'monthly-day':
-                newPattern = _self.clndr.options.selectedDate.recur().every(_self.clndr.options.selectedDate.day()).daysOfWeek().every(0).weeksOfMonthByDay();
+                newPattern = selectedDate.recur()
+                                .every(selectedDate.day()).daysOfWeek()
+                                .every(selectedDate.monthWeekByDay()).weeksOfMonthByDay();
                 break;
             case 'monthly-date':
-                newPattern = _self.clndr.options.selectedDate.recur().every(1).months();
+                newPattern = selectedDate.recur().every(1).months();
                 break;
             case 'annually':
-                newPattern = _self.clndr.options.selectedDate.recur().every(1).year();
+                newPattern = selectedDate.recur().every(1).year();
                 break;
             default:
                 newPattern = null;
@@ -371,6 +479,9 @@ class EventCalendar {
      */
     paintMonth (month, method) {
         let _self = this;
+        
+        // Store currently viewed month, used when changing endDate to check if we need to refocus the calendar
+        _self.currentCalendarMonth = month;
 
         // Unpaint the entire month, used to catch any dates resetting to neutral
         _self.styleClearAll();
@@ -428,7 +539,7 @@ class EventCalendar {
         let _self = this;
 
         // Protect against misconfiguration
-        if (_self.$ariaLiveRegion === undefined) {
+        if (!_self.$ariaLiveRegion.length) {
             return;
         }
 
@@ -492,50 +603,20 @@ class EventCalendar {
         let _self = this,
             $elems = _self.clndr.element.find('.day-contents');
 
-            $elems.each(function() {
-                let $elem = $(this),
-                    $elemParent = $elem.parent(),
-                    date = moment($elem.data('day')).format(_self.dateFormatLong),
-                    ariaLabel = 'Unselected';
+        $elems.each(function() {
+            let $elem = $(this),
+                $elemParent = $elem.parent(),
+                date = moment($elem.data('day')).format(_self.dateFormatLong),
+                ariaLabel = 'Unselected';
 
-                // If event was passed in the `events` array, it will be reset back to `.selected` and needs labelling
-                if ($elemParent.attr('class').indexOf('event') !== -1) {
-                    ariaLabel = 'Selected. Event will repeat on this day';
-                }
+            // If event was passed in the `events` array, it will be reset back to `.selected` and needs labelling
+            if ($elemParent.attr('class').indexOf('event') !== -1) {
+                ariaLabel = 'Selected. Event will repeat on this day';
+            }
 
-                $elem.attr('aria-label',  date + '. ' + ariaLabel);
-                $elemParent.removeClass('event-add event-del event-repeat');
-            });
-        }
-
-    /**
-     * Check whether `date` is in the same month as `dateToCompareTo`
-     * 
-     * @param {moment} dateToCompareTo Haystack
-     * @param {moment} date Needle
-     */
-    static isInMonth (dateToCompareTo, date) {
-        return date.month() === dateToCompareTo.month();
-    }
-    
-    /**
-     * Check whether `date` is in the same year as `dateToCompareTo`
-     * 
-     * @param {moment} dateToCompareTo Haystack
-     * @param {moment} date Needle
-     */
-    static isInYear (dateToCompareTo, date) {
-        return date.year() === dateToCompareTo.year();
-    }
-
-    /**
-     * Check whether two moment instances are not the same date
-     * 
-     * @param {moment} a Haystack
-     * @param {moment} b Needle
-     */
-    static doesNotMatchDate (a, b) {
-        return a.format(this.dateFormat) != b.format(this.dateFormat);
+            $elem.attr('aria-label',  date + '. ' + ariaLabel);
+            $elemParent.removeClass('event-add event-del event-repeat');
+        });
     }
     
     /**
@@ -578,16 +659,6 @@ class EventCalendar {
     }
 
     /**
-     * Pluralises a string given a quantity of 'things'.
-     * 
-     * @param {string} noun The word to pluralise
-     * @param {integer} quantity The quantity to determine whether to pluralise
-     */
-    pluralise (noun, quantity) {
-        return quantity > 1 ? noun + 's' : noun;
-    }
-
-    /**
      * Reverts all user changes to their initial state (when the calendar was initialised) and return the user to the 
      * initial view the calendar was loaded on (either `today` or the `startDate`).
      */
@@ -597,19 +668,202 @@ class EventCalendar {
         // Empty the lists of changes to add/del
         _self.clndr.options.extras.datesToAdd = [];
         _self.clndr.options.extras.datesToDel = [];
+        
+        // Set the `selectedDate` to match the new start date
+        _self.clndr.options.selectedDate = moment(_self.originalStartDate);
+
+        // Reset start date to original value
+        _self.clndr.options.constraints.startDate = _self.originalStartDate;
+
+        if (typeof _self.$startDateField !== 'undefined') {
+            _self.$startDateField.val(_self.originalStartDate);
+        }
+        
+        // Reset end date to original value
+        _self.clndr.options.constraints.endDate = _self.originalEndDate;
+        
+        // Reset end date field to starting value, unless that's 'today + 15 years'
+        if (typeof _self.$endDateField !== 'undefined') {
+            if (_self.originalEndDate != moment(new Date()).add(15, 'years').format(_self.dateFormat)) {
+                _self.$endDateField.val(_self.originalEndDate);
+            }
+            else {
+                _self.$endDateField.val('');
+            }
+        }
 
         // Empty the stored recur pattern
         _self.setPattern(null);
 
         // Reset the recur pattern field
         _self.$patternField.val('no-repeat');
+        _self.applyPattern();
 
         // Remove the review changes information
         _self.updateReview();
 
+        // Reset the min/max values on the start/end date fields
+        _self.setStartDateMaximum();
+        _self.setEndDateMinimum();
+
         // Return to the initial view
         _self.clndr.setMonth(_self.clndr.options.startWithMonth.month());
     }
+
+    /**
+     * Fired when the startDateField changes and re-renders the calendar to start at the new startDate, removes any
+     * out-of-bounds dates from the datesToAdd / datesToDel arrays and repaints the month.
+     * 
+     * Clearing the startDateField will cause the calendar to be reset to the original start date.
+     */
+    changeStartDate () {
+        let _self = this,
+            datesToAdd = _self.clndr.options.extras.datesToAdd,
+            datesToDel = _self.clndr.options.extras.datesToDel,
+            newStartDate = _self.$startDateField.val().length ? _self.$startDateField.val() : _self.originalStartDate;
+
+        let newStartDateMoment = moment(newStartDate);
+
+        // Set the `selectedDate` to match the new start date
+        _self.clndr.options.selectedDate = newStartDateMoment;
+
+        // Make dates before the new start date inactive
+        _self.clndr.options.constraints.startDate = newStartDate;
+        
+        // Navigate to the month/year for the new start date
+        _self.clndr
+            .setYear(newStartDateMoment.year())
+            .setMonth(newStartDateMoment.month())
+            .render();
+
+        // Switch selected state styling from the old start date to the new one
+        _self.$html.find('.selected').removeClass('selected');
+        _self.$html.find('.calendar-day-' + newStartDate).addClass('selected');
+
+        // Remove now out-of-bounds dates from the datesToAdd array
+        const outOfBoundsDatesToAdd = _self.clndr.options.extras.datesToAdd
+            .filter(EventCalendar.isInYear.bind(this, newStartDateMoment))
+            .filter(EventCalendar.isInMonth.bind(this, newStartDateMoment))
+            .filter(EventCalendar.isBeforeDate.bind(this, newStartDateMoment));
+
+        $.each(outOfBoundsDatesToAdd, function(k, v) {
+            datesToAdd = datesToAdd.filter(EventCalendar.doesNotMatchDate.bind(this, v));
+        });
+
+        // Update stored datesToAdd with outOfBounds date removed
+        _self.clndr.options.extras.datesToAdd = datesToAdd;
+
+        // Remove now out-of-bounds dates from the datesToDel array
+        const outOfBoundsDatesToDel = _self.clndr.options.extras.datesToDel
+            .filter(EventCalendar.isInYear.bind(this, newStartDateMoment))
+            .filter(EventCalendar.isInMonth.bind(this, newStartDateMoment))
+            .filter(EventCalendar.isBeforeDate.bind(this, newStartDateMoment));
+
+        $.each(outOfBoundsDatesToDel, function(k, v) {
+            datesToDel = datesToDel.filter(EventCalendar.doesNotMatchDate.bind(this, v));
+        });
+
+        // Update stored datesToDel with outOfBounds date removed
+        _self.clndr.options.extras.datesToDel = datesToDel;
+
+        // If pattern is weekly, make sure the weekDay picker checks the correct weekday for the new start date
+        _self.applyPattern();
+
+        // Reset the endDateField `min` value to reflect the startDate value
+        _self.setEndDateMinimum();
+
+        // Update the review information to reflect changes to out-of-bound dates
+        _self.updateReview();
+
+        _self.paintMonth(_self.clndr.month);
+    }
+
+    /**
+     * Fired when the endDateField changes and re-renders the calendar to stop at the new endDate, removes any
+     * out-of-bounds dates from the datesToAdd / datesToDel arrays and repaints the month.
+     */
+    changeEndDate () {
+        let _self = this,
+            datesToAdd = _self.clndr.options.extras.datesToAdd,
+            datesToDel = _self.clndr.options.extras.datesToDel,
+            newEndDate = _self.$endDateField.val().length ? _self.$endDateField.val() : moment(new Date()).add(15, 'years').format(_self.dateFormat),
+            newEndDateMoment = newEndDate.length ? moment(newEndDate) : moment(new Date()).add(15, 'years');
+
+        // Update the endDate constraint before re-rendering
+        _self.clndr.options.constraints.endDate = newEndDate;
+
+        // Remove now out-of-bounds dates from the datesToAdd array
+        const outOfBoundsDatesToAdd = _self.clndr.options.extras.datesToAdd
+            .filter(EventCalendar.isInYear.bind(this, newEndDateMoment))
+            .filter(EventCalendar.isInMonth.bind(this, newEndDateMoment))
+            .filter(EventCalendar.isAfterDate.bind(this, newEndDateMoment));
+
+        $.each(outOfBoundsDatesToAdd, function(k, v) {
+            datesToAdd = datesToAdd.filter(EventCalendar.doesNotMatchDate.bind(this, v));
+        });
+
+        // Update stored datesToAdd with outOfBounds date removed
+        _self.clndr.options.extras.datesToAdd = datesToAdd;
+
+        // Remove now out-of-bounds dates from the datesToDel array
+        const outOfBoundsDatesToDel = _self.clndr.options.extras.datesToDel
+            .filter(EventCalendar.isInYear.bind(this, newEndDateMoment))
+            .filter(EventCalendar.isInMonth.bind(this, newEndDateMoment))
+            .filter(EventCalendar.isAfterDate.bind(this, newEndDateMoment));
+
+        $.each(outOfBoundsDatesToDel, function(k, v) {
+            datesToDel = datesToDel.filter(EventCalendar.doesNotMatchDate.bind(this, v));
+        });
+
+        // Update stored datesToDel with outOfBounds date removed
+        _self.clndr.options.extras.datesToDel = datesToDel;
+
+        // If chosen end date is before the currently focused month, then refocus the calendar
+        if (newEndDateMoment.isBefore(_self.currentCalendarMonth)) {
+            _self.clndr.setMonth(newEndDateMoment.month());
+        }
+
+        // Reset the startDateField `max` value to reflect the endDate value
+        _self.setStartDateMaximum();
+
+        // Update the review information to reflect changes to out-of-bound dates
+        _self.updateReview();
+
+        // Render the changes
+        _self.clndr.render();
+        _self.paintMonth(_self.clndr.month);
+    }
+
+    /**
+     * Updates the `min` value for the `endDateField` so that dates before the startDate cannot be chosen
+     */
+    setEndDateMinimum () {
+        let _self = this,
+            startDate = _self.clndr.options.constraints.startDate;
+
+        // Check for presence of `endDateField`
+        if (typeof _self.$endDateField === 'undefined') {
+            return;
+        }
+
+        _self.$endDateField.attr('min', startDate);
+    }
+
+    /**
+     * Updates the `max` value for the `startDateField` so that dates after the endDate cannot be chosen
+     */
+    setStartDateMaximum () {
+        let _self = this,
+            endDate = _self.clndr.options.constraints.endDate;
+
+        // Check for presence of `startDateField`
+        if (typeof _self.$startDateField === 'undefined') {
+            return;
+        }
+
+        _self.$startDateField.attr('max', endDate);
+    }
+
 
     /**
      * Retrieve the contents of the `datesToAdd` and `datesToDel` arrays.
@@ -626,6 +880,67 @@ class EventCalendar {
         let _self = this;
         return _self.recurPattern;
     }
+
+    /**
+     * Pluralises a string given a quantity of 'things'.
+     * 
+     * @param {string} noun The word to pluralise
+     * @param {integer} quantity The quantity to determine whether to pluralise
+     */
+    pluralise (noun, quantity) {
+        return quantity > 1 ? noun + 's' : noun;
+    }
+
+    /**
+     * Check whether the date of the month for `date` is before `dateToCompareTo`
+     * 
+     * @param {moment} dateToCompareTo Haystack
+     * @param {moment} date Needle
+     */
+    static isBeforeDate (dateToCompareTo, date) {
+        return date.date() < dateToCompareTo.date();
+    }
+
+    /**
+     * Check whether the date of the month for `date` is after `dateToCompareTo`
+     * 
+     * @param {moment} dateToCompareTo Haystack
+     * @param {moment} date Needle
+     */
+    static isAfterDate (dateToCompareTo, date) {
+        return date.date() > dateToCompareTo.date();
+    }
+
+    /**
+     * Check whether `date` is in the same month as `dateToCompareTo`
+     * 
+     * @param {moment} dateToCompareTo Haystack
+     * @param {moment} date Needle
+     */
+    static isInMonth (dateToCompareTo, date) {
+        return date.month() === dateToCompareTo.month();
+    }
+    
+    /**
+     * Check whether `date` is in the same year as `dateToCompareTo`
+     * 
+     * @param {moment} dateToCompareTo Haystack
+     * @param {moment} date Needle
+     */
+    static isInYear (dateToCompareTo, date) {
+        return date.year() === dateToCompareTo.year();
+    }
+
+    /**
+     * Check whether two moment instances are not the same date
+     * 
+     * @param {moment} a Haystack
+     * @param {moment} b Needle
+     */
+    static doesNotMatchDate (a, b) {
+        return a.format(this.dateFormat) != b.format(this.dateFormat);
+    }
+
 }
 
 module.exports = EventCalendar;

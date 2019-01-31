@@ -46,6 +46,7 @@ const EventCalendar = require('./src/EventCalendar');
 
 $(function () {
     const clndr = new EventCalendar($('html'));
+
     clndr.init();
 });
 ```
@@ -60,29 +61,78 @@ Include the Event Calendar styles into your existing Sass bundle.
 
 ## Usage
 
-### Start date (optional)
+### Start date as an init() option (optional)
 
 The initial date which will be selected within the calendar can be passed as an initialisation option.
 
 ```javascript
 $(function () {
-    let startDate = '2019-07-04';
-
     const clndr = new EventCalendar($('html'));
-    clndr.init(startDate);
+
+    clndr.init({
+        startDate: '2019-07-04'
+    });
 });
 ```
-
-Usually you would want to let the user choose a start date from a date field within the user interface, you can bind a change event to this field.
 
 If no start date is supplied, or the value is `null`, the calendar will default to `today`.
 
 ```javascript
 $(function () {
     const clndr = new EventCalendar($('html'));
+
     clndr.init();
 });
 ```
+
+### Locale
+
+The day of the week in which the calendar starts can be defined by the `locale` setting.
+
+United Kingdom `en_GB` and Australia `en_AU` locales will start the week on Monday.
+
+United States `en_US` will start the week on Sunday.
+
+```javascript
+$(function () {
+    const clndr = new EventCalendar($('html'));
+
+    clndr.init({
+        locale: 'en_US'
+    });
+});
+```
+
+### Start date field
+
+You can allow the user to choose and change the start date by providing a date field within the user interface. Change events will be bound to this field.
+
+```html
+<div class="form__group">
+    <label for="ercal-start" class="control__label">Event date</label>
+    <div class="controls">
+        <input type="date" id="ercal-start" class="js-ercal-start" />
+    </div>
+</div>
+```
+
+```javascript
+$(function () {
+    const clndr = new EventCalendar($('html'));
+
+    clndr.init({
+        startDateField: '.js-ercal-start'
+    });
+});
+```
+
+The following behaviour will be observed:
+
+* If `startDateField` has a value, this will be used as the start date
+* If `startDateField` does not have a value, and `startDate` is provided, this will populate the value for `startDateField`
+* If `startDateField` has no value, and `startDate` is not provided, the calendar will default to `today`
+
+When you choose a start date, the end date field (if supplied) will be constrained to prevent the user from choosing an end date that occurs before the start date.
 
 ## Selected events
 
@@ -90,32 +140,69 @@ To automatically populate a list of already selected events you can pass an arra
 
 ```javascript
 $(function () {
-    let events = [
+    let myEvents = [
         { date: '2019-07-25' },
         { date: '2019-07-26' },
         { date: '2019-08-01' }
     ];
 
     const clndr = new EventCalendar($('html'));
-    clndr.init(null, null, events);
+
+    clndr.init({
+        events: myEvents
+    });
 });
 ```
 
-## End Date (optional)
+## End Date as an init() option (optional)
 
 The Event Calendar can be constrained to not allow the user to navigate past a certain date. This defaults to `today + 15 years`.
 
-Pass a Moment compatible date (like `YYYY-MM-DD`) as the second option to the `init()` method.
+Pass a Moment compatible date (like `YYYY-MM-DD`) as the `endDate` option.
 
 ```javascript
 $(function () {
-    let startDate = '2019-07-04',
-        endDate = '2020-12-31';
-
     const clndr = new EventCalendar($('html'));
-    clndr.init(startDate, endDate);
+
+    clndr.init({
+        startDate: '2019-07-04',
+        endDate: '2020-12-31'
+    });
 });
 ```
+
+### End date field
+
+You can allow the user to choose and change the end date by providing a date field within the user interface. Change events will be bound to this field.
+
+This field should be hidden on page load, and will be shown if the user chooses a repeat pattern.
+
+```html
+<div class="form__group" style="display: none;">
+    <label for="ercal-end" class="control__label">End repeat on</label>
+    <div class="controls">
+        <input type="date" id="ercal-end" class="js-ercal-end" disabled />
+    </div>
+</div>
+```
+
+```javascript
+$(function () {
+    const clndr = new EventCalendar($('html'));
+
+    clndr.init({
+        endDateField: '.js-ercal-start'
+    });
+});
+```
+
+The following behaviour will be observed:
+
+* If the `endDateField` has a value, this will be used as the end date
+* If the `endDateField` does not have a value, and `endDate` is provided, this will populate the value for `endDateField`
+* If the `endDateField` has no value, and `endDate` is not provided, the calendar will default to `startDate + 15 years`
+
+When you choose an end date, the start date field (if supplied) will be constrained to prevent the user from choosing a start date that occurs after the end date.
 
 # Repeat pattern
 

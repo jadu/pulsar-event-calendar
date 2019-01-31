@@ -1,6 +1,3 @@
-$fa-font-path: '../../node_modules/font-awesome/fonts';
-@import '../../node_modules/font-awesome/scss/font-awesome';
-
 $gutter-width:          20px !default;
 $line-height-base:      24px !default;
 $margin-base:           10px !default;
@@ -114,12 +111,12 @@ $font-family-monospace: 'Courier New', 'Andale Mono', 'Consolas', monospace !def
             font-family: 'FontAwesome';
             font-weight: normal;
             height: 16px;
-            line-height: 16px;
+            line-height: 18px;
             position: absolute;
             right: 0;
             text-align: center;
             top: -6px;
-            width: 16px;
+            width: 17px;
         }
 
         &:hover {

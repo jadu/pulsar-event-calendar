@@ -9,13 +9,14 @@ describe('EventCalendar', () => {
     const clickEvent = $.Event('click');
     let $html,
         $body,
-        clndr,
         eventCalendar,
         eventCalendarWithoutHTML;
 
     beforeEach(() => {
         $html = $('<div></div>');
         $body = $(`<body>
+        <input type="date" class="js-ercal-start" />
+        <input type="date" class="js-ercal-end" />
         <select class="js-ercal-repeat">
             <option value="no-repeat">No repeat</option>
             <option value="daily">Daily</option>
@@ -72,7 +73,7 @@ describe('EventCalendar', () => {
         });
     
 		it('should throw an error if $html isn’t passed to the component', () => {
-			eventCalendarWithoutHTML = new EventCalendar(undefined);
+			eventCalendarWithoutHTML = new EventCalendar();
 
 			expect(() => {
                 eventCalendarWithoutHTML.init();
@@ -88,6 +89,32 @@ describe('EventCalendar', () => {
             }).to.throw('EventCalendar requires a .js-event-calendar element present in the DOM');
         });
 
+        it('should start the week on a Monday', () => {
+            expect($html.find('.header-day:first-of-type').text()).to.equal('M');
+        });
+    });
+
+
+    describe('Providing the en_US locale', () => {
+        beforeEach(() => {
+            eventCalendar.init({
+                locale: 'en_US'
+            });
+        });
+    
+        it('should start the week on a Sunday', () => {
+            expect($html.find('.header-day:first-of-type').text()).to.equal('S');
+        });
+    });
+
+
+    describe('Providing the en_AU locale', () => {
+        beforeEach(() => {
+            eventCalendar.init({
+                locale: 'en_AU'
+            });
+        });
+    
         it('should start the week on a Monday', () => {
             expect($html.find('.header-day:first-of-type').text()).to.equal('M');
         });
@@ -149,7 +176,7 @@ describe('EventCalendar', () => {
 
     describe('when a start date is provided', () => {
         beforeEach(() => {
-            eventCalendar.init('2018-01-02');
+            eventCalendar.init({startDate: '2018-01-02'});
         });
 
         it('should select the specified date', () => {
@@ -192,12 +219,19 @@ describe('EventCalendar', () => {
             console.log($html.find('tbody td:first-of-type').attr('class'));
             expect($html.find('tbody > tr:first-of-type > td:first-of-type').hasClass('calendar-day-2018-01-01')).to.be.true;
         });
+
+        it('should not have a max value on the start date field', () => {
+            expect(typeof $html.find('.js-ercal-start').attr('max')).to.equal('undefined');
+        });
     });
 
 
     describe('when an end date is provided', () => {
         beforeEach(() => {
-            eventCalendar.init('2018-01-05', '2018-01-10');
+            eventCalendar.init({
+                startDate: '2018-01-05',
+                endDate: '2018-01-10'
+            });
         });
 
         it('should select the specified date', () => {
@@ -236,7 +270,10 @@ describe('EventCalendar', () => {
 
     describe('passing events to the init() method', () => {
         beforeEach(() => {
-            eventCalendar.init('2018-07-01', null, [{ date: '2018-07-04' }]);
+            eventCalendar.init({
+                startDate: '2018-07-01',
+                events: [{ date: '2018-07-04' }]
+            });
         });
         
         it('should add the appropriate styling to the date', () => {
@@ -251,7 +288,9 @@ describe('EventCalendar', () => {
 
     describe('choosing a previously unselected date', () => {
         beforeEach(() => {
-            eventCalendar.init('2018-07-01');
+            eventCalendar.init({
+                startDate: '2018-07-01'
+            });
         });
         
         it('should add the appropriate styling to the target date', () => {
@@ -313,7 +352,10 @@ describe('EventCalendar', () => {
 
     describe('choosing multiple previously unselected dates', () => {
         beforeEach(() => {
-            eventCalendar.init('2018-07-01');
+            eventCalendar.init({
+                startDate: '2018-07-01'
+            });
+
             $html.find('[data-day="2018-07-04"]').click();
             $html.find('[data-day="2018-07-05"]').click();
         });
@@ -345,7 +387,10 @@ describe('EventCalendar', () => {
 
     describe('choosing then unchoosing a previously unselected date', () => {
         beforeEach(() => {
-            eventCalendar.init('2018-07-01');
+            eventCalendar.init({
+                startDate: '2018-07-01'
+            });
+
             $html.find('[data-day="2018-07-04"]').click();
             $html.find('[data-day="2018-07-04"]').click();
         });
@@ -385,7 +430,10 @@ describe('EventCalendar', () => {
 
     describe('choosing a previously selected date (one that was passed on init())', () => {
         beforeEach(() => {
-            eventCalendar.init('2018-07-01', null, [{ date: '2018-07-04' }]);
+            eventCalendar.init({
+                startDate: '2018-07-01',
+                events: [{ date: '2018-07-04' }]
+            });
         });
         
         it('should add the appropriate styling to the target date', () => {
@@ -436,7 +484,11 @@ describe('EventCalendar', () => {
 
     describe('choosing multiple previously selected dates (ones that was passed on init())', () => {
         beforeEach(() => {
-            eventCalendar.init('2018-07-01', null, [{ date: '2018-07-04' }, { date: '2018-07-05' }]);
+            eventCalendar.init({
+                startDate: '2018-07-01',
+                events: [{ date: '2018-07-04' }, { date: '2018-07-05' }]
+            });
+
             $html.find('[data-day="2018-07-04"]').click();
             $html.find('[data-day="2018-07-05"]').click();
         });
@@ -468,7 +520,11 @@ describe('EventCalendar', () => {
 
     describe('choosing then unchoosing a previously selected date (one that was passed on init())', () => {
         beforeEach(() => {
-            eventCalendar.init('2018-07-01', null, [{ date: '2018-07-04' }]);
+            eventCalendar.init({
+                startDate: '2018-07-01',
+                events: [{ date: '2018-07-04' }]
+            });
+
             $html.find('[data-day="2018-07-04"]').click();
             $html.find('[data-day="2018-07-04"]').click();
         });
@@ -508,7 +564,7 @@ describe('EventCalendar', () => {
 
     describe('clicking a date before the startDate', () => {
         beforeEach(() => {
-            eventCalendar.init('2018-07-04');
+            eventCalendar.init({ startDate: '2018-07-04' });
 
             $html.find('[data-day="2018-07-01"]').click();
         });
@@ -528,7 +584,7 @@ describe('EventCalendar', () => {
 
     describe('clicking the next month arrow', () => {
         beforeEach(() => {
-            eventCalendar.init('2018-01-01');
+            eventCalendar.init({ startDate: '2018-01-01' });
             $html.find('.clndr-next-button').click();
         });
 
@@ -540,7 +596,7 @@ describe('EventCalendar', () => {
 
     describe('clicking the previous month arrow', () => {
         beforeEach(() => {
-            eventCalendar.init('2018-01-01');
+            eventCalendar.init({ startDate: '2018-01-01' });
             $html.find('.clndr-next-button').click();
             $html.find('.clndr-previous-button').click();
         });
@@ -553,7 +609,14 @@ describe('EventCalendar', () => {
 
     describe('clicking the reset button', () => {
         beforeEach(() => {
-            eventCalendar.init('2018-01-01', null, [{ date: '2018-01-10' }]);
+            $html.find('.js-ercal-start').val('2018-01-01');
+            $html.find('.js-ercal-end').val('2018-01-20');
+
+            eventCalendar.init({
+                startDateField: '.js-ercal-start',
+                endDateField: '.js-ercal-end',
+                events: [{ date: '2018-01-10' }]
+            });
         });
         
         it('should empty the datesToAdd and datesToDel arrays', () => {
@@ -590,12 +653,143 @@ describe('EventCalendar', () => {
 
             expect($html.find('[data-day="2018-01-10"]').attr('aria-label')).to.contain('Selected. Event will repeat on');
         });
+
+        it('should reset the selected date', () => {
+            $html.find('.js-ercal-start').val('2018-01-05').trigger('change');
+            $html.find('.js-ercal-reset').click();
+
+            let selectedDate = $html.find('.selected > .day-contents').data('day');
+
+            expect(selectedDate).to.equal('2018-01-01');
+        });
+
+        it('should reset the start date', () => {
+            $html.find('.js-ercal-start').val('2018-01-05').trigger('change');
+            $html.find('.js-ercal-reset').click();
+
+            expect($html.find('.js-ercal-start').val()).to.equal('2018-01-01');
+        });
+
+        it('should reset the end date', () => {
+            $html.find('.js-ercal-end').val('2018-01-05').trigger('change');
+            $html.find('.js-ercal-reset').click();
+
+            expect($html.find('.js-ercal-end').val()).to.equal('2018-01-20');
+        });
+
+        it('should reset the min value for the start date field', () => {
+            expect(typeof $html.find('.js-ercal-start').attr('min')).to.equal('undefined');
+        });
+
+        it('should reset the min value for the end date field', () => {
+            expect($html.find('.js-ercal-end').attr('min')).to.equal('2018-01-01');
+        });
+        
+    });
+
+    describe('clicking the reset button with no start/end date fields', () => {
+        beforeEach(() => {
+            eventCalendar.init({
+                startDate: '2018-01-01',
+                endDate: '2018-01-20',
+                events: [{ date: '2018-01-10' }]
+            });
+        });
+        
+        it('should empty the datesToAdd and datesToDel arrays', () => {
+            $html.find('[data-day="2018-01-02"]').click();
+            $html.find('[data-day="2018-01-10"]').click();
+            let dates = eventCalendar.getDates();
+
+            expect(dates.datesToAdd.length).to.equal(1);
+            expect(dates.datesToDel.length).to.equal(1);
+
+            $html.find('.js-ercal-reset').click();
+
+            expect(dates.datesToAdd.length).to.equal(0);
+            expect(dates.datesToDel.length).to.equal(0);
+        });
+
+        it('should clear the stored pattern', () => {
+            $html.find('.js-ercal-repeat').val('daily').trigger('change');
+            $html.find('.js-ercal-reset').click();
+
+            expect(eventCalendar.getRecurPattern()).to.be.null;
+        });
+
+        it('should reset the pattern field', () => {
+            $html.find('.js-ercal-repeat').val('daily').trigger('change');
+            $html.find('.js-ercal-reset').click();
+
+            expect($html.find('.js-ercal-repeat').val()).to.equal('no-repeat');
+        });
+
+        it('should reset the aria label', () => {
+            $html.find('[data-day="2018-01-10"]').click();
+            $html.find('.js-ercal-reset').click();
+
+            expect($html.find('[data-day="2018-01-10"]').attr('aria-label')).to.contain('Selected. Event will repeat on');
+        });
+
+        it('should reset the selected date', () => {
+            $html.find('.js-ercal-start').val('2018-01-05').trigger('change');
+            $html.find('.js-ercal-reset').click();
+
+            let selectedDate = $html.find('.selected > .day-contents').data('day');
+
+            expect(selectedDate).to.equal('2018-01-01');
+        });
+    });
+
+    
+    describe('clicking the reset button with no start/end values', () => {
+        beforeEach(() => {
+            eventCalendar.init({
+                startDateField: '.js-ercal-start',
+                endDateField: '.js-ercal-end',
+                events: [{ date: '2018-01-10' }]
+            });
+        });
+
+        it('should reset the start date back to undefined', () => {
+            let today = moment(new Date()).format('YYYY-MM-DD');
+            $html.find('.js-ercal-start').val(today).trigger('change');
+            $html.find('.js-ercal-reset').click();
+
+            expect($html.find('.js-ercal-start').val()).to.equal(today);
+        });
+
+        it('should reset the end date', () => {
+            let todayPlus1Day = moment(new Date()).add(1, 'day').format('YYYY-MM-DD');
+            $html.find('.js-ercal-end').val(todayPlus1Day).trigger('change');
+            $html.find('.js-ercal-reset').click();
+
+            expect($html.find('.js-ercal-end').val()).to.equal('');
+        });
+
+        it('should reset the min value for the start date field', () => {
+            let today = moment(new Date()).format('YYYY-MM-DD');
+
+            expect(typeof $html.find('.js-ercal-start').attr('min')).to.equal('undefined');
+        });
+
+        it('should reset the min value for the end date field', () => {
+            let today = moment(new Date()).format('YYYY-MM-DD');
+
+            expect($html.find('.js-ercal-end').attr('min')).to.equal(today);
+        });
+        
     });
 
 
     describe('choosing a pattern that doesn’t exist', () => {
         beforeEach(() => {
-            eventCalendar.init('2018-01-02', '2018-02-27', [{ date: '2018-01-10' }]);
+            eventCalendar.init({
+                startDate: '2018-01-02',
+                endDate: '2018-02-27',
+                events: [{ date: '2018-01-10' }]
+            });
+
             $html.find('.js-ercal-repeat').val('foo').trigger('change');
         });
         
@@ -614,7 +808,12 @@ describe('EventCalendar', () => {
 
     describe('choosing the no-repeat’ pattern', () => {
         beforeEach(() => {
-            eventCalendar.init('2018-01-02', '2018-02-27', [{ date: '2018-01-10' }]);
+            eventCalendar.init({
+                startDate: '2018-01-02',
+                endDate: '2018-02-27',
+                events: [{ date: '2018-01-10' }]
+            });
+
             $html.find('.js-ercal-repeat').val('no-repeat').trigger('change');
         });
         
@@ -655,7 +854,12 @@ describe('EventCalendar', () => {
 
     describe('choosing the ’daily’ pattern', () => {
         beforeEach(() => {
-            eventCalendar.init('2018-01-02', '2018-02-27', [{ date: '2018-01-10' }]);
+            eventCalendar.init({
+                startDate: '2018-01-02',
+                endDate: '2018-02-27',
+                events: [{ date: '2018-01-10' }]
+            });
+
             $html.find('.js-ercal-repeat').val('daily').trigger('change');
         });
         
@@ -737,7 +941,13 @@ describe('EventCalendar', () => {
 
     describe('choosing the ’weekly’ pattern with a startDate', () => {
         beforeEach(() => {
-            eventCalendar.init('2018-01-02', '2018-02-27', [{ date: '2018-01-10' }]);
+            eventCalendar.init({
+                startDate: '2018-01-02',
+                startDateField: '.js-ercal-start',
+                endDate: '2018-02-27',
+                events: [{ date: '2018-01-10' }]
+            });
+            
             $html.find('.js-ercal-repeat').val('weekly').trigger('change');
         });
 
@@ -840,12 +1050,23 @@ describe('EventCalendar', () => {
 
             expect($html.find('.js-ercal-weekdays').attr('style')).to.equal('display: none;');
         });
+
+        it('should change the selected weekday in the weekday picker if the start date is changed', () => {
+            $html.find('.js-ercal-start').val('2018-01-03').trigger('change');
+
+            expect($html.find('[value="3"]').prop('checked')).to.be.true;
+        });
     });
 
 
     describe('choosing the ’two-weekly’ pattern', () => {
         beforeEach(() => {
-            eventCalendar.init('2018-01-02', '2018-02-27', [{ date: '2018-01-10' }]);
+            eventCalendar.init({
+                startDate: '2018-01-02',
+                endDate: '2018-02-27',
+                events: [{ date: '2018-01-10' }]
+            });
+
             $html.find('.js-ercal-repeat').val('two-weekly').trigger('change');
         });
         
@@ -916,7 +1137,12 @@ describe('EventCalendar', () => {
 
     describe('choosing the ’monthly on this date’ pattern', () => {
         beforeEach(() => {
-            eventCalendar.init('2018-01-02', '2018-02-27', [{ date: '2018-01-10' }]);
+            eventCalendar.init({
+                startDate: '2018-01-02',
+                endDate: '2018-02-27',
+                events: [{ date: '2018-01-10' }]
+            });
+            
             $html.find('.js-ercal-repeat').val('monthly-date').trigger('change');
         });
         
@@ -989,28 +1215,34 @@ describe('EventCalendar', () => {
 
     describe('choosing the ’monthly on this day’ pattern', () => {
         beforeEach(() => {
-            eventCalendar.init('2018-01-02', '2018-02-27', [{ date: '2018-01-10' }]);
+            eventCalendar.init({
+                startDate: '2018-01-12',
+                endDate: '2018-02-27',
+                events: [{ date: '2018-01-14' }]
+            });
+
             $html.find('.js-ercal-repeat').val('monthly-day').trigger('change');
         });
         
-        it('should apply the repeat styling', () => {
-            let $days = $html.find('.day.event-repeat');
+        it('should apply the repeat styling to the next occurrence', () => {
+            $html.find('.clndr-next-button').click();
 
-            expect($days.length).to.equal(1);
-            expect($html.find('.calendar-day-2018-01-02').hasClass('event-repeat')).to.be.true;
+            expect($html.find('.calendar-day-2018-02-09').hasClass('event-repeat')).to.be.true;
         });
 
         it('should store the recur pattern in the clndr instance', () => {
             expect(eventCalendar.getRecurPattern().rules[0].measure).to.equal('daysOfWeek');
-            expect(eventCalendar.getRecurPattern().rules[0].units['2']).to.be.true;
+            expect(eventCalendar.getRecurPattern().rules[0].units['5']).to.be.true;
+            expect(eventCalendar.getRecurPattern().rules[1].measure).to.equal('weeksOfMonthByDay')
+            expect(eventCalendar.getRecurPattern().rules[1].units['1']).to.be.true;
         });
 
         it('should not apply the repeat styling to dates before the startDate', () => {
-            expect($html.find('.calendar-day-2018-01-01').hasClass('event-repeat')).to.be.false;
+            expect($html.find('.calendar-day-2018-01-11').hasClass('event-repeat')).to.be.false;
         });
 
         it('should not remove the event class from preexisting events', () => {
-            expect($html.find('.calendar-day-2018-01-10').hasClass('event')).to.be.true;
+            expect($html.find('.calendar-day-2018-01-14').hasClass('event')).to.be.true;
         });
 
         it('should also repaint the next month', () => {
@@ -1019,7 +1251,7 @@ describe('EventCalendar', () => {
             let $days = $html.find('.day.event-repeat');
 
             expect($days.length).to.equal(1);
-            expect($html.find('.calendar-day-2018-02-06').hasClass('event-repeat')).to.be.true;
+            expect($html.find('.calendar-day-2018-02-09').hasClass('event-repeat')).to.be.true;
         });
 
         it('should not apply the repeat styling to dates after the endDate', () => {
@@ -1038,8 +1270,8 @@ describe('EventCalendar', () => {
         it('should add toDelete styling to an item when clicked', () => {
             $html.find('.clndr-next-button').click();
 
-            let $target = $html.find('[data-day="2018-02-06"]'),
-                $parent = $html.find('.calendar-day-2018-02-06');
+            let $target = $html.find('[data-day="2018-02-09"]'),
+                $parent = $html.find('.calendar-day-2018-02-09');
 
             $target.click();
 
@@ -1049,20 +1281,25 @@ describe('EventCalendar', () => {
         it('should add clicked dates to the list of dates to delete', () => {
             $html.find('.clndr-next-button').click();
 
-            let $target = $html.find('[data-day="2018-02-06"]');
+            let $target = $html.find('[data-day="2018-02-09"]');
 
             $target.click();
 
             let dates = eventCalendar.getDates();
 
-            expect(dates.datesToDel[0]._i).to.equal('2018-02-06');
+            expect(dates.datesToDel[0]._i).to.equal('2018-02-09');
         });
     });
 
 
     describe('choosing the ’annually’ pattern', () => {
         beforeEach(() => {
-            eventCalendar.init('2018-01-02', '2019-02-27', [{ date: '2018-01-10' }]);
+            eventCalendar.init({
+                startDate: '2018-01-02',
+                endDate: '2019-02-27',
+                events: [{ date: '2018-01-10' }]
+            });
+
             $html.find('.js-ercal-repeat').val('annually').trigger('change');
         });
         
@@ -1141,7 +1378,11 @@ describe('EventCalendar', () => {
 
     describe('applying a pattern, then making changes to dates affected by that pattern', () => {
         beforeEach(() => {
-            eventCalendar.init('2018-01-02', '2019-02-27');
+            eventCalendar.init({
+                startDate: '2018-01-02',
+                endDate: '2019-02-27'
+            });
+
             $html.find('.js-ercal-repeat').val('weekly').trigger('change');
             
             $html.find('[data-day="2018-01-09"]').click(); // to del
@@ -1191,7 +1432,11 @@ describe('EventCalendar', () => {
 
     describe('applying a pattern, making changes to dates affected by that pattern, then reverting those changes', () => {
         beforeEach(() => {
-            eventCalendar.init('2018-01-02', '2019-02-27');
+            eventCalendar.init({
+                startDate: '2018-01-02',
+                endDate: '2019-02-27'
+            });
+
             $html.find('.js-ercal-repeat').val('weekly').trigger('change');
             
             $html.find('[data-day="2018-01-09"]').click(); // to del
@@ -1246,7 +1491,12 @@ describe('EventCalendar', () => {
 
     describe('making date changes, then applying a pattern', () => {
         beforeEach(() => {
-            eventCalendar.init('2018-01-02', '2019-02-27', [{ date: '2018-01-10' }]);
+            eventCalendar.init({
+                startDate: '2018-01-02',
+                endDate: '2019-02-27',
+                events: [{ date: '2018-01-10' }]
+            });
+
             $html.find('[data-day="2018-01-04"]').click(); // to add
             $html.find('[data-day="2018-01-10"]').click(); // to del
             $html.find('.js-ercal-repeat').val('daily').trigger('change');
@@ -1295,7 +1545,12 @@ describe('EventCalendar', () => {
 
     describe('making date changes, applying a pattern that affects the same date, then changing the date again', () => {
         beforeEach(() => {
-            eventCalendar.init('2018-01-02', '2019-02-27', [{ date: '2018-01-10' }]);
+            eventCalendar.init({
+                startDate: '2018-01-02', 
+                endDate: '2019-02-27', 
+                events: [{ date: '2018-01-10' }]
+            });
+
             $html.find('[data-day="2018-01-04"]').click(); // to add
             $html.find('[data-day="2018-01-10"]').click(); // to del
             $html.find('.js-ercal-repeat').val('daily').trigger('change');
@@ -1319,7 +1574,12 @@ describe('EventCalendar', () => {
 
     describe('making date changes, then applying a pattern, then removing the pattern', () => {
         beforeEach(() => {
-            eventCalendar.init('2018-01-02', '2019-02-27', [{ date: '2018-01-10' }]);
+            eventCalendar.init({
+                startDate: '2018-01-02', 
+                endDate: '2019-02-27', 
+                events: [{ date: '2018-01-10' }]
+            });
+
             $html.find('[data-day="2018-01-04"]').click(); // to add
             $html.find('[data-day="2018-01-10"]').click(); // to del
             $html.find('.js-ercal-repeat').val('daily').trigger('change');
@@ -1368,7 +1628,8 @@ describe('EventCalendar', () => {
 
     describe('applying a pattern, excluding a date from that pattern, then changing to a pattern which doesn’t hit the same date', () => {
         beforeEach(() => {
-            eventCalendar.init('2018-01-02');
+            eventCalendar.init({ startDate: '2018-01-02' });
+
             $html.find('.js-ercal-repeat').val('weekly').trigger('change');
             $html.find('[data-day="2018-01-09"]').click(); // to del
             $html.find('.js-ercal-repeat').val('two-weekly').trigger('change');
@@ -1396,7 +1657,11 @@ describe('EventCalendar', () => {
 
     describe('applying a pattern, excluding a date from that pattern, then changing to a pattern which doesn’t hit the same date, then clicking the target date again', () => {
         beforeEach(() => {
-            eventCalendar.init('2018-01-02', '2019-02-27');
+            eventCalendar.init({
+                startDate: '2018-01-02', 
+                endDate: '2019-02-27'
+            });
+
             $html.find('.js-ercal-repeat').val('weekly').trigger('change');
             $html.find('[data-day="2018-01-09"]').click(); // to del
             $html.find('.js-ercal-repeat').val('two-weekly').trigger('change');
@@ -1424,5 +1689,464 @@ describe('EventCalendar', () => {
         });
     });
 
-});
 
+    describe('when the startDateField is provided without a value', () => {
+        beforeEach(() => {
+            eventCalendar.init({
+                startDateField: '.js-ercal-start' 
+            });
+        });
+
+        it('should select the current date (today)', () => {
+            let today = moment(new Date()).format('YYYY-MM-DD'),
+                selectedDate = $html.find('.selected > .day-contents').data('day');
+
+            expect(selectedDate).to.equal(today);
+        });
+
+        it('should set the current date to .today', () => {
+            expect($html.find('.selected').hasClass('today')).to.be.true;
+        });
+
+        it('should constrain the max value on the start date field to today + 15 years', () => {
+            let startDatePlus15Years = moment(new Date()).add(15, 'years').format('YYYY-MM-DD');
+
+            expect($html.find('.js-ercal-start').attr('max')).to.equal(startDatePlus15Years);
+        });
+    });
+
+
+    describe('when the startDate and a startDateField are provided with a value', () => {
+        beforeEach(() => {
+            let $startDateField = $html.find('.js-ercal-start').val('1981-07-04');
+            
+            eventCalendar.init({
+                startDate: '1981-01-01',
+                startDateField: '.js-ercal-start' 
+            });
+        });
+
+        it('should use the value from startDateField as the startDate', () => {
+            let selectedDate = $html.find('.selected > .day-contents').data('day');
+
+            expect(selectedDate).to.equal('1981-07-04');
+        });
+    });
+
+
+    describe('when the startDate and a startDateField are provided without a value', () => {
+        beforeEach(() => {
+            eventCalendar.init({
+                startDate: '1981-01-01',
+                startDateField: '.js-ercal-start' 
+            });
+        });
+
+        it('should use the value from startDate as the startDate', () => {
+            let selectedDate = $html.find('.selected > .day-contents').data('day');
+
+            expect(selectedDate).to.equal('1981-01-01');
+        });
+    });
+
+
+    describe('when the start date field has a value on init', () => {
+        beforeEach(() => {
+            $html.find('.js-ercal-start').val('1981-07-04');
+
+            eventCalendar.init({ startDateField: '.js-ercal-start' });
+        });
+
+        it('should select the specified date', () => {
+            let selectedDate = $html.find('.selected > .day-contents').data('day');
+
+            expect(selectedDate).to.equal('1981-07-04');
+        });
+
+        it('should not set the current date to inactive', () => {
+            expect($html.find('.selected').hasClass('inactive')).to.be.false;
+        });
+
+        it('should disable dates in the past to prevent keyboard navigation', () => {
+            expect($html.find('[data-day="1981-07-03"]').attr('disabled')).to.equal('disabled');
+        });
+
+        it('should not disable dates in the future', () => {
+            expect($html.find('[data-day="1981-07-05"]').attr('disabled')).to.be.undefined;
+        });
+
+        it('should constrain the available dates to the day before the startDate', () => {
+            expect($html.find('.selected').prev().hasClass('inactive')).to.be.true;
+        });
+
+        it('should show the month & year in text form (start month)', () => {
+            let todayMonthYear = moment('1981-07-04').format('MMMM YYYY');
+
+            expect($html.find('.month').text()).to.equal(todayMonthYear);
+        });
+
+        it('should not show the previous month arrow', () => {
+            expect($html.find('.clndr-previous-button').hasClass('inactive')).to.be.true;
+        });
+
+        it('should show the next month arrow', () => {
+            expect($html.find('.clndr-next-button').hasClass('inactive')).to.be.false;
+        });
+    });
+
+
+    describe('when the start date field is changed', () => {
+        beforeEach(() => {
+            eventCalendar.init({ 
+                startDate: '2015-10-01',
+                startDateField: '.js-ercal-start',
+                endDateField: '.js-ercal-end',
+                events: [{ date: '2015-10-19' }, { date: '2015-10-24' }]
+            });
+
+            $html.find('[data-day="2015-10-20"]').click(); // to add
+            $html.find('[data-day="2015-10-22"]').click(); // to add
+            $html.find('[data-day="2015-10-19"]').click(); // to del
+            $html.find('[data-day="2015-10-24"]').click(); // to del
+
+            $html.find('.js-ercal-start').val('2015-10-21').trigger('change');
+        });
+
+        it('should select the specified date', () => {
+            let selectedDate = $html.find('.selected > .day-contents').data('day');
+
+            expect(selectedDate).to.equal('2015-10-21');
+        });
+
+        it('should not set the current date to inactive', () => {
+            expect($html.find('.selected').hasClass('inactive')).to.be.false;
+        });
+
+        it('should disable dates in the past to prevent keyboard navigation', () => {
+            expect($html.find('[data-day="2015-10-20"]').attr('disabled')).to.equal('disabled');
+        });
+
+        it('should not disable dates in the future', () => {
+            expect($html.find('[data-day="2015-10-22"]').attr('disabled')).to.be.undefined;
+        });
+
+        it('should constrain the available dates to the day before the startDate', () => {
+            expect($html.find('.selected').prev().hasClass('inactive')).to.be.true;
+        });
+
+        it('should show the month & year in text form (start month)', () => {
+            let todayMonthYear = moment('2015-10-21').format('MMMM YYYY');
+
+            expect($html.find('.month').text()).to.equal(todayMonthYear);
+        });
+
+        it('should not show the previous month arrow', () => {
+            expect($html.find('.clndr-previous-button').hasClass('inactive')).to.be.true;
+        });
+
+        it('should show the next month arrow', () => {
+            expect($html.find('.clndr-next-button').hasClass('inactive')).to.be.false;
+        });
+
+        it('should remove any out-of-bounds dates from the datesToAdd arrays', () => {
+            let dates = eventCalendar.getDates();
+
+            expect(dates.datesToAdd.length).to.equal(1);
+            expect(dates.datesToAdd[0]._i).to.equal('2015-10-22');
+        });
+
+        it('should remove any out-of-bounds dates from the datesToDel arrays', () => {
+            let dates = eventCalendar.getDates();
+
+            expect(dates.datesToDel.length).to.equal(1);
+            expect(dates.datesToDel[0]._i).to.equal('2015-10-24');
+        });
+
+        it('should revert to the start date when the calendar is reset', () => {
+            $html.find('.js-ercal-reset').click();
+            
+            let selectedDate = $html.find('.selected > .day-contents').data('day');
+
+            expect(selectedDate).to.equal('2015-10-01');
+        });
+
+        it('should constrain the min value for the end date field', () => {
+            expect($html.find('.js-ercal-end').attr('min')).to.equal('2015-10-21');
+        });
+    });
+
+
+    describe('when the start date field is changed, then the end date field is changed', () => {
+        beforeEach(() => {
+            eventCalendar.init({ 
+                startDate: '2015-10-01',
+                startDateField: '.js-ercal-start',
+                endDateField: '.js-ercal-end'
+            });
+
+            $html.find('.js-ercal-start').val('2015-10-10').trigger('change');
+            $html.find('.js-ercal-end').val('2015-10-20').trigger('change');
+        });
+
+        it('should maintain the selected start date', () => {
+            let selectedDate = $html.find('.selected > .day-contents').data('day');
+
+            expect(selectedDate).to.equal('2015-10-10');
+        });
+
+        it('should constrain the max value for the start date field', () => {
+            expect($html.find('.js-ercal-start').attr('max')).to.equal('2015-10-20');
+        });
+
+        it('should constrain the min value for the end date field', () => {
+            expect($html.find('.js-ercal-end').attr('min')).to.equal('2015-10-10');
+        });
+    });
+
+
+    describe('when the endDateField is provided without a value, and no startDate is defined', () => {
+        beforeEach(() => {
+            eventCalendar.init({
+                endDateField: '.js-ercal-end'
+            });
+        });
+
+        it('should set the end date to today + 15 years', () => {
+            let todayPlus15Years = moment(new Date()).add(15, 'years').format('YYYY-MM-DD');
+
+            expect(eventCalendar.clndr.options.constraints.endDate).to.equal(todayPlus15Years);
+        });
+    });
+
+
+    describe('when the endDateField is provided without a value, and a startDate is defined', () => {
+        beforeEach(() => {
+            eventCalendar.init({
+                endDateField: '.js-ercal-end',
+                startDate: '2000-01-01'
+            });
+        });
+
+        it('should set the end date to startDate + 15 years', () => {
+            let startDatePlus15Years = moment('2000-01-01').add(15, 'years').format('YYYY-MM-DD');
+
+            expect(eventCalendar.clndr.options.constraints.endDate).to.equal(startDatePlus15Years);
+        });
+    });
+
+
+    describe('when the startDateField and endDateField are provided with a value', () => {
+        beforeEach(() => {
+            $html.find('.js-ercal-start').val('1981-07-02');
+            $html.find('.js-ercal-end').val('1981-07-04');
+
+            eventCalendar.init({
+                startDateField: '.js-ercal-start',
+                endDateField: '.js-ercal-end' 
+            });
+        });
+
+        it('should set the end date to that value', () => {
+            expect(eventCalendar.clndr.options.constraints.endDate).to.equal('1981-07-04');
+        });
+
+        it('should constrain the min value for the end date field to reflect the start date', () => {
+            expect($html.find('.js-ercal-end').attr('min')).to.equal('1981-07-02');
+        });
+
+        it('should constrain the max value for the start date field to reflect the emd date', () => {
+            expect($html.find('.js-ercal-start').attr('max')).to.equal('1981-07-04');
+        });
+    });
+
+
+    describe('when the startDate and endDate option is defined', () => {
+        beforeEach(() => {
+            eventCalendar.init({
+                startDate: '1981-07-01',
+                endDate: '1981-07-04' 
+            });
+        });
+
+        it('should set the end date to that value', () => {
+            expect(eventCalendar.clndr.options.constraints.endDate).to.equal('1981-07-04');
+        });
+    });
+
+
+    describe('when the end date field is changed', () => {
+        beforeEach(() => {
+            eventCalendar.init({ 
+                startDate: '2015-10-01',
+                endDate: '2015-10-30',
+                endDateField: '.js-ercal-end',
+                events: [{ date: '2015-10-19' }, { date: '2015-10-24' }]
+            });
+
+            $html.find('[data-day="2015-10-20"]').click(); // to add
+            $html.find('[data-day="2015-10-22"]').click(); // to add
+            $html.find('[data-day="2015-10-19"]').click(); // to del
+            $html.find('[data-day="2015-10-24"]').click(); // to del
+
+            $html.find('.js-ercal-end').val('2015-10-21').trigger('change');
+        });
+
+        it('should keep the startDate selected', () => {
+            let selectedDate = $html.find('.selected > .day-contents').data('day');
+
+            expect(selectedDate).to.equal('2015-10-01');
+        });
+
+
+        it('should remove any out-of-bounds dates from the datesToAdd arrays', () => {
+            let dates = eventCalendar.getDates();
+
+            expect(dates.datesToAdd.length).to.equal(1);
+            expect(dates.datesToAdd[0]._i).to.equal('2015-10-20');
+        });
+
+        it('should remove any out-of-bounds dates from the datesToDel arrays', () => {
+            let dates = eventCalendar.getDates();
+
+            expect(dates.datesToDel.length).to.equal(1);
+            expect(dates.datesToDel[0]._i).to.equal('2015-10-19');
+        });
+    });
+
+    describe('when the end date field is cleared', () => {
+        beforeEach(() => {
+            $html.find('.js-ercal-start').val('1981-07-02');
+            $html.find('.js-ercal-end').val('1981-07-04');
+
+            eventCalendar.init({
+                startDateField: '.js-ercal-start',
+                endDateField: '.js-ercal-end' 
+            });
+
+            $html.find('.js-ercal-end').val('').trigger('change');
+        });
+
+        it('should maintain the start date', () => {
+            expect(eventCalendar.clndr.options.constraints.startDate).to.equal('1981-07-02');
+        });
+
+        it('should set the end date to startDate + 15 years', () => {
+            let todayPlus15Years = moment(new Date()).add(15, 'years').format('YYYY-MM-DD');
+
+            expect(eventCalendar.clndr.options.constraints.endDate).to.equal(todayPlus15Years);
+        });
+
+        it('should reset the max value for the start date field', () => {
+            let todayPlus15Years = moment(new Date()).add(15, 'years').format('YYYY-MM-DD');
+
+            expect($html.find('.js-ercal-start').attr('max')).to.equal(todayPlus15Years);
+        });
+
+        it('should reset the min value for the end date field', () => {
+            let todayPlus15Years = moment(new Date()).add(15, 'years').format('YYYY-MM-DD');
+
+            expect($html.find('.js-ercal-start').attr('max')).to.equal(todayPlus15Years);
+        });
+    });
+
+    describe('Attempting to set an end date that is before the start date', () => {
+        it('should throw an error when the values are passed as init options', () => {
+            expect(() => {
+                eventCalendar.init({
+                    startDate: '1981-07-02',
+                    endDate: '1981-07-01' 
+                });
+            }).to.throw('End date can not be before the start date');
+        });
+
+        it('should throw an error when the values are passed as date fields', () => {
+			expect(() => {
+                $html.find('.js-ercal-start').val('1981-07-02');
+                $html.find('.js-ercal-end').val('1981-07-01');
+
+                eventCalendar.init({
+                    startDateField: '.js-ercal-start',
+                    endDateField: '.js-ercal-end' 
+                });
+            }).to.throw('End date can not be before the start date');
+        });
+    });
+
+    describe('Selecting a date if the aria live region does not exist in the template', () => {
+        beforeEach(() => {
+            let templateWithoutAriaStatusContainer = `
+            <div class='clndr-controls' role='navigation'>
+                <div class='clndr-control-button'>
+                    <button class='clndr-previous-button' aria-controls='event-calendar' aria-label='Go to the previous month'>&lsaquo;</button>
+                </div>
+                <div class='month' id='aria-clndr-title' aria-live='polite'><%= month %> <%= year %></div>
+                <div class='clndr-control-button rightalign'>
+                    <button class='clndr-next-button' aria-controls='event-calendar' aria-label='Go to the next month'>&rsaquo;</button>
+                </div>
+            </div>
+            <table id='event-calendar' class='clndr-table' border='0' cellspacing='0' cellpadding='0'>
+                <thead>
+                    <tr class='header-days'>
+                    <% for (var i = 0; i < daysOfTheWeek.length; i++) { %>
+                        <td class='header-day'><%= daysOfTheWeek[i] %></td>
+                    <% } %>
+                    </tr>
+                </thead>
+                <tbody aria-live="polite">
+                <% for (var i = 0; i < numberOfRows; i++) { %>
+                    <tr>
+                    <% for (var j = 0; j < 7; j++){ %>
+                    <% var d = j + i * 7; %>
+                        <% var daysLeadingZero = days[d].day < 10 ? '0' + days[d].day : days[d].day; %>
+                        <td class='<%= days[d].classes %>'>
+                        <% if (days[d].day.length != 0) { %>
+                            <button 
+                                class='day-contents' 
+                                data-day="<%= year %>-<%= monthNumerical %>-<%= daysLeadingZero %>" 
+                                aria-label="<% if (days[d].classes.indexOf('selected') !== -1) { %><%= ariaStartDate %><% } else if (days[d].classes.indexOf('event') !== -1) { %><%= ariaSelected %><% } %> <%= days[d].day %> <%= month %>, <%= year %>.<% if (days[d].classes.indexOf('selected') === -1 && days[d].classes.indexOf('event') === -1) { %> <%= ariaUnselected %><% } %>"
+                                <% 
+                                    if (days[d].classes.indexOf('inactive') !== -1 && 
+                                    days[d].classes.indexOf('selected') === -1) { 
+                                %> disabled<% } %>
+                            >
+                                <%= days[d].day %>
+                            </button>
+                        <% } %>
+                        </td>
+                    <% } %>
+                    </tr>
+                <% } %>
+                </tbody>
+            </table>
+            <div class="event-calendar-review">
+                <ul class="event-calendar-summary">
+                    <li><i class="fa fa-repeat icon--success"></i> Repeat pattern</li>
+                    <li><i class="fa fa-plus-circle icon--success"></i> Additional repeat
+                        <span class="js-dates-to-add label label--success" style="display: none;"></span></li>
+                    <li><i class="fa fa-ban icon--danger"></i> Event will <u>not</u> repeat
+                        <span class="js-dates-to-del label label--danger" style="display: none;"></span></li>
+                </ul>
+                <button class="js-ercal-reset">Reset Calendar</button>
+            </div>`;
+
+            eventCalendar.init({ 
+                startDate: '2015-10-01',
+                template: templateWithoutAriaStatusContainer
+            });
+
+            $html.find('[data-day="2015-10-02"]').click();
+        });
+       
+        // the code to update the live region lives in the styleToAdd method, if we have successfully got past that and
+        // updated the review panel, then the updateLiveRegion method should've correctly returned without an error
+        it('should show the toAdd information in the review panel', () => {
+            expect($html.find('.js-dates-to-add').attr('style')).to.equal('display: inline;');
+        });
+
+        it('should update the toAdd information with the current number', () => {
+            expect($html.find('.js-dates-to-add').html()).to.equal('1 day will be added');
+        });
+
+    });
+
+});
