@@ -2110,6 +2110,13 @@ describe('EventCalendar', () => {
             expect($html.find('[data-day="2018-07-04"]').attr('aria-label')).to.contain('Selected');
             expect($html.find('[data-day="2018-07-05"]').attr('aria-label')).to.contain('Selected');
         });
+
+        it('should maintain styling to the dates when reset', () => {
+            $html.find('.js-ercal-reset').click();
+
+            expect($html.find('[data-day="2018-07-04"]').parent().hasClass('event-add')).to.be.true;
+            expect($html.find('[data-day="2018-07-05"]').parent().hasClass('event-add')).to.be.true;
+        });
     });
 
     describe('passing datesToDel to the init() method', () => {
@@ -2134,6 +2141,48 @@ describe('EventCalendar', () => {
             expect($html.find('[data-day="2018-07-04"]').attr('aria-label')).to.contain('Removed');
             expect($html.find('[data-day="2018-07-05"]').attr('aria-label')).to.contain('Removed');
         });
+
+        it('should maintain styling to the dates when reset', () => {
+            $html.find('.js-ercal-reset').click();
+
+            expect($html.find('[data-day="2018-07-04"]').parent().hasClass('event-del')).to.be.true;
+            expect($html.find('[data-day="2018-07-05"]').parent().hasClass('event-del')).to.be.true;
+        });
     });
 
+    describe('setting weekday checkboxes before init()', () => {
+        beforeEach(() => {
+            $html.find('[value="2"]').prop('checked', true);
+            $html.find('[value="5"]').prop('checked', true);
+            $html.find('.js-ercal-repeat').val('weekly');
+
+            eventCalendar.init({
+                startDate: '2019-02-01'
+            });
+        });
+
+        it('should select the appropriate days', () => {
+            expect($html.find('.calendar-day-2019-02-05').hasClass('event-repeat')).to.be.true;
+            expect($html.find('.calendar-day-2019-02-12').hasClass('event-repeat')).to.be.true;
+            expect($html.find('.calendar-day-2019-02-19').hasClass('event-repeat')).to.be.true;
+            expect($html.find('.calendar-day-2019-02-26').hasClass('event-repeat')).to.be.true;
+            
+            expect($html.find('.calendar-day-2019-02-08').hasClass('event-repeat')).to.be.true;
+            expect($html.find('.calendar-day-2019-02-15').hasClass('event-repeat')).to.be.true;
+            expect($html.find('.calendar-day-2019-02-22').hasClass('event-repeat')).to.be.true;
+        });
+
+        it('should rest to the originally selected days when reset', () => {
+            $html.find('.js-ercal-reset').click();
+
+            expect($html.find('.calendar-day-2019-02-05').hasClass('event-repeat')).to.be.true;
+            expect($html.find('.calendar-day-2019-02-12').hasClass('event-repeat')).to.be.true;
+            expect($html.find('.calendar-day-2019-02-19').hasClass('event-repeat')).to.be.true;
+            expect($html.find('.calendar-day-2019-02-26').hasClass('event-repeat')).to.be.true;
+            
+            expect($html.find('.calendar-day-2019-02-08').hasClass('event-repeat')).to.be.true;
+            expect($html.find('.calendar-day-2019-02-15').hasClass('event-repeat')).to.be.true;
+            expect($html.find('.calendar-day-2019-02-22').hasClass('event-repeat')).to.be.true;
+        });
+    });
 });
