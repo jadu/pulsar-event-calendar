@@ -137,9 +137,11 @@ class EventCalendar {
         // Process any datesToAdd passed as init() options, converting them to moments and adding to the array
         if (typeof options.datesToAdd !== 'undefined' && options.datesToAdd.length) {
             $.each(options.datesToAdd, function() {
-                let dateToAdd = moment(this, _self.dateFormatInternal);
+                let dateToAdd = moment(this, _self.dateFormatInternal),
+                    startDate = moment(options.startDate, _self.dateFormatInternal),
+                    endDate = moment(options.endDate, _self.dateFormatInternal);
 
-                if (dateToAdd.isAfter(moment(options.startDate, _self.dateFormatInternal))) {
+                if ((dateToAdd.isAfter(startDate) && !dateToAdd.isAfter(endDate)) || this === options.startDate) {
                     _self.datesToAdd.push(dateToAdd);
                 }
             });
@@ -150,9 +152,10 @@ class EventCalendar {
         // Process any datesToDel passed as init() options, converting them to moments and adding to the array
         if (typeof options.datesToDel !== 'undefined' && options.datesToDel.length) {
             $.each(options.datesToDel, function() {
-                let dateToDel = moment(this, _self.dateFormatInternal);
-       
-                if (dateToDel.isBefore(moment(options.endDate, _self.dateFormatInternal))) {
+                let dateToDel = moment(this, _self.dateFormatInternal),
+                    endDate = moment(options.endDate, _self.dateFormatInternal);
+
+                if (dateToDel.isBefore(endDate) || this === options.endDate) {
                     _self.datesToDel.push(dateToDel);
                 }
             });
