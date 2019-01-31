@@ -4,11 +4,6 @@ const EventCalendar = require('./src/EventCalendar');
 $(function () {
     const calendar = new EventCalendar($('html'));
 
-    let myEvents = [
-        { date: '2019-01-26' },
-        { date: '2019-01-28' }
-    ];
-
     let toAdd = [
         '2019-02-05',
         '2019-02-06',
@@ -31,7 +26,6 @@ $(function () {
         // // endDate: '2019-02-07'
         datesToAdd: toAdd,
         datesToDel: toDel
-        // // events: myEvents,
     });
 
     /**
