@@ -2131,31 +2131,31 @@ describe('EventCalendar', () => {
         beforeEach(() => {
             eventCalendar.init({
                 startDate: '2018-07-01',
-                endDate: '2018-07-06',
-                datesToDel: [ '2018-07-04', '2018-07-05', '2018-07-06', '2019-07-07' ]
+                endDate: '2018-07-03',
+                datesToDel: [ '2018-07-01', '2018-07-02', '2018-07-03', '2018-07-04' ]
             });
         });
         
         it('should add the appropriate styling to the dates', () => {
-            expect($html.find('[data-day="2018-07-04"]').parent().hasClass('event-del')).to.be.true;
-            expect($html.find('[data-day="2018-07-05"]').parent().hasClass('event-del')).to.be.true;
-            expect($html.find('[data-day="2018-07-06"]').parent().hasClass('event-del')).to.be.true;
+            expect($html.find('[data-day="2018-07-01"]').parent().hasClass('event-del')).to.be.true;
+            expect($html.find('[data-day="2018-07-02"]').parent().hasClass('event-del')).to.be.true;
+            expect($html.find('[data-day="2018-07-03"]').parent().hasClass('event-del')).to.be.true;
         });
 
         it('should not style out of bounds dates', () => {
-            expect($html.find('[data-day="2018-07-07"]').parent().hasClass('event-del')).to.be.false;
+            expect($html.find('[data-day="2018-07-04"]').parent().hasClass('event-del')).to.be.false;
         });
 
         it('should add the appropriate aria-label to the dates', () => {
-            expect($html.find('[data-day="2018-07-04"]').attr('aria-label')).to.contain('Removed');
-            expect($html.find('[data-day="2018-07-05"]').attr('aria-label')).to.contain('Removed');
+            expect($html.find('[data-day="2018-07-02"]').attr('aria-label')).to.contain('Removed');
+            expect($html.find('[data-day="2018-07-03"]').attr('aria-label')).to.contain('Removed');
         });
 
         it('should maintain styling to the dates when reset', () => {
             $html.find('.js-ercal-reset').click();
 
-            expect($html.find('[data-day="2018-07-04"]').parent().hasClass('event-del')).to.be.true;
-            expect($html.find('[data-day="2018-07-05"]').parent().hasClass('event-del')).to.be.true;
+            expect($html.find('[data-day="2018-07-02"]').parent().hasClass('event-del')).to.be.true;
+            expect($html.find('[data-day="2018-07-03"]').parent().hasClass('event-del')).to.be.true;
         });
     });
 
