@@ -127,7 +127,7 @@ class EventCalendar {
         }
 
         // If endDate isn't supplied, set it to `today + 15 years`
-        if (options.endDate !== 'Invalid date') {
+        if (options.endDate !== 'Invalid date' && typeof options.endDate !== 'undefined') {
             options.endDate = _self.internalDate(options.endDate);
         }
         else {
@@ -945,6 +945,7 @@ class EventCalendar {
     setStartDateMaximum () {
         let _self = this,
             endDate = _self.clndr.options.constraints.endDate;
+
         // Check for presence of `startDateField`
         if (typeof _self.$startDateField === 'undefined') {
             return;
