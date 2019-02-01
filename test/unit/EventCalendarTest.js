@@ -147,14 +147,21 @@ describe('EventCalendar', () => {
         });
 
         it('should constrain the available dates to the day before the startDate', () => {
-            let yesterday = moment(new Date()).subtract(1, 'day').format('YYYY-MM-DD');
-            expect($html.find('.calendar-day-' + yesterday).hasClass('inactive')).to.be.true;
+            let yesterday = moment(new Date()).subtract(1, 'day').format('YYYY-MM-DD'),
+                $yesterday = $html.find('.calendar-day-' + yesterday);
+
+            if ($yesterday.length) {
+                expect($html.find('.calendar-day-' + yesterday).hasClass('inactive')).to.be.true;
+            }
         });
 
         it('should disable dates in the past to prevent keyboard navigation', () => {
-            let date = moment(new Date()).subtract(1, 'day').format('YYYY-MM-DD');
+            let yesterday = moment(new Date()).subtract(1, 'day').format('YYYY-MM-DD'),
+                $yesterday = $html.find('.calendar-day-' + yesterday);
 
-            expect($html.find('[data-day="' + date + '"]').attr('disabled')).to.equal('disabled');
+            if ($yesterday.length) {
+                expect($html.find('[data-day="' + date + '"]').attr('disabled')).to.equal('disabled');
+            }
         });
 
         it('should not disable dates in the future', () => {
