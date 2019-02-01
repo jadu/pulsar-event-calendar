@@ -95,7 +95,7 @@ class EventCalendar {
             options.startDate = _self.$startDateField.val().length ? _self.internalDate(_self.$startDateField.val()) : _self.internalDate(options.startDate);
    
             // Set the startDateField value in case it has been passed as an init option
-            _self.$startDateField.val(options.startDate);
+            _self.$startDateField.val(moment(options.startDate, _self.dateFormatInternal).format(_self.localeFormat));
         }
 
         /**

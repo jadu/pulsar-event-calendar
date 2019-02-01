@@ -8,7 +8,9 @@ $(function () {
         '2019-02-05',
         '2019-02-06',
         '2019-02-09',
-        '2019-02-07'
+        '2019-02-10',
+        '2019-02-11',
+        '2019-02-12'
     ];
 
     let toDel = [
@@ -20,9 +22,10 @@ $(function () {
      * Simple init() method which will default to startDate = today / endDate = today + 15 years
      */
     calendar.init({
-        startDate: '2018-07-03',
-                endDate: '2018-07-06',
-                datesToAdd: [ '2018-07-02', '2018-07-03', '2018-07-04', '2018-07-05', '2018-07-06', '2018-07-07' ]
+        startDateField: '.js-ercal-start',
+        endDateField: '.js-ercal-end',
+        datesToAdd: toAdd,
+        datesToDel: toDel
     });
 
     /**
