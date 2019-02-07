@@ -160,7 +160,7 @@ describe('EventCalendar', () => {
                 $yesterday = $html.find('.calendar-day-' + yesterday);
 
             if ($yesterday.length) {
-                expect($html.find('[data-day="' + date + '"]').attr('disabled')).to.equal('disabled');
+                expect($html.find('[data-day="' + yesterday + '"]').attr('disabled')).to.equal('disabled');
             }
         });
 
