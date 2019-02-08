@@ -1103,7 +1103,7 @@ describe('EventCalendar', () => {
         it('should apply the repeat styling', () => {
             let $days = $html.find('.day.event-repeat');
 
-            expect($days.length).to.equal(3);
+            expect($days.length).to.equal(5);
             expect($html.find('.calendar-day-2018-01-02').hasClass('event-repeat')).to.be.true;
             expect($html.find('.calendar-day-2018-01-16').hasClass('event-repeat')).to.be.true;
             expect($html.find('.calendar-day-2018-01-30').hasClass('event-repeat')).to.be.true;
@@ -1134,7 +1134,7 @@ describe('EventCalendar', () => {
 
             let $days = $html.find('.day.event-repeat');
 
-            expect($days.length).to.equal(2);
+            expect($days.length).to.equal(4);
             expect($html.find('.calendar-day-2018-02-13').hasClass('event-repeat')).to.be.true;
             expect($html.find('.calendar-day-2018-02-27').hasClass('event-repeat')).to.be.true;
         });
