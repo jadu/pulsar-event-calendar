@@ -23,9 +23,9 @@ $(function () {
      */
     calendar.init({
         startDateField: '.js-ercal-start',
-        endDateField: '.js-ercal-end',
-        datesToAdd: toAdd,
-        datesToDel: toDel
+        endDateField: '.js-ercal-end'
+        // datesToAdd: toAdd,
+        // datesToDel: toDel
     });
 
     /**

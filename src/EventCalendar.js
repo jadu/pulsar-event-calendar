@@ -326,8 +326,8 @@ class EventCalendar {
             }
         }
 
-        // Show the weekday picker if the pattern is `weekly`
-        if (pattern === 'weekly') {
+        // Show the weekday picker if the pattern is `weekly/fortnightly`
+        if (pattern === 'weekly' || pattern === 'fortnight') {
             // Choose the weekday based on the startDate
             _self.$html.find('[name="ercal-weekdays"][value="' + moment(_self.clndr.options.constraints.startDate, _self.dateFormatInternal).day() + '"]').prop('checked', true);
             _self.$weekdayPicker.show();
@@ -339,7 +339,7 @@ class EventCalendar {
         }
 
         // If we're using the weekly pattern, this will have been painted appropriately before this point
-        if (pattern !== 'weekly') {
+        if (pattern !== 'weekly' && pattern !== 'fortnight') {
             // Unpaint the currently stored pattern
             _self.paintMonth(_self.clndr.month, 'clear');
 
@@ -375,13 +375,14 @@ class EventCalendar {
      */
     toggleWeekday () {
         let _self = this,
-            pattern = [];
+            pattern = _self.$patternField.val(),
+            weekdays = [];
             
         _self.$html.find('[name="ercal-weekdays"]:checked').map(function() {
-            pattern.push($(this).val());
+            weekdays.push($(this).val());
         });
 
-        _self.setPattern('weekdays', pattern);
+        _self.setPattern('weekly', weekdays);
         _self.paintMonth(this.clndr.month, 'repeat-on');
     }
 
@@ -488,12 +489,10 @@ class EventCalendar {
             case 'day':
                 newPattern = selectedDate.recur().every(1).days();
                 break;
-            case 'weekdays':
+            case 'weekly':
+            case 'fortnightly':
                 newPattern = selectedDate.recur().every(weekdays).daysOfWeek();
                 break
-            case 'fortnight':
-                newPattern = selectedDate.recur().every(2).weeks();
-                break;
             case 'monthByDay':
                 newPattern = selectedDate.recur()
                                 .every(selectedDate.day()).daysOfWeek()
@@ -520,10 +519,41 @@ class EventCalendar {
         let _self = this,
             paintMethod = method ? method : 'repeat-on',
             repeatEnd = (moment(_self.clndr.options.constraints.endDate, _self.dateFormatInternal).isBefore(_self.clndr.intervalEnd)) ? _self.clndr.options.constraints.endDate : _self.clndr.intervalEnd,
-            recurDatesThisMonth = _self.recurPattern
+            recurDatesThisMonth = [];
+            
+        // It's not currently possible to do a `recur on x weekdays every y weeks` compound rule with moment-recur, so
+        // we calculate a fortnightly repeat, and a `weekly on x weekdays` and then compare the week numbers to get the
+        // desired dates.
+        if (_self.$patternField.val() === 'fortnight') {
+            let weeks = [],
+                fortnightlyWeeks = _self.clndr.options.selectedDate.recur()
+                                        .every(2).weeks()
+                                        .startDate(_self.clndr.options.selectedDate)
+                                        .endDate(repeatEnd)
+                                        .all(),
+                datesToPaint = _self.recurPattern
                                     .startDate(_self.clndr.options.selectedDate)
                                     .endDate(repeatEnd)
                                     .all();
+
+            // Build an array of week numbers which hit the `every 2 weeks` pattern
+            $.each(fortnightlyWeeks, function() {
+                weeks.push(this.week());
+            });
+
+            // Grab weekly recurrence and use the ones that match the required week numbers
+            $.each(datesToPaint, function() {
+                if ($.inArray(this.week(), weeks) !== -1) {
+                    recurDatesThisMonth.push(this);
+                }
+            });
+        }
+        else {
+            recurDatesThisMonth = _self.recurPattern
+                .startDate(_self.clndr.options.selectedDate)
+                .endDate(repeatEnd)
+                .all();
+        }
 
         $.each(recurDatesThisMonth, function() {
             switch (paintMethod) {

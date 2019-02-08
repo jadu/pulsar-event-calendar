@@ -1096,7 +1096,7 @@ describe('EventCalendar', () => {
                 endDate: '2018-02-27',
                 events: [{ date: '2018-01-10' }]
             });
-
+            $html.find('[value="5"]').prop('checked', true);
             $html.find('.js-ercal-repeat').val('fortnight').trigger('change');
         });
         
@@ -1107,10 +1107,17 @@ describe('EventCalendar', () => {
             expect($html.find('.calendar-day-2018-01-02').hasClass('event-repeat')).to.be.true;
             expect($html.find('.calendar-day-2018-01-16').hasClass('event-repeat')).to.be.true;
             expect($html.find('.calendar-day-2018-01-30').hasClass('event-repeat')).to.be.true;
+
+            expect($html.find('.calendar-day-2018-01-05').hasClass('event-repeat')).to.be.true;
+            expect($html.find('.calendar-day-2018-01-19').hasClass('event-repeat')).to.be.true;
+        });
+        
+        it('should select the current startDate in the weekday picker', () => {
+            expect($html.find('[value="2"]').prop('checked')).to.be.true;
         });
 
         it('should store the recur pattern in the clndr instance', () => {
-            expect(eventCalendar.getRecurPattern().rules[0].measure).to.equal('weeks');
+            expect(eventCalendar.getRecurPattern().rules[0].measure).to.equal('daysOfWeek');
             expect(eventCalendar.getRecurPattern().rules[0].units['2']).to.be.true;
         });
 
