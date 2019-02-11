@@ -92,8 +92,12 @@ class EventCalendar {
          */
         if (typeof options.startDateField !== 'undefined' && options.startDateField.length) {
             _self.$startDateField = _self.$html.find(options.startDateField);
-            options.startDate = _self.$startDateField.val().length ? _self.internalDate(_self.$startDateField.val()) : _self.internalDate(options.startDate);
-   
+
+            // If startDate is undefined, use 'today' for the following startDate calculation
+            let startDate = (typeof options.startDate !== 'undefined') ? options.startDate : _self.today.format(_self.localeFormat);
+
+            options.startDate = _self.$startDateField.val().length ? _self.internalDate(_self.$startDateField.val()) : _self.internalDate(startDate);
+
             // Set the startDateField value in case it has been passed as an init option
             _self.$startDateField.val(moment(options.startDate, _self.dateFormatInternal).format(_self.localeFormat));
         }
@@ -108,11 +112,11 @@ class EventCalendar {
          */
         if (typeof options.endDateField !== 'undefined' && options.endDateField.length) {
             _self.$endDateField = _self.$html.find(options.endDateField);
-            
+
             // If startDate is undefined, use 'today' for the following endDate calculation
             let startDate = (typeof options.startDate !== 'undefined') ? options.startDate : _self.today.format(_self.localeFormat);
 
-            options.endDate = _self.$endDateField.val().length ? _self.internalDate(_self.$endDateField.val()) : moment(startDate, _self.localeFormat).add(15, 'years').format(_self.dateFormatInternal);
+            options.endDate = _self.$endDateField.val().length ? _self.internalDate(_self.$endDateField.val()) : moment(startDate, _self.dateFormatInternal).add(15, 'years').format(_self.dateFormatInternal);
 
             // Store reference to the end date field container, as it will be shown/hidden when choosing patterns
             _self.$endDateFieldContainer = _self.$endDateField.closest('.form__group');
