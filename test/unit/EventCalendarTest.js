@@ -1059,10 +1059,10 @@ describe('EventCalendar', () => {
             expect($html.find('.js-ercal-weekdays').attr('style')).to.equal('display: none;');
         });
 
-        it('should change the selected weekday in the weekday picker if the start date is changed', () => {
+        it('should not change the selected weekday in the weekday picker if the start date is changed', () => {
             $html.find('.js-ercal-start').val('03/01/2018').trigger('change');
 
-            expect($html.find('[value="3"]').prop('checked')).to.be.true;
+            expect($html.find('[value="2"]').prop('checked')).to.be.true;
         });
     });
 
@@ -1076,8 +1076,12 @@ describe('EventCalendar', () => {
             });
         });
 
-        it('should select the current weekday in the weekday picker', () => {
-            expect($html.find('[value="5"]').prop('checked')).to.be.true;
+        it('should select the pre-selected day in the weekday picker', () => {
+            expect($html.find('[value="2"]').prop('checked')).to.be.true;
+        });
+
+        it('should not select the current weekday in the weekday picker', () => {
+            expect($html.find('[value="5"]').prop('checked')).to.be.false;
         });
 
         it('should select the pre-selected weekdays', () => {
@@ -1103,22 +1107,17 @@ describe('EventCalendar', () => {
         it('should apply the repeat styling', () => {
             let $days = $html.find('.day.event-repeat');
 
-            expect($days.length).to.equal(5);
-            expect($html.find('.calendar-day-2018-01-02').hasClass('event-repeat')).to.be.true;
-            expect($html.find('.calendar-day-2018-01-16').hasClass('event-repeat')).to.be.true;
-            expect($html.find('.calendar-day-2018-01-30').hasClass('event-repeat')).to.be.true;
-
+            expect($days.length).to.equal(2);
             expect($html.find('.calendar-day-2018-01-05').hasClass('event-repeat')).to.be.true;
             expect($html.find('.calendar-day-2018-01-19').hasClass('event-repeat')).to.be.true;
         });
         
-        it('should select the current startDate in the weekday picker', () => {
-            expect($html.find('[value="2"]').prop('checked')).to.be.true;
+        it('should not select the current startDate in the weekday picker', () => {
+            expect($html.find('[value="2"]').prop('checked')).to.be.false;
         });
 
         it('should store the recur pattern in the clndr instance', () => {
             expect(eventCalendar.getRecurPattern().rules[0].measure).to.equal('daysOfWeek');
-            expect(eventCalendar.getRecurPattern().rules[0].units['2']).to.be.true;
         });
 
         it('should not apply the repeat styling to dates before the startDate', () => {
@@ -1134,9 +1133,9 @@ describe('EventCalendar', () => {
 
             let $days = $html.find('.day.event-repeat');
 
-            expect($days.length).to.equal(4);
-            expect($html.find('.calendar-day-2018-02-13').hasClass('event-repeat')).to.be.true;
-            expect($html.find('.calendar-day-2018-02-27').hasClass('event-repeat')).to.be.true;
+            expect($days.length).to.equal(2);
+            expect($html.find('.calendar-day-2018-02-02').hasClass('event-repeat')).to.be.true;
+            expect($html.find('.calendar-day-2018-02-16').hasClass('event-repeat')).to.be.true;
         });
 
         it('should not apply the repeat styling to dates after the endDate', () => {
@@ -1153,8 +1152,8 @@ describe('EventCalendar', () => {
         });
 
         it('should add toDelete styling to an item when clicked', () => {
-            let $target = $html.find('[data-day="2018-01-16"]'),
-                $parent = $html.find('.calendar-day-2018-01-16');
+            let $target = $html.find('[data-day="2018-01-19"]'),
+                $parent = $html.find('.calendar-day-2018-01-19');
 
             $target.click();
 
@@ -1162,13 +1161,13 @@ describe('EventCalendar', () => {
         });
 
         it('should add clicked dates to the list of dates to delete', () => {
-            let $target = $html.find('[data-day="2018-01-16"]');
+            let $target = $html.find('[data-day="2018-01-19"]');
 
             $target.click();
 
             let dates = eventCalendar.getDates();
 
-            expect(dates.datesToDel[0]._i).to.equal('2018-01-16');
+            expect(dates.datesToDel[0]._i).to.equal('2018-01-19');
         });
     });
 

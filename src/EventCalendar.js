@@ -328,8 +328,11 @@ class EventCalendar {
 
         // Show the weekday picker if the pattern is `weekly/fortnightly`
         if (pattern === 'weekly' || pattern === 'fortnight') {
-            // Choose the weekday based on the startDate
-            _self.$html.find('[name="ercal-weekdays"][value="' + moment(_self.clndr.options.constraints.startDate, _self.dateFormatInternal).day() + '"]').prop('checked', true);
+            // Choose the weekday based on the startDate, only if weekdays have not been supplied on init()
+            if (!_self.$html.find('[name="ercal-weekdays"]:checked').length) {
+                _self.$html.find('[name="ercal-weekdays"][value="' + moment(_self.clndr.options.constraints.startDate, _self.dateFormatInternal).day() + '"]').prop('checked', true);
+            }
+
             _self.$weekdayPicker.show();
             _self.toggleWeekday();
         }
