@@ -533,7 +533,7 @@ class EventCalendar {
         // desired dates.
         if (_self.$patternField.val() === 'fortnight') {
             let weeks = [],
-                fortnightlyWeeks = _self.clndr.options.selectedDate.recur()
+                fortnightlyWeeks = _self.clndr.options.selectedDate.startOf('week').recur()
                                         .every(2).weeks()
                                         .startDate(_self.clndr.options.selectedDate)
                                         .endDate(repeatEnd)

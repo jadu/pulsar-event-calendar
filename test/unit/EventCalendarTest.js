@@ -65,7 +65,6 @@ describe('EventCalendar', () => {
         $body.empty();
     });
 
-
     describe('init()', () => {
         beforeEach(() => {
             eventCalendar.init();
@@ -2316,6 +2315,66 @@ describe('EventCalendar', () => {
             expect($html.find('.calendar-day-2019-02-08').hasClass('event-repeat')).to.be.true;
             expect($html.find('.calendar-day-2019-02-15').hasClass('event-repeat')).to.be.true;
             expect($html.find('.calendar-day-2019-02-22').hasClass('event-repeat')).to.be.true;
+        });
+    });
+
+    describe('choosing the ’fortnight’ pattern with a weekday pattern (CMS-5889)', () => {
+        beforeEach(() => {
+            eventCalendar.init({
+                startDateField: '.js-ercal-start',
+                startDateField: '.js-ercal-end',
+                startDate: '2019-02-24',
+                endDate: '2019-05-30'
+            });
+
+            $html.find('[value="2"]').prop('checked', true);
+            $html.find('[value="3"]').prop('checked', true);
+            $html.find('[value="4"]').prop('checked', true);
+            $html.find('.js-ercal-repeat').val('fortnight').trigger('change');
+        });
+        
+        it('should select the appropriate days in March', () => {
+            $html.find('.clndr-next-button').click();
+
+            expect($html.find('.calendar-day-2019-03-05').hasClass('event-repeat')).to.be.true;
+            expect($html.find('.calendar-day-2019-03-06').hasClass('event-repeat')).to.be.true;
+            expect($html.find('.calendar-day-2019-03-07').hasClass('event-repeat')).to.be.true;
+            
+            expect($html.find('.calendar-day-2019-03-19').hasClass('event-repeat')).to.be.true;
+            expect($html.find('.calendar-day-2019-03-20').hasClass('event-repeat')).to.be.true;
+            expect($html.find('.calendar-day-2019-03-21').hasClass('event-repeat')).to.be.true;
+        });
+
+        it('should select the appropriate days in April', () => {
+            $html.find('.clndr-next-button').click();
+            $html.find('.clndr-next-button').click();
+
+            expect($html.find('.calendar-day-2019-04-02').hasClass('event-repeat')).to.be.true;
+            expect($html.find('.calendar-day-2019-04-03').hasClass('event-repeat')).to.be.true;
+            expect($html.find('.calendar-day-2019-04-04').hasClass('event-repeat')).to.be.true;
+            
+            expect($html.find('.calendar-day-2019-04-16').hasClass('event-repeat')).to.be.true;
+            expect($html.find('.calendar-day-2019-04-17').hasClass('event-repeat')).to.be.true;
+            expect($html.find('.calendar-day-2019-04-18').hasClass('event-repeat')).to.be.true;
+
+            expect($html.find('.calendar-day-2019-04-30').hasClass('event-repeat')).to.be.true;
+        });
+
+        it('should select the appropriate days in May', () => {
+            $html.find('.clndr-next-button').click();
+            $html.find('.clndr-next-button').click();
+            $html.find('.clndr-next-button').click();
+
+            expect($html.find('.calendar-day-2019-05-01').hasClass('event-repeat')).to.be.true;
+            expect($html.find('.calendar-day-2019-05-02').hasClass('event-repeat')).to.be.true;
+            
+            expect($html.find('.calendar-day-2019-05-14').hasClass('event-repeat')).to.be.true;
+            expect($html.find('.calendar-day-2019-05-15').hasClass('event-repeat')).to.be.true;
+            expect($html.find('.calendar-day-2019-05-16').hasClass('event-repeat')).to.be.true;
+
+            expect($html.find('.calendar-day-2019-05-28').hasClass('event-repeat')).to.be.true;
+            expect($html.find('.calendar-day-2019-05-29').hasClass('event-repeat')).to.be.true;
+            expect($html.find('.calendar-day-2019-05-30').hasClass('event-repeat')).to.be.true;
         });
     });
 });
