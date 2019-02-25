@@ -321,8 +321,10 @@ class EventCalendar {
         // Toggle visibility of endDate field by showing/hiding it's container (based on Pulsar markup) 
         if (typeof _self.$endDateFieldContainer !== 'undefined') {
             if (pattern === '1day') {
+                _self.$endDateField
+                    .val('')
+                    .attr('disabled', true);
                 _self.$endDateFieldContainer.hide();
-                _self.$endDateField.attr('disabled', true);
             }
             else {
                 _self.$endDateFieldContainer.show();

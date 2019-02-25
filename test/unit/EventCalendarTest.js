@@ -292,6 +292,11 @@ describe('EventCalendar', () => {
         it('should not show the next month arrow', () => {
             expect($html.find('.clndr-next-button').hasClass('inactive')).to.be.true;
         });
+
+        it('should be removed if the pattern is changed to no-repeat', () => {
+            $html.find('.js-ercal-repeat').val('1day').trigger('change');
+            expect($html.find('.js-ercal-end').val()).to.be.equal('');
+        });
     });
 
 
@@ -759,11 +764,11 @@ describe('EventCalendar', () => {
             expect($html.find('.js-ercal-start').val()).to.equal('01/01/2018');
         });
 
-        it('should reset the end date', () => {
+        it('should clear the end date field', () => {
             $html.find('.js-ercal-end').val('05/01/2018').trigger('change');
             $html.find('.js-ercal-reset').click();
 
-            expect($html.find('.js-ercal-end').val()).to.equal('20/01/2018');
+            expect($html.find('.js-ercal-end').val()).to.equal('');
         });
 
         it('should reset the min value for the start date field', () => {
