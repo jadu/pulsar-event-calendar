@@ -323,7 +323,8 @@ class EventCalendar {
             if (pattern === '1day') {
                 _self.$endDateField
                     .val('')
-                    .attr('disabled', true);
+                    .attr('disabled', true)
+                    .trigger('change');
                 _self.$endDateFieldContainer.hide();
             }
             else {
