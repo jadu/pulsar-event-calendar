@@ -539,16 +539,15 @@ class EventCalendar {
         if (_self.$patternField.val() === 'fortnight') {
             let weeks = [],
                 fortnightlyWeeks = _self.clndr.options.selectedDate.startOf('week').recur()
-                                        .every(2).weeks()
-                                        .startDate(_self.clndr.options.selectedDate)
-                                        .endDate(repeatEnd)
-                                        .all(),
-                datesToPaint = _self.recurPattern
+                                    .every(2).weeks()
                                     .startDate(_self.clndr.options.selectedDate)
+                                    .endDate(repeatEnd)
+                                    .all(),
+                datesToPaint = _self.recurPattern
+                                    .startDate(_self.clndr.options.constraints.startDate)
                                     .endDate(repeatEnd)
                                     .all();
 
-            // Build an array of week numbers which hit the `every 2 weeks` pattern
             $.each(fortnightlyWeeks, function() {
                 weeks.push(this.week());
             });

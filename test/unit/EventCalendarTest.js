@@ -2009,7 +2009,7 @@ describe('EventCalendar', () => {
             expect($html.find('.js-ercal-end').attr('min')).to.equal('1981-07-02');
         });
 
-        it('should constrain the max value for the start date field to reflect the emd date', () => {
+        it('should constrain the max value for the start date field to reflect the end date', () => {
             expect($html.find('.js-ercal-start').attr('max')).to.equal('1981-07-04');
         });
     });
@@ -2327,7 +2327,7 @@ describe('EventCalendar', () => {
         beforeEach(() => {
             eventCalendar.init({
                 startDateField: '.js-ercal-start',
-                startDateField: '.js-ercal-end',
+                endDateField: '.js-ercal-end',
                 startDate: '2019-02-24',
                 endDate: '2019-05-30'
             });
@@ -2380,6 +2380,24 @@ describe('EventCalendar', () => {
             expect($html.find('.calendar-day-2019-05-28').hasClass('event-repeat')).to.be.true;
             expect($html.find('.calendar-day-2019-05-29').hasClass('event-repeat')).to.be.true;
             expect($html.find('.calendar-day-2019-05-30').hasClass('event-repeat')).to.be.true;
+        });
+    });
+
+    describe('choosing the ’fortnight’ pattern with a weekday pattern, when the start date is at the end of the week', () => {
+        beforeEach(() => {
+            eventCalendar.init({
+                startDateField: '.js-ercal-start',
+                endDateField: '.js-ercal-end',
+                startDate: '2019-02-10',
+                endDate: '2019-07-05'
+            });
+
+            $html.find('[value="4"]').prop('checked', true);
+            $html.find('.js-ercal-repeat').val('fortnight').trigger('change');
+        });
+
+        it('should not select dates before the start date', () => {
+            expect($html.find('.calendar-day-2019-02-07').hasClass('event-repeat')).to.be.false;
         });
     });
 });
