@@ -377,7 +377,7 @@ class EventCalendar {
             let lastDay = _self.$weekdayPicker.find('label').last();
 
             if (lastDay.find('span').text() === 'SU') {
-                _self.$weekdayPicker.find('label').first().before(lastDay);
+                _self.$weekdayPicker.find('fieldset > label').first().before(lastDay);
             }
         }
     }
