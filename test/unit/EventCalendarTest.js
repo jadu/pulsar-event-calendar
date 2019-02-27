@@ -26,36 +26,38 @@ describe('EventCalendar', () => {
             <option value="monthByDate">Monthly, on this date</option>
             <option value="foo">This option should not exist</option>
         </select>
-        <fieldset class="js-ercal-weekdays" style="display: none;">
-            <label>
-                <input value="1" name="ercal-weekdays" type="checkbox">
-                <span>MO</span>
-            </label>
-            <label>
-                <input value="2" name="ercal-weekdays" type="checkbox">
-                <span>TU</span>
-            </label>
-            <label>
-                <input value="3" name="ercal-weekdays" type="checkbox">
-                <span>WE</span>
-            </label>
-            <label>
-                <input value="4" name="ercal-weekdays" type="checkbox">
-                <span>TH</span>
-            </label>
-            <label>
-                <input value="5" name="ercal-weekdays" type="checkbox">
-                <span>FR</span>
-            </label>
-            <label>
-                <input value="6" name="ercal-weekdays" type="checkbox">
-                <span>SA</span>
-            </label>
-            <label>
-                <input value="7" name="ercal-weekdays" type="checkbox">
-                <span>SU</span>
-            </label>
-        </fieldset>
+        <div class="js-ercal-weekdays">
+            <fieldset style="display: none;">
+                <label>
+                    <input value="1" name="ercal-weekdays" type="checkbox">
+                    <span>MO</span>
+                </label>
+                <label>
+                    <input value="2" name="ercal-weekdays" type="checkbox">
+                    <span>TU</span>
+                </label>
+                <label>
+                    <input value="3" name="ercal-weekdays" type="checkbox">
+                    <span>WE</span>
+                </label>
+                <label>
+                    <input value="4" name="ercal-weekdays" type="checkbox">
+                    <span>TH</span>
+                </label>
+                <label>
+                    <input value="5" name="ercal-weekdays" type="checkbox">
+                    <span>FR</span>
+                </label>
+                <label>
+                    <input value="6" name="ercal-weekdays" type="checkbox">
+                    <span>SA</span>
+                </label>
+                <label>
+                    <input value="7" name="ercal-weekdays" type="checkbox">
+                    <span>SU</span>
+                </label>
+            </fieldset>
+        </div>
         <div class="js-event-calendar"></div></body>`).appendTo($html);
 
         eventCalendar = new EventCalendar($html);
