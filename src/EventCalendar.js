@@ -548,6 +548,7 @@ class EventCalendar {
                                     .endDate(repeatEnd)
                                     .all();
 
+            // Build an array of week numbers which hit the `every 2 weeks` pattern
             $.each(fortnightlyWeeks, function() {
                 weeks.push(this.week());
             });
@@ -1033,7 +1034,7 @@ class EventCalendar {
         }
 
         // If we're using US localisation, dates will be formatted as MM/DD/YYYY in the UI.
-        if (locale === 'en'  || locale === 'en-us') {
+        if (locale.toLowerCase() === 'en'  || locale.toLowerCase() === 'en-us') {
             _self.localeFormat = _self.dateFormatUS;
         }
     }
