@@ -87,16 +87,16 @@ $(function () {
 
 The day of the week in which the calendar starts can be defined by the `locale` setting.
 
-United Kingdom `en_GB` and Australia `en_AU` locales will start the week on Monday.
+United Kingdom `en-GB` and Australia `en-AU` locales will start the week on Monday.
 
-United States `en_US` will start the week on Sunday.
+United States `en-US` will start the week on Sunday.
 
 ```javascript
 $(function () {
     const clndr = new EventCalendar($('html'));
 
     clndr.init({
-        locale: 'en_US'
+        locale: 'en-US'
     });
 });
 ```
