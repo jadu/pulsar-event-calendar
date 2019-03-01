@@ -316,13 +316,12 @@ class EventCalendar {
      */
     applyPattern () {
         let _self = this,
-            pattern = _self.$patternField.val()
+            pattern = _self.$patternField.val();
 
         // Toggle visibility of endDate field by showing/hiding it's container (based on Pulsar markup) 
         if (typeof _self.$endDateFieldContainer !== 'undefined') {
             if (pattern === '1day') {
                 _self.$endDateFieldContainer.hide();
-
                 _self.$endDateField
                     .val(moment(_self.originalEndDate, _self.dateFormatInternal).format(_self.localeFormat))
                     .attr('disabled', true)
@@ -337,6 +336,7 @@ class EventCalendar {
 
         // Show the weekday picker if the pattern is `weekly/fortnightly`
         if (pattern === 'weekly' || pattern === 'fortnight') {
+
             // Choose the weekday based on the startDate, only if weekdays have not been supplied on init()
             if (!_self.$html.find('[name="ercal-weekdays"]:checked').length) {
                 _self.$html.find('[name="ercal-weekdays"][value="' + moment(_self.clndr.options.constraints.startDate, _self.dateFormatInternal).day() + '"]').prop('checked', true);
@@ -494,7 +494,7 @@ class EventCalendar {
      */
     setPattern (pattern, weekdays) {
         let _self = this,
-            selectedDate = _self.clndr.options.selectedDate,
+            selectedDate = moment(_self.originalStartDate, _self.dateFormatInternal),
             newPattern;
 
         switch (pattern) {
@@ -502,7 +502,7 @@ class EventCalendar {
                 newPattern = selectedDate.recur().every(1).days();
                 break;
             case 'weekly':
-            case 'fortnightly':
+            case 'fortnight':
                 newPattern = selectedDate.recur().every(weekdays).daysOfWeek();
                 break
             case 'monthByDay':
@@ -532,7 +532,7 @@ class EventCalendar {
             paintMethod = method ? method : 'repeat-on',
             repeatEnd = (moment(_self.clndr.options.constraints.endDate, _self.dateFormatInternal).isBefore(_self.clndr.intervalEnd)) ? _self.clndr.options.constraints.endDate : _self.clndr.intervalEnd,
             recurDatesThisMonth = [];
-            
+
         // It's not currently possible to do a `recur on x weekdays every y weeks` compound rule with moment-recur, so
         // we calculate a fortnightly repeat, and a `weekly on x weekdays` and then compare the week numbers to get the
         // desired dates.
