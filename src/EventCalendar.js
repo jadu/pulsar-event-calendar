@@ -509,7 +509,7 @@ class EventCalendar {
                 newPattern = selectedDate.recur()
                                 .every(selectedDate.day()).daysOfWeek()
                                 .every(selectedDate.monthWeekByDay()).weeksOfMonthByDay();
-                break;
+                                break;
             case 'monthByDate':
                 newPattern = selectedDate.recur().every(1).months();
                 break;
@@ -562,7 +562,7 @@ class EventCalendar {
         }
         else {
             recurDatesThisMonth = _self.recurPattern
-                .startDate(_self.clndr.options.selectedDate)
+                .startDate(moment(_self.originalStartDate, _self.dateFormatInternal))
                 .endDate(repeatEnd)
                 .all();
         }

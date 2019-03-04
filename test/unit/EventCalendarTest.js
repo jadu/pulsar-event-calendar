@@ -2402,4 +2402,33 @@ describe('EventCalendar', () => {
             expect($html.find('.calendar-day-2019-02-07').hasClass('event-repeat')).to.be.false;
         });
     });
+
+    describe('Detect edge cases found when switching between every two weeks and monthly (CMS-5916)', () => {
+        beforeEach(() => {
+            eventCalendar.init({
+                startDateField: '.js-ercal-start',
+                endDateField: '.js-ercal-end',
+                startDate: '2019-03-01',
+                endDate: '2019-04-31'
+            });
+
+            $html.find('.js-ercal-repeat').val('fortnight').trigger('change');
+            $html.find('.js-ercal-repeat').val('monthByDate').trigger('change');
+        });
+
+        it('March 1st should be selected', () => {
+            expect($html.find('.selected').length).to.equal(1);
+        });
+
+        it('There should be no repeated dates in March (just the start date)', () => {
+            expect($html.find('.event-repeat').length).to.equal(1);
+            expect($html.find('.calendar-day-2019-03-01').hasClass('selected')).to.be.true;
+        });
+
+        it('Event should repeat on April 1st', () => {
+            $html.find('.clndr-next-button').click();
+            expect($html.find('.event-repeat').length).to.equal(1);
+            expect($html.find('.calendar-day-2019-04-01').hasClass('event-repeat')).to.be.true;
+        });
+    });
 });
