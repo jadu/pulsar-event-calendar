@@ -69,6 +69,7 @@ $font-family-monospace: 'Courier New', 'Andale Mono', 'Consolas', monospace !def
         font-size: 2em;
         line-height: 39px;
         height: $line-height-base * 2;
+        width: 50px;
 
         &:hover {
             color: $colour-primary;
@@ -110,8 +111,8 @@ $font-family-monospace: 'Courier New', 'Andale Mono', 'Consolas', monospace !def
             display: block;
             font-family: 'FontAwesome';
             font-weight: normal;
-            height: 16px;
-            line-height: 18px;
+            height: 17px;
+            line-height: 17px;
             position: absolute;
             right: 0;
             text-align: center;
@@ -238,6 +239,10 @@ $font-family-monospace: 'Courier New', 'Andale Mono', 'Consolas', monospace !def
         &:focus {
             box-shadow: 0 0 0 3px $colour-focus, inset 0 0 0 3px $colour-white;
         }
+    }
+
+    .selected.event-repeat > .day-contents::after {
+        display: none;
     }
 
     .event-del > .day-contents,

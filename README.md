@@ -89,16 +89,16 @@ $(function () {
 
 The day of the week in which the calendar starts can be defined by the `locale` setting.
 
-United Kingdom `en_GB` and Australia `en_AU` locales will start the week on Monday.
+United Kingdom `en-GB` and Australia `en-AU` locales will start the week on Monday.
 
-United States `en_US` will start the week on Sunday.
+United States `en-US` will start the week on Sunday.
 
 ```javascript
 $(function () {
     const clndr = new EventCalendar($('html'));
 
     clndr.init({
-        locale: 'en_US'
+        locale: 'en-US'
     });
 });
 ```
@@ -111,7 +111,7 @@ You can allow the user to choose and change the start date by providing a date f
 <div class="form__group">
     <label for="ercal-start" class="control__label">Event date</label>
     <div class="controls">
-        <input type="date" id="ercal-start" class="js-ercal-start" />
+        <input type="text" id="ercal-start" class="js-ercal-start" />
     </div>
 </div>
 ```
@@ -154,6 +154,31 @@ $(function () {
 });
 ```
 
+## Adding exceptions
+
+You can pass in an array of exceptions to define which dates should be included in, or excluded from your recurrence pattern.
+
+```javascript
+$(function () {
+    let inclusions = [
+        '2019-07-25',
+        '2019-07-26',
+        '2019-08-01'
+    ];
+
+    let exclusions = [
+        '2019-12-25'
+    ];
+
+    const clndr = new EventCalendar($('html'));
+
+    clndr.init({
+        datesToAdd: inclusions,
+        datesToDel: exclusions
+    });
+});
+```
+
 ## End Date as an init() option (optional)
 
 The Event Calendar can be constrained to not allow the user to navigate past a certain date. This defaults to `today + 15 years`.
@@ -181,7 +206,7 @@ This field should be hidden on page load, and will be shown if the user chooses 
 <div class="form__group" style="display: none;">
     <label for="ercal-end" class="control__label">End repeat on</label>
     <div class="controls">
-        <input type="date" id="ercal-end" class="js-ercal-end" disabled />
+        <input type="text" id="ercal-end" class="js-ercal-end" disabled />
     </div>
 </div>
 ```

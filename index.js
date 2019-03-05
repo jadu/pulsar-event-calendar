@@ -4,19 +4,12 @@ const EventCalendar = require('./src/EventCalendar');
 $(function () {
     const calendar = new EventCalendar($('html'));
 
-    // let myEvents = [
-    //     { date: '2019-01-20' },
-    //     { date: '2019-01-23' },
-    //     { date: '2019-01-26' }
-    // ];
-    
     /**
      * Simple init() method which will default to startDate = today / endDate = today + 15 years
      */
     calendar.init({
         startDateField: '.js-ercal-start',
         endDateField: '.js-ercal-end'
-        // events: myEvents
     });
 
     /**
