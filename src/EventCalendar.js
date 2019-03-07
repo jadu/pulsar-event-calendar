@@ -494,8 +494,9 @@ class EventCalendar {
      */
     setPattern (pattern, weekdays) {
         let _self = this,
-            selectedDate = moment(_self.originalStartDate, _self.dateFormatInternal),
+            selectedDate = moment(_self.clndr.options.constraints.startDate, _self.dateFormatInternal),
             newPattern;
+
 
         switch (pattern) {
             case 'day':
@@ -562,7 +563,7 @@ class EventCalendar {
         }
         else {
             recurDatesThisMonth = _self.recurPattern
-                .startDate(moment(_self.originalStartDate, _self.dateFormatInternal))
+                .startDate(moment(_self.clndr.options.constraints.startDate, _self.dateFormatInternal))
                 .endDate(repeatEnd)
                 .all();
         }
