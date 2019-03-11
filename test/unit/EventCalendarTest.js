@@ -1156,12 +1156,6 @@ describe('EventCalendar', () => {
 
             expect($html.find('.js-ercal-weekdays').attr('style')).to.equal('display: none;');
         });
-
-        it('should not change the selected weekday in the weekday picker if the start date is changed', () => {
-            $html.find('.js-ercal-start').val('03/01/2018').trigger('change');
-
-            expect($html.find('[value="2"]').prop('checked')).to.be.true;
-        });
     });
 
 
@@ -1196,25 +1190,28 @@ describe('EventCalendar', () => {
         beforeEach(() => {
             eventCalendar.init({
                 startDateField: '.js-ercal-start',
+                endDateField: '.js-ercal-end',
                 startDate: '2018-01-02',
                 endDate: '2018-02-27',
                 events: [{ date: '2018-01-10' }]
             });
-            $html.find('[value="5"]').prop('checked', true);
+
             $html.find('.js-ercal-repeat').val('fortnight').trigger('change');
+            $html.find('[value="5"]').prop('checked', true).trigger('change');
         });
         
         it('should apply the repeat styling', () => {
             let $days = $html.find('.day.event-repeat');
 
-            expect($days.length).to.equal(2);
+            expect($days.length).to.equal(5);
+
+            expect($html.find('.calendar-day-2018-01-02').hasClass('event-repeat')).to.be.true;
             expect($html.find('.calendar-day-2018-01-05').hasClass('event-repeat')).to.be.true;
+            expect($html.find('.calendar-day-2018-01-16').hasClass('event-repeat')).to.be.true;
             expect($html.find('.calendar-day-2018-01-19').hasClass('event-repeat')).to.be.true;
+            expect($html.find('.calendar-day-2018-01-30').hasClass('event-repeat')).to.be.true;
         });
-        
-        it('should not select the current startDate in the weekday picker', () => {
-            expect($html.find('[value="2"]').prop('checked')).to.be.false;
-        });
+    
 
         it('should store the recur pattern in the clndr instance', () => {
             expect(eventCalendar.getRecurPattern().rules[0].measure).to.equal('daysOfWeek');
@@ -1233,9 +1230,11 @@ describe('EventCalendar', () => {
 
             let $days = $html.find('.day.event-repeat');
 
-            expect($days.length).to.equal(2);
+            expect($days.length).to.equal(4);
             expect($html.find('.calendar-day-2018-02-02').hasClass('event-repeat')).to.be.true;
+            expect($html.find('.calendar-day-2018-02-13').hasClass('event-repeat')).to.be.true;
             expect($html.find('.calendar-day-2018-02-16').hasClass('event-repeat')).to.be.true;
+            expect($html.find('.calendar-day-2018-02-27').hasClass('event-repeat')).to.be.true;
         });
 
         it('should not apply the repeat styling to dates after the endDate', () => {
@@ -1514,7 +1513,7 @@ describe('EventCalendar', () => {
             expect(dates.datesToDel.length).to.equal(0);
         });
 
-        it('should remove the dates previopusly being added to the pattern from the datesToAdd arrays', () => {
+        it('should remove the dates previously being added to the pattern from the datesToAdd arrays', () => {
             let dates = eventCalendar.getDates();
 
             expect(dates.datesToAdd.length).to.equal(0);
@@ -2430,5 +2429,63 @@ describe('EventCalendar', () => {
             expect($html.find('.event-repeat').length).to.equal(1);
             expect($html.find('.calendar-day-2019-04-01').hasClass('event-repeat')).to.be.true;
         });
+    });
+
+    describe('Check fortnightly pattern behaves when switching between patterns', () => {
+        beforeEach(() => {
+            eventCalendar.init({
+                startDateField: '.js-ercal-start',
+                endDateField: '.js-ercal-end',
+                startDate: '2019-03-01',
+                endDate: '2019-04-31'
+            });
+
+            $html.find('.js-ercal-repeat').val('fortnight').trigger('change');
+            $html.find('.js-ercal-repeat').val('monthByDate').trigger('change');
+        });
+
+        it('March 1st should be selected', () => {
+            expect($html.find('.selected').length).to.equal(1);
+        });
+
+        it('There should be no repeated dates in March (just the start date)', () => {
+            expect($html.find('.event-repeat').length).to.equal(1);
+            expect($html.find('.calendar-day-2019-03-01').hasClass('selected')).to.be.true;
+        });
+
+        it('Event should repeat on April 1st', () => {
+            $html.find('.clndr-next-button').click();
+            expect($html.find('.event-repeat').length).to.equal(1);
+            expect($html.find('.calendar-day-2019-04-01').hasClass('event-repeat')).to.be.true;
+        });
+    });
+
+    describe('Changing the start date should change the selected day in the weekday picker', () => {
+        beforeEach(() => {
+            eventCalendar.init({
+                startDateField: '.js-ercal-start',
+                endDateField: '.js-ercal-end',
+                startDate: '2019-03-01'
+            });
+
+            $html.find('.js-ercal-repeat').val('fortnight').trigger('change');
+        });
+
+        it('Friday should be selected before changing', () => {
+            expect($html.find('[value="5"]').prop('checked')).to.be.true;
+        });
+
+        it('Friday should not be selected after changing', () => {
+            $html.find('.js-ercal-start').val('06/03/2019').trigger('change');
+
+            expect($html.find('[value="5"]').prop('checked')).to.be.false;
+        });
+
+        it('Wednesday should be selected after changing', () => {
+            $html.find('.js-ercal-start').val('06/03/2019').trigger('change');
+
+            expect($html.find('[value="3"]').prop('checked')).to.be.true;
+        });
+
     });
 });

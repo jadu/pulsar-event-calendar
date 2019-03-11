@@ -2432,7 +2432,6 @@
     visibility: visible; }
   .clndr .event > .day-contents,
   .clndr .event.event-repeat > .day-contents,
-  .clndr .selected.inactive > .day-contents,
   .clndr .selected.event-repeat > .day-contents,
   .clndr .selected > .day-contents,
   .clndr .selected.event-add > .day-contents,
@@ -2443,7 +2442,6 @@
     color: #fff; }
     .clndr .event > .day-contents:hover,
     .clndr .event.event-repeat > .day-contents:hover,
-    .clndr .selected.inactive > .day-contents:hover,
     .clndr .selected.event-repeat > .day-contents:hover,
     .clndr .selected > .day-contents:hover,
     .clndr .selected.event-add > .day-contents:hover,
