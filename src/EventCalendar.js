@@ -327,6 +327,9 @@ class EventCalendar {
                     .attr('disabled', true)
                     .trigger('change')
                     .val('');
+
+                // reset selected state on startDate
+                _self.clndr.element.find('[data-day="' + _self.clndr.options.constraints.startDate + '"]').parent().addClass('selected');
             }
             else {
                 _self.$endDateFieldContainer.show();
@@ -338,8 +341,11 @@ class EventCalendar {
         if (pattern === 'weekly' || pattern === 'fortnight') {
 
             // Choose the weekday based on the startDate, only if weekdays have not been supplied on init()
-            if (!_self.$html.find('[name="ercal-weekdays"]:checked').length) {
-                _self.$html.find('[name="ercal-weekdays"][value="' + moment(_self.clndr.options.constraints.startDate, _self.dateFormatInternal).day() + '"]').prop('checked', true);
+            if (!_self.originalWeekdays.length) {
+                let day = moment(_self.clndr.options.constraints.startDate, _self.dateFormatInternal).day(),
+                    dayNo = day != 0 ? day : 7; 
+                
+                _self.$html.find('[name="ercal-weekdays"][value="' + dayNo + '"]').prop('checked', true);
             }
 
             _self.$weekdayPicker.show();
@@ -901,6 +907,9 @@ class EventCalendar {
 
         // Update stored datesToDel with outOfBounds date removed
         _self.clndr.options.extras.datesToDel = datesToDel;
+
+        // Unset weekday checkboxes before applying the pattern
+        _self.$html.find('[name="ercal-weekdays"]:checked').prop('checked', false);
 
         // If pattern is weekly, make sure the weekDay picker checks the correct weekday for the new start date
         _self.applyPattern();
