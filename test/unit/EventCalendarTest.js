@@ -366,7 +366,7 @@ describe('EventCalendar', () => {
         it('should show the toAdd information in the review panel', () => {
             $html.find('[data-day="2018-07-04"]').click();
 
-            expect($html.find('.js-dates-to-add').attr('style')).to.equal('display: inline;');
+            expect($html.find('.js-dates-to-add').attr('style')).to.not.equal('display: none;');
         });
 
         it('should update the toAdd information with the current number', () => {
@@ -417,7 +417,7 @@ describe('EventCalendar', () => {
         });
 
         it('should show the toAdd information in the review panel', () => {
-            expect($html.find('.js-dates-to-add').attr('style')).to.equal('display: inline;');
+            expect($html.find('.js-dates-to-add').attr('style')).to.not.equal('display: none;');
         });
 
         it('should update the toAdd information with the current number', () => {
@@ -512,7 +512,7 @@ describe('EventCalendar', () => {
         it('should show the toDel information in the review panel', () => {
             $html.find('[data-day="2018-07-04"]').click();
 
-            expect($html.find('.js-dates-to-del').attr('style')).to.equal('display: inline;');
+            expect($html.find('.js-dates-to-del').attr('style')).to.not.equal('display: none;');
         });
 
         it('should update the toDel information with the current number', () => {
@@ -565,7 +565,7 @@ describe('EventCalendar', () => {
         });
 
         it('should show the toDel information in the review panel', () => {
-            expect($html.find('.js-dates-to-del').attr('style')).to.equal('display: inline;');
+            expect($html.find('.js-dates-to-del').attr('style')).to.not.equal('display: none;');
         });
 
         it('should update the toDel information with the current number', () => {
@@ -1055,7 +1055,7 @@ describe('EventCalendar', () => {
         });
 
         it('should show the weekday picker', () => {
-            expect($html.find('.js-ercal-weekdays').attr('style')).to.equal('display: block;');
+            expect($html.find('.js-ercal-weekdays').attr('style')).to.not.equal('display: none;');
         });
 
         it('should not populate the start date field', () => {
@@ -1461,7 +1461,7 @@ describe('EventCalendar', () => {
         });
 
         it('should show the toAdd information in the review panel', () => {
-            expect($html.find('.js-dates-to-add').attr('style')).to.equal('display: inline;');
+            expect($html.find('.js-dates-to-add').attr('style')).to.not.equal('display: none;');
         });
 
         it('should update the toAdd information with the current number', () => {
@@ -1469,7 +1469,7 @@ describe('EventCalendar', () => {
         });
 
         it('should show the toDel information in the review panel', () => {
-            expect($html.find('.js-dates-to-del').attr('style')).to.equal('display: inline;');
+            expect($html.find('.js-dates-to-del').attr('style')).to.not.equal('display: none;');
         });
 
         it('should update the toDel information with the current number', () => {
@@ -1575,7 +1575,7 @@ describe('EventCalendar', () => {
         });
 
         it('should show the toAdd information in the review panel', () => {
-            expect($html.find('.js-dates-to-add').attr('style')).to.equal('display: inline;');
+            expect($html.find('.js-dates-to-add').attr('style')).to.not.equal('display: none;');
         });
 
         it('should update the toAdd information with the current number', () => {
@@ -1583,7 +1583,7 @@ describe('EventCalendar', () => {
         });
 
         it('should show the toDel information in the review panel', () => {
-            expect($html.find('.js-dates-to-del').attr('style')).to.equal('display: inline;');
+            expect($html.find('.js-dates-to-del').attr('style')).to.not.equal('display: none;');
         });
 
         it('should update the toDel information with the current number', () => {
@@ -1660,7 +1660,7 @@ describe('EventCalendar', () => {
         });
 
         it('should show the toAdd information in the review panel', () => {
-            expect($html.find('.js-dates-to-add').attr('style')).to.equal('display: inline;');
+            expect($html.find('.js-dates-to-add').attr('style')).to.not.equal('display: none;');
         });
 
         it('should update the toAdd information with the current number', () => {
@@ -1668,7 +1668,7 @@ describe('EventCalendar', () => {
         });
 
         it('should show the toDel information in the review panel', () => {
-            expect($html.find('.js-dates-to-del').attr('style')).to.equal('display: inline;');
+            expect($html.find('.js-dates-to-del').attr('style')).to.not.equal('display: none;');
         });
 
         it('should update the toDel information with the current number', () => {
@@ -1696,7 +1696,7 @@ describe('EventCalendar', () => {
         });
         
         it('should show the toDel information in the review panel', () => {
-            expect($html.find('.js-dates-to-del').attr('style')).to.equal('display: inline;');
+            expect($html.find('.js-dates-to-del').attr('style')).to.not.equal('display: none;');
         });
         
         it('should update the toDel information with the current number', () => {
@@ -2207,7 +2207,7 @@ describe('EventCalendar', () => {
         // the code to update the live region lives in the styleToAdd method, if we have successfully got past that and
         // updated the review panel, then the updateLiveRegion method should've correctly returned without an error
         it('should show the toAdd information in the review panel', () => {
-            expect($html.find('.js-dates-to-add').attr('style')).to.equal('display: inline;');
+            expect($html.find('.js-dates-to-add').attr('style')).to.not.equal('display: none;');
         });
 
         it('should update the toAdd information with the current number', () => {
