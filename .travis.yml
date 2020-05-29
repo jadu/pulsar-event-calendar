@@ -4,7 +4,7 @@ node_js:
   - "10"
 
 before_install:
-  - npm i -g npm@6.2.0
+  - npm i -g npm
 
 before_script:
   - npm install
