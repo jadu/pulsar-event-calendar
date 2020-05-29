@@ -181,7 +181,7 @@ class EventCalendar {
                     </div>
                 </div>
                 <span class="js-ercal-status hide" role="alert" aria-live="polite"></span>
-                <table id='event-calendar' class='clndr-table' border='0' cellspacing='0' cellpadding='0'>
+                <table id='event-calendar' class='clndr-table'>
                     <thead>
                         <tr class='header-days'>
                         <% for (var i = 0; i < daysOfTheWeek.length; i++) { %>
