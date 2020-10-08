@@ -1,5 +1,5 @@
 {
-  "version": "1.0.3",
+  "version": "2.0.0",
   "name": "pulsar-event-calendar",
   "description": "Given a list of selected events, allow the user to add and/or remove other dates.",
   "homepage": "https://github.com/jadu/pulsar-event-calendar",
