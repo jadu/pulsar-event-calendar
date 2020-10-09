@@ -1,4 +1,12 @@
-language: js
+language:
+  - 'node_js'
+
+os:
+  - 'linux'
+
+dist:
+  - 'trusty'
+
 node_js:
   - '10'
 
@@ -7,7 +15,6 @@ before_install:
 
 before_script:
   - npm install
-  - mkdir -p dist/
 
 script:
   - npm run coverage
@@ -15,12 +22,9 @@ script:
 after_success:
   - bash <(curl -s https://codecov.io/bash)
 
-sudo: required
-  addons:
-    chrome: stable
-  deploy:
-    skip_cleanup: true
-    on:
-      tags: true
-    api_key:
-      secure: VSjp4nJq6AMR5M8Y0hys86PPo1CyUEjje0vJ3PBWS9JDTavLrYt4zopc2Te4+viow+NKi8mpd1dMJg9ulY+iIvaf9vcrO3VDw1bcL43EKAkoA2e8bDzYo+7otojRM3uMd2Kx9l9A8lfIq2EkCRslw6J0gY06ffBLfzF8RRs/NqVW2ENHhxMTwlWYBDabJOrnOA6qVi2KPAYbCmbUD6W9K4LAAaGWL81dKbjp16Pjx3kxfTwIXyLaaXYC/w+D4sozQ7YgGhgRuu6gyGIDGNToLsRIP23YWXpU5WTlvfhodSXO1U0u9T8PxIipo0Q1XFFWO/U77e7UVfTJmP75UJ+ymKejVBuH6/vlHGHsKSjnZiojlSMXv2gJnU000GskIDlpSCTN5B8rH1p/vuIoMYzxhNQqi/80NQBDEaBI4GEP2wSvVt86FlPbk9ubBByRYKdZVTEPlqMg6QutOYnGWQj+mtCU2ehCW+GsdwXalSsS5lFIzrUiuJ4haUzRHYW4HnhqMsEZlA9NOY89G0fX2qsMjhf81GgVJpi/2CuJBeU2AMjDOHW57WNme8xaVyhUy1MK0Ea0w/ZPkYKGkTxgSJnJSAfgoQ/qE3WjPL8z4XCmt5UJkZWiwQU+4Tv+7RNympGT7uvrSMqbC0bKcLBHY/wGTrxz5sycPuTO/NquGC4VGF0=
+deploy:
+  skip_cleanup: true
+  on:
+    tags: true
+  api_key:
+    secure: VSjp4nJq6AMR5M8Y0hys86PPo1CyUEjje0vJ3PBWS9JDTavLrYt4zopc2Te4+viow+NKi8mpd1dMJg9ulY+iIvaf9vcrO3VDw1bcL43EKAkoA2e8bDzYo+7otojRM3uMd2Kx9l9A8lfIq2EkCRslw6J0gY06ffBLfzF8RRs/NqVW2ENHhxMTwlWYBDabJOrnOA6qVi2KPAYbCmbUD6W9K4LAAaGWL81dKbjp16Pjx3kxfTwIXyLaaXYC/w+D4sozQ7YgGhgRuu6gyGIDGNToLsRIP23YWXpU5WTlvfhodSXO1U0u9T8PxIipo0Q1XFFWO/U77e7UVfTJmP75UJ+ymKejVBuH6/vlHGHsKSjnZiojlSMXv2gJnU000GskIDlpSCTN5B8rH1p/vuIoMYzxhNQqi/80NQBDEaBI4GEP2wSvVt86FlPbk9ubBByRYKdZVTEPlqMg6QutOYnGWQj+mtCU2ehCW+GsdwXalSsS5lFIzrUiuJ4haUzRHYW4HnhqMsEZlA9NOY89G0fX2qsMjhf81GgVJpi/2CuJBeU2AMjDOHW57WNme8xaVyhUy1MK0Ea0w/ZPkYKGkTxgSJnJSAfgoQ/qE3WjPL8z4XCmt5UJkZWiwQU+4Tv+7RNympGT7uvrSMqbC0bKcLBHY/wGTrxz5sycPuTO/NquGC4VGF0=
