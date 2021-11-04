@@ -22,6 +22,11 @@ $colour-black:          #1e1e1e !default;
 $font-family:   'Helvetica Neue', 'Helvetica', 'Arial', sans-serif !default;
 $font-family-monospace: 'Courier New', 'Andale Mono', 'Consolas', monospace !default;
 
+$fa-var-ban: '\f05e';
+$fa-var-plus-circle: '\f055';
+$fa-var-times-circle: '\f057';
+$fa-var-repeat: '\f2f9';
+
 .event-calendar {
     display: table;
     margin-bottom: $line-height-base;
@@ -34,6 +39,12 @@ $font-family-monospace: 'Courier New', 'Andale Mono', 'Consolas', monospace !def
         th {
             padding-right: 16px;
         }
+    }
+
+    [class^=icon] {
+        font-family: 'Font Awesome 5 Free';
+        font-weight: 900;
+        font-style: normal;
     }
 }
 
@@ -109,8 +120,8 @@ $font-family-monospace: 'Courier New', 'Andale Mono', 'Consolas', monospace !def
             border: 1px solid #fff;
             border-radius: 40px;
             display: block;
-            font-family: 'FontAwesome';
-            font-weight: normal;
+            font-family: 'Font Awesome 5 Free';
+            font-weight: 900;
             height: 17px;
             line-height: 17px;
             position: absolute;
