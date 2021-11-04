@@ -34,7 +34,7 @@
   "dependencies": {
     "clndr": "^1.4.7",
     "font-awesome": "^4.7.0",
-    "jquery": "^3.4.1",
+    "jquery": "^3.6.0",
     "later": "^1.2.0",
     "moment": "^2.15.2",
     "moment-recur": "^1.0.7",
