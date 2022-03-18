@@ -19,8 +19,9 @@ $colour-text-light:     #737373 !default;
 $colour-white:          #fff !default;
 $colour-black:          #1e1e1e !default;
 
-$font-family:   'Helvetica Neue', 'Helvetica', 'Arial', sans-serif !default;
+$font-family: 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif !default;
 $font-family-monospace: 'Courier New', 'Andale Mono', 'Consolas', monospace !default;
+$font-family-icons: 'Font Awesome 6 Free' !default;
 
 $fa-var-ban: '\f05e';
 $fa-var-plus-circle: '\f055';
@@ -42,7 +43,7 @@ $fa-var-repeat: '\f2f9';
     }
 
     [class^=icon] {
-        font-family: 'Font Awesome 5 Free';
+        font-family: $font-family-icons;
         font-weight: 900;
         font-style: normal;
     }
@@ -120,7 +121,7 @@ $fa-var-repeat: '\f2f9';
             border: 1px solid #fff;
             border-radius: 40px;
             display: block;
-            font-family: 'Font Awesome 5 Free';
+            font-family: $font-family-icons;
             font-weight: 900;
             height: 17px;
             line-height: 17px;
