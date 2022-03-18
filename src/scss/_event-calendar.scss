@@ -99,6 +99,7 @@ $fa-var-repeat: '\f2f9';
 
     .header-day,
     .day {
+        overflow: visible;
         padding-bottom: $margin-base;
         padding-right: $margin-base;
         width: percentage(1/7);
@@ -140,7 +141,6 @@ $fa-var-repeat: '\f2f9';
             &::after {
                 content: '\f055';
                 color: $colour-primary;
-                font-weight: normal;
             }
         }
 
