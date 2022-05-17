@@ -2488,4 +2488,23 @@ describe('EventCalendar', () => {
         });
 
     });
+
+    describe('Choosing the last day of a short month should not select days beyond this date in subsequent months', () => {
+        beforeEach(() => {
+            eventCalendar.init({
+                startDateField: '.js-ercal-start',
+                endDateField: '.js-ercal-end',
+                startDate: '2022-02-28'
+            });
+
+            $html.find('.js-ercal-repeat').val('monthByDate').trigger('change');
+        });
+
+        it('Event should occur on Feb 28th and repeat on March 28th only', () => {
+            $html.find('.clndr-next-button').click();
+            expect($html.find('.event-repeat').length).to.equal(1);
+            expect($html.find('.calendar-day-2022-03-28').hasClass('event-repeat')).to.be.true;
+        });
+
+    });
 });

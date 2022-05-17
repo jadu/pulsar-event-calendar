@@ -6795,7 +6795,7 @@ readers do not read off random characters that represent icons */
     .event-calendar .calendar th {
       padding-right: 16px; }
   .event-calendar [class^=icon] {
-    font-family: 'Font Awesome 5 Free';
+    font-family: "Font Awesome 6 Free";
     font-weight: 900;
     font-style: normal; }
 
@@ -6835,6 +6835,7 @@ readers do not read off random characters that represent icons */
     text-align: center; }
   .clndr .header-day,
   .clndr .day {
+    overflow: visible;
     padding-bottom: 10px;
     padding-right: 10px;
     width: 14.2857142857%; }
@@ -6854,7 +6855,7 @@ readers do not read off random characters that represent icons */
       border: 1px solid #fff;
       border-radius: 40px;
       display: block;
-      font-family: 'Font Awesome 5 Free';
+      font-family: "Font Awesome 6 Free";
       font-weight: 900;
       height: 17px;
       line-height: 17px;
@@ -6869,8 +6870,7 @@ readers do not read off random characters that represent icons */
       font-weight: bold; }
       .clndr .day > .day-contents:hover::after {
         content: '\f055';
-        color: #2575b0;
-        font-weight: normal; }
+        color: #2575b0; }
     .clndr .day > .day-contents:focus {
       box-shadow: 0 0 0 3px #ffbf47, inset 0 0 0 3px #fff;
       outline: none; }
