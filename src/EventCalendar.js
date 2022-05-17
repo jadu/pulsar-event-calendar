@@ -580,8 +580,8 @@ class EventCalendar {
             let date = moment(_self.clndr.options.constraints.startDate).date();
 
             // Remove dates which don't have the same date of the month
-            let filteredRecurDatesThisMonth = recurDatesThisMonth.filter(function(elem) {
-                return date === elem.date();
+            let filteredRecurDatesThisMonth = recurDatesThisMonth.filter(function(recurrence) {
+                return date === recurrence.date();
             });
 
             recurDatesThisMonth = filteredRecurDatesThisMonth;
