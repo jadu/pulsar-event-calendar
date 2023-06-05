@@ -1056,6 +1056,15 @@ class EventCalendar {
             moment.locale(locale);
         }
 
+        // if Australian locale, force first day of week to start on Monday to work around this known issue:
+        // https://github.com/moment/moment/issues/5890
+        if (locale.toLowerCase() === 'en-au') {
+            moment.updateLocale('en-au', { week: {
+                dow: 1, // First day of week is Monday
+                doy: 7  // First week of year must contain 1 January (7 + 1 - 1)
+            }});
+        }
+
         // If we're using US localisation, dates will be formatted as MM/DD/YYYY in the UI.
         if (locale.toLowerCase() === 'en'  || locale.toLowerCase() === 'en-us') {
             _self.localeFormat = _self.dateFormatUS;
