@@ -1,6 +1,11 @@
-$fa-font-path: '../../node_modules/font-awesome/fonts';
+$fa-font-path: '../../node_modules/@fortawesome/fontawesome-free/webfonts';
 $fa-css-prefix: 'icon';
 
-@import '../../node_modules/font-awesome/scss/font-awesome';
+// Font awesome
+@import '../../node_modules/@fortawesome/fontawesome-free/scss/fontawesome';
+@import '../../node_modules/@fortawesome/fontawesome-free/scss/regular';
+@import '../../node_modules/@fortawesome/fontawesome-free/scss/solid';
+@import '../../node_modules/@fortawesome/fontawesome-free/scss/brands';
+@import '../../node_modules/@fortawesome/fontawesome-free/scss/v4-shims';
 
 @import '_event-calendar';

@@ -574,6 +574,19 @@ class EventCalendar {
                 .all();
         }
 
+        // Due to a bug in moment-recur, we need to manually strip any incorrect
+        // dates supplied by the .every(1).months() pattern
+        if (_self.$patternField.val() === 'monthByDate') {
+            let date = moment(_self.clndr.options.constraints.startDate).date();
+
+            // Remove dates which don't have the same date of the month
+            let filteredRecurDatesThisMonth = recurDatesThisMonth.filter(function(recurrence) {
+                return date === recurrence.date();
+            });
+
+            recurDatesThisMonth = filteredRecurDatesThisMonth;
+        }
+
         $.each(recurDatesThisMonth, function() {
             switch (paintMethod) {
                 case 'repeat-on':
