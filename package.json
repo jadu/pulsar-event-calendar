@@ -45,7 +45,7 @@
     "babel-istanbul": "^0.12.2",
     "babel-preset-es2015": "^6.24.1",
     "babelify": "^7.3.0",
-    "browserify": "^11.2.0",
+    "browserify": "^17.0.0",
     "chai": "^2.3.0",
     "dart-sass": "^1.25.0",
     "growl": ">=1.10.0",
