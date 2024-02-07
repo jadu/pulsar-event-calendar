@@ -9,6 +9,7 @@ import moment from 'moment';
 import 'moment/locale/en-au';
 import 'moment/locale/en-gb';
 import 'moment-recur';
+window.moment = require('moment-recur')
 window._ = require('underscore');
 import 'clndr';
 
